@@ -1,0 +1,32 @@
+#map_right_info_div{
+    height: 100%;
+    width: 25%;
+    background: #444444;
+    opacity: 0.5;
+}
+#title_div{
+    position: relative;
+    background-color: #fff;
+    height: 10%;
+    width: 100%;
+}
+#map_info_menu_btn{
+    height: 7px;
+    width: 7px;
+    display: block;
+
+    border-top: 21px double;
+    border-left: 0;
+    border-bottom: 7px solid;
+    border-right: 0;
+
+    color: black;
+    margin: auto;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    opacity: 0.5;
+    transition: opacity 700ms;
+}

@@ -1,0 +1,7 @@
+.fp-controlArrow{
+	opacity: 0.5;
+	transition: opacity 500ms;
+}
+.fp-controlArrow:hover{
+	opacity: 1;
+}

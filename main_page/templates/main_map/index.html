@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Simple Map</title>
+    <meta name="viewport" content="initial-scale=1.0">
+    <meta charset="utf-8">
+    <style>
+      /* Always set the map height explicitly to define the size of the div
+       * element that contains the map. */
+      #map {
+        height: 100%;
+      }
+      /* Optional: Makes the sample page fill the window. */
+      html, body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <!--input type="text" id="map_search" name=""-->
+    <div id="fullpage">
+      <div class="section">
+        <div class="slide" data-anchor="slide1">
+            <div id="map"></div>
+            <div id="map_right_info_div">
+                <div id="title_div">
+                    <div id="map_info_menu_btn"></div>
+                </div>
+            </div>
+        </div>
+      </div>
+    </div>
+  <style type="text/css">
+    #id{
+      height: 100%;
+      position: fixed;
+      background: rgba(0,0,0,0.5);
+      right: 0;
+      width: 100px;
+      z-index: 100;
+    }
+  </style>
+
+    {% load static %}
+    <script src="{% static "js/jquery.min.js" %}"></script>
+    <script src="{% static "js/jquery.easing.js" %}"></script>
+    <script src="{% static "js/map.js" %}"></script>
+    <script src="{% static "js/jquery.fullpage.extensions.min.js" %}"></script>
+    <script src="{% static "js/fullpage.continuousHorizontal.limited.min.js" %}"></script>
+    <link rel="stylesheet" type="text/css" href="{% static "css/jquery.fullPage.css" %}">
+    <link rel="stylesheet" type="text/css" href="{% static "css/custome.fullPage.css" %}">
+    <link rel="stylesheet" type="text/css" href="{% static "css/map_right_div.css" %}">
+
+    <script src="https://maps.google.cn/maps/api/js?key=AIzaSyC5VIhPswBk-7iluvp6GGrmoL2nvNxoDek&libraries=places&language=zh-CN&callback=initMap"
+    async defer></script>
+    <script type="text/javascript">
+      $(document).ready(function() {
+        $('#fullpage').fullpage({
+          continuousHorizontal: true,
+          continuousHorizontalKey: 'YWx2YXJvdHJpZ28uY29tX00zVVkyOXVkR2x1ZFc5MWMwaHZjbWw2YjI1MFlXdz12Nk0=',
+          slidesNavigation: true
+        });
+      });
+    </script>
+
+    <style type="text/css">
+      /*Disable Google Copyright*/
+      /*
+      a[href*="maps.google.com/maps"]{display:none !important}
+      a[href*="www.google.cn"]{display:none !important}
+      .gm-style-cc{display: none !important;}
+      */
+    </style>
+  </body>
+</html>
