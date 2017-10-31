@@ -32,29 +32,22 @@
         </div>
       </div>
     </div>
-  <style type="text/css">
-    #id{
-      height: 100%;
-      position: fixed;
-      background: rgba(0,0,0,0.5);
-      right: 0;
-      width: 100px;
-      z-index: 100;
-    }
-  </style>
 
     {% load static %}
-    <script src="{% static "js/jquery.min.js" %}"></script>
-    <script src="{% static "js/jquery.easing.js" %}"></script>
-    <script src="{% static "js/map.js" %}"></script>
-    <script src="{% static "js/jquery.fullpage.extensions.min.js" %}"></script>
-    <script src="{% static "js/fullpage.continuousHorizontal.limited.min.js" %}"></script>
     <link rel="stylesheet" type="text/css" href="{% static "css/jquery.fullPage.css" %}">
     <link rel="stylesheet" type="text/css" href="{% static "css/custome.fullPage.css" %}">
     <link rel="stylesheet" type="text/css" href="{% static "css/map_right_div.css" %}">
 
+    <script src="{% static "js/jquery.min.js" %}"></script>
+    <script src="{% static "js/jquery.easing.js" %}"></script>
+    <script src="{% static "js/markerclusterer.js" %}""></script>
+    <script src="{% static "js/map.js" %}"></script>
+    <script src="{% static "js/jquery.fullpage.extensions.min.js" %}"></script>
+    <script src="{% static "js/fullpage.continuousHorizontal.limited.min.js" %}"></script>
+
     <script src="https://maps.google.cn/maps/api/js?key=AIzaSyC5VIhPswBk-7iluvp6GGrmoL2nvNxoDek&libraries=places&language=zh-CN&callback=initMap"
     async defer></script>
+
     <script type="text/javascript">
       $(document).ready(function() {
         $('#fullpage').fullpage({
