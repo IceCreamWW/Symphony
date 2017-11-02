@@ -1,0 +1,13 @@
+{% if plots %}
+	{% for plot in plots %}
+		<div class="plot">
+			<img class="plot-img" src="/static/img/{{ plot.img }}">
+            <div class="intro">
+                <article>
+                <h2>{{ plot.movie__name }}</h2>
+                {{ plot.keyword }}
+                </article>
+            </div>
+        </div>
+	{% endfor %}
+{% endif %}

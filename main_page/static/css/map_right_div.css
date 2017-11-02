@@ -1,8 +1,9 @@
 #map_right_info_div{
     height: 100%;
     width: 25%;
-    background: #444444;
-    opacity: 0.5;
+    background: rgba(44,44,44,0.5);
+    /*opacity: 0.5;*/
+    overflow: hidden; 
 }
 #title_div{
     position: relative;
@@ -29,4 +30,47 @@
     right: 0;
     opacity: 0.5;
     transition: opacity 700ms;
+}
+#map-right-div-section{
+    position: absolute;
+    bottom: 0;
+    height: 90%;
+    width: 300%;
+    transition: 500ms;
+    overflow: hidden; 
+}
+
+.m-slide{
+    width: 33.33%;
+    height: 100%;
+    float: left;
+    min-height: 1px;
+}
+
+.plot{
+    border: solid rgba(0,0,0,0.7);
+    padding: 10px;
+    margin: 10px;
+    margin-right: 15px;
+}
+
+.intro{
+    color: white;
+}
+
+img.plot-img{
+    float: left;
+    max-width: 100%;
+    width: auto;
+    height: auto;
+}
+#map-right-scrollbar .nicescroll-cursors{
+    margin-right: 3px;
+}
+.plots-info{
+    padding-left: 10px;
+    color: white;
+}
+#plots-content{
+    height: 100%;
 }

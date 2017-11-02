@@ -28,7 +28,9 @@ function load_map(map_style_json){
       center: center_coordinate,
       zoom: 5,
       zoomControl: false,
+      streetViewControl: false,
       fullscreenControl: false,
+      mapTypeControl: false,
       gestureHandling: 'cooperative',
       mapTypeControlOptions: {
         mapTypeIds: ['roadmap', 'map_night']
@@ -42,11 +44,8 @@ function load_map(map_style_json){
     map.controls[google.maps.ControlPosition.RIGHT_TOP].push(map_right_div[0])
 
     $.getJSON('init_marks', null, function(json, textStatus) {
-        /*optional stuff to do after success */
         init_marks(json);
     });
-
-    //http://localhost:8000/static/img/markercluster.png
 
     /*
     var marker = new google.maps.Marker({
@@ -75,6 +74,7 @@ function init_marks(markers){
       var map_marker = new google.maps.Marker({
         position: markers[i]['latlng'],
         map: map,
+        id: markers[i]['id']
       })
       map_marker.addListener('click', onMarkerClicked)
       allMarkers.push(map_marker)
@@ -82,6 +82,35 @@ function init_marks(markers){
   markercluster = new MarkerClusterer(map, allMarkers,  
     {imagePath: 'http://localhost:8000/static/img/m'});
 }
+
 function onMarkerClicked(event){
-  alert(event)
+  var csrftoken = getCookie('csrftoken');
+  var data = {"id": 1, "csrfmiddlewaretoken": csrftoken}
+
+  $.getJSON('get_marker_plots', data, function(json, textStatus) {
+    $("#plots-content").html(json['html']);
+    
+    $('.plots-info>h1').text(json['site'])
+    moveToSlide('m-cur-slide-', 'map-right-div-section', 2);
+  });
+
+
+    
+  
+}
+
+function getCookie(name) {
+    var cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        var cookies = document.cookie.split(';');
+        for (var i = 0; i < cookies.length; i++) {
+            var cookie = jQuery.trim(cookies[i]);
+            // Does this cookie string begin with the name we want?
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
 }
