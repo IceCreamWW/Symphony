@@ -1,0 +1,196 @@
+/* focus-line top = input padding-bottom + 74px */
+*{
+    margin: 0;
+    padding: 0;
+    user-select: none;
+}
+body{
+    height: 100%;
+    width: 100%;
+    position: relative;
+}
+html,body{
+    height: 100%;
+    width: 100%;
+}
+body, .center-div::before{
+    background: url("../img/background.png") no-repeat center fixed;
+    background-size: cover;
+}
+.make-center-wrapper{
+    width: 30%;
+    display: table;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    margin: auto;
+    position: absolute;
+}
+.center-div::before{
+    content: '';
+    height: 100vh;
+    width: 100vw;
+    filter: blur(10px);
+    display: block;
+    position: absolute;
+    z-index: -1;
+}
+.center-div{
+    position: relative;
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+    background: hsla(0,0%,100%,.15);
+    box-shadow: 5px 3px 30px black;
+}
+.log-secion{
+    width: 200%;
+    overflow: hidden; 
+    transition: 500ms;
+}
+.m-slide{
+    width: 50%;
+    text-align: center;
+    float: left;
+}
+.login-wrapper, .signup-wrapper{
+	width: 70%;
+	margin: 0 auto;
+	display: table;
+}
+
+/* Two Btns on the top*/
+.log-title{
+    width: 70%;
+    margin: auto;
+}
+
+.title-btn.section-active{
+	border-color: rgba(0,0,0,0.7);
+}
+.title-btn{
+	padding: 0 0 2% 0;
+	margin-top: 10%;
+	margin-bottom: 5%;
+	border-bottom: 3px solid;
+	border-color: rgba(0,0,0,0);
+	box-sizing: border-box;
+	font-size: 17pt;
+	transition: 300ms;
+	cursor: pointer;
+}
+#login-btn{
+	float: left;
+}
+#signup-btn{
+	float: right;
+}
+
+
+label {
+    position: absolute;
+    left: 1px;
+    font-size: 12pt;
+    transition: 200ms, color 500ms;
+    color: rgba(0,0,0,0.8)
+}
+.login-wrapper label{
+    bottom: 120%;
+}
+.signup-wrapper label{
+    bottom: 110%;
+}
+
+input:not([type='submit']):placeholder-shown:not(:focus) + label{
+    bottom: 10%;
+    cursor: text;
+    color: rgba(0,0,0,0.7);
+}
+
+.login-wrapper input:not([type='submit']):placeholder-shown:not(:focus) + label{
+    font-size: 17pt;
+}
+.signup-wrapper input:not([type='submit']):placeholder-shown:not(:focus) + label{
+    font-size: 15pt;
+}
+input:not([type='submit']):hover:placeholder-shown + label{
+    color: rgba(0,0,0,1)
+}
+
+input:not([type="submit"]){
+    border-color: transparent transparent rgba(0,0,0,0.5) transparent;
+    background: transparent;
+    padding-bottom: 6px;
+    width: 100%;
+    transition: 400ms;
+    user-select: text;
+}
+
+.login-wrapper input:not([type="submit"]){
+	font-size: 17pt;
+}
+.signup-wrapper input:not([type="submit"]){
+	font-size: 15pt;
+}
+
+input:not([type="submit"]):hover{
+    border-color: transparent transparent rgba(0,0,0,1) transparent;
+}
+input:not([type="submit"]):focus{
+    outline: none;
+}
+.login-wrapper .input-wrapper{
+    position: relative;
+    margin-top: 20%;
+}
+.signup-wrapper .input-wrapper{
+    position: relative;
+    margin-top: 12%;
+}
+.focus-line{
+    color: white;
+    border-bottom: solid 2.5px;
+    top: 95%;
+    width: 0;
+    position: absolute;
+    transition: 400ms;
+}
+.input-focused .focus-line{
+    width: 102%;
+}
+
+input[type='submit']:focus{
+	outline: none;
+}
+
+.login-submit{
+    background: transparent;
+    border: 2px solid;
+    border-radius: 5px;
+    padding: 5px 10px;
+    font-size: 18px;
+}
+.login-submit-wrapper{
+	padding: 10% 0;
+	text-align: right;
+}
+.login-submit:hover{
+    cursor: pointer;
+}
+
+
+.signup-submit{
+    background: transparent;
+    border: 2px solid;
+    border-radius: 5px;
+    padding: 5px 10px;
+    font-size: 18px;
+}
+.signup-submit:hover{
+    cursor: pointer;
+}
+.signup-submit-wrapper{
+	padding: 10% 0;
+	text-align: right;
+}

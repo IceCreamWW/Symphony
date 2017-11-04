@@ -5,11 +5,12 @@
     /*opacity: 0.5;*/
     overflow: hidden; 
 }
-#title_div{
+#title-div{
     position: relative;
-    background-color: #fff;
+    background-color: rgba(77,77,77,0.7);
     height: 10%;
     width: 100%;
+    display: table;
 }
 #map_info_menu_btn{
     height: 7px;
@@ -73,4 +74,33 @@ img.plot-img{
 }
 #plots-content{
     height: 100%;
+}
+
+.map-arrow-left{
+    border-top: 20px solid transparent;
+    border-bottom: 20px solid transparent; 
+    border-right: 17px solid;
+}   
+
+.map-arrow-right{
+    border-top: 20px solid transparent;
+    border-bottom: 20px solid transparent; 
+    border-left: 17px solid;  
+    float: right;
+}   
+.arrow{
+    width: 0; 
+    height: 0;     
+    transition: 500ms;  
+    color: rgb(0,0,0);
+    opacity: 0.4;
+}
+.arrow:hover{
+    opacity: 0.6;
+    cursor: pointer;
+}
+.icon{
+    display: table-cell;
+    vertical-align: middle;
+    padding: 0 15px; 
 }

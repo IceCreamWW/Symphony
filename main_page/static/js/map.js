@@ -93,10 +93,6 @@ function onMarkerClicked(event){
     $('.plots-info>h1').text(json['site'])
     moveToSlide('m-cur-slide-', 'map-right-div-section', 2);
   });
-
-
-    
-  
 }
 
 function getCookie(name) {

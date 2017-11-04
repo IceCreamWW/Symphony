@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/registration.css' %}">
+    <script src="{% static 'js/jquery.min.js' %}"></script>
+    <script src="{% static 'js/mslider.js' %}"></script>
+    <script src="{% static 'js/registration.js' %}"></script>
+</head>
+<body>
+    <div class="make-center-wrapper">
+        <div class="center-div">
+            <div class="log-title">
+                <div class="title-btn section-active" id="login-btn">
+                    Log In
+                </div>
+                <div class="title-btn" id="signup-btn">
+                    Sign Up
+                </div>
+            </div>
+            <div class="log-secion m-cur-slide-1" id="log-section">
+                <div class="login-slide m-slide" >
+                	<div class="login-wrapper">
+	                    <form action="/mlogin/" method="post">
+	                    {% csrf_token %}
+	                     {% for field in login_form %}
+	                        <div class="input-wrapper">
+	                            {{ field.errors }}
+	                            {{ field }}
+                                <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+	                            <div class="focus-line"></div>
+	                            {{ field.help_text }}
+	                        </div>
+	                     {% endfor %}
+	                    <div class="login-submit-wrapper">
+	                        <input type="submit" class="login-submit" value="Log In"/>
+	                    </div>
+	                    </form>
+                    </div>
+                </div>
+
+                <div class="signup-slide m-slide">
+                	<div class="signup-wrapper">
+	                    <form action="/mlogin/" method="post">
+	                    {% csrf_token %}
+	                    {% for field in signup_form %}
+	                        <div class="input-wrapper">
+	                            {{ field.errors }}
+	                            {{ field }}
+                                <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+	                            <div class="focus-line"></div>
+	                            {{ field.help_text }}
+	                        </div>
+	                    {% endfor %}
+	                    <div class="signup-submit-wrapper">
+	                        <input type="submit" class="signup-submit" value="Sign Up"/>
+	                    </div>
+	                    </form>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</body>
+</html>
+
