@@ -5,8 +5,6 @@
     user-select: none;
 }
 body{
-    height: 100%;
-    width: 100%;
     position: relative;
 }
 html,body{
@@ -150,8 +148,8 @@ input:not([type="submit"]):focus{
 }
 .focus-line{
     color: white;
-    border-bottom: solid 2.5px;
-    top: 95%;
+    border-bottom: solid 3.5px;
+    top: 92%;
     width: 0;
     position: absolute;
     transition: 400ms;

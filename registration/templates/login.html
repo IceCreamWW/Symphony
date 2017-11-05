@@ -22,7 +22,7 @@
             <div class="log-secion m-cur-slide-1" id="log-section">
                 <div class="login-slide m-slide" >
                 	<div class="login-wrapper">
-	                    <form action="/mlogin/" method="post">
+	                    <form action={% url 'mlogin' %} method="post">
 	                    {% csrf_token %}
 	                     {% for field in login_form %}
 	                        <div class="input-wrapper">

@@ -2,12 +2,14 @@ from django.shortcuts import render, render_to_response
 from django.http import JsonResponse
 from django.template.loader import render_to_string
 
+from django.contrib.auth.decorators import login_required
 from main_page.models import *
 from random import *
 import json
 
 
 # Create your views here.
+@login_required
 def film_map(request):
     return render(request, "main_page/index.html")
 

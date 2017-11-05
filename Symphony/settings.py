@@ -85,8 +85,6 @@ DATABASES = {
         'PORT': '3306',
     }
 }
-
-
 # Password validation
 # https://docs.djangoproject.com/en/1.11/ref/settings/#auth-password-validators
 
@@ -124,3 +122,9 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
 
 STATIC_URL = '/static/'
+
+AUTHENTICATION_BACKENDS = ['django.contrib.auth.backends.ModelBackend']
+
+AUTH_USER_MODEL = 'registration.MyUser'
+
+LOGIN_URL = '/login/'
