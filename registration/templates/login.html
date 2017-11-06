@@ -26,10 +26,16 @@
 	                    {% csrf_token %}
 	                     {% for field in login_form %}
 	                        <div class="input-wrapper">
-	                            {{ field.errors }}
+                                {% if field.errors %}
+                                    {% for err in field.errors %}
+                                        <div class="error-div">{{ err|escape }}</div>
+                                    {% endfor %}
+                                {% endif %}
+
 	                            {{ field }}
                                 <label for="{{ field.id_for_label }}">{{ field.label }}</label>
 	                            <div class="focus-line"></div>
+	                            <div class="input-underline"></div>
 	                            {{ field.help_text }}
 	                        </div>
 	                     {% endfor %}
@@ -50,6 +56,7 @@
 	                            {{ field }}
                                 <label for="{{ field.id_for_label }}">{{ field.label }}</label>
 	                            <div class="focus-line"></div>
+                                <div class="input-underline"></div>
 	                            {{ field.help_text }}
 	                        </div>
 	                    {% endfor %}

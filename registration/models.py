@@ -57,16 +57,16 @@ class MyUser(AbstractBaseUser):
 
     @property
     def is_staff(self):
-        "Is the user a member of staff?"
-        # Simplest possible answer: All admins are staff
         return self.is_admin
 
 class UserProfile(models.Model):
     user = models.OneToOneField(MyUser)
     head_img = models.CharField(max_length=255)
-    user_follow = models.ManyToManyField("self", symmetrical=False)
+    user_follow = models.ManyToManyField(MyUser, related_name='follow_set')
     intro = models.TextField(default="TA 还没有添加任何介绍")
-    label = models.TextField(default="No labels")
-    email = models.EmailField(null=True)
-    phone = models.CharField(max_length=20, null=True)
-    route_follow = models.ManyToManyField(Route)
+    label = models.TextField(default="TA 还没有添加任何标签")
+    phone = models.CharField(max_length=20, blank=True, null=True)
+    route_follow = models.ManyToManyField(Route, blank=True, null=True)
+
+    def __str__(self):
+        return self.user.email

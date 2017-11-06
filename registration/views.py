@@ -6,19 +6,17 @@ from .forms import *
 
 # Create your views here.
 def mlogin(request):
+    login_form = LoginForm()
+    signup_form = SignUpForm()
     if request.method == 'POST':
-        form = LoginForm(request.POST)
-        if form.is_valid():
-            email = form.cleaned_data['email']
-            password = form.cleaned_data['password']
-            user = authenticate(request=request, email=email, password=password)
-            if user is None:
-                pass
-            else:
+        login_form = LoginForm(request.POST)
+        if login_form.is_valid():
+            user = authenticate(email=login_form.cleaned_data['email'], password=login_form.cleaned_data['password'])
+            if user.is_active:
                 login(request, user)
                 return HttpResponseRedirect('/main_page/')
-    else:
-        login_form = LoginForm()
-        signup_form = SignUpForm()
-
+            else:
+                pass
+        else:
+            pass
     return render(request, 'login.html', {"login_form": login_form, "signup_form": signup_form})
