@@ -7,12 +7,27 @@
     <script src="{% static 'js/jquery.min.js' %}"></script>
     <script src="{% static 'js/mslider.js' %}"></script>
     <script src="{% static 'js/registration.js' %}"></script>
+    <script>
+    $(function () {
+        var transition = $(".title-btn").css("transition");
+        $(".title-btn").css("transition", "none");
+    {% if cur_slide == 2 %}
+        signup_click.call($('#signup-btn'),true);
+    {% else %}
+        login_click.call($('#login-btn'), true);
+    {% endif %}
+        setTimeout(function () {
+            $(".title-btn").css("transition", transition)
+        }, 10);
+    });
+    </script>
+
 </head>
 <body>
     <div class="make-center-wrapper">
         <div class="center-div">
             <div class="log-title">
-                <div class="title-btn section-active" id="login-btn">
+                <div class="title-btn menu-slide-active" id="login-btn">
                     Log In
                 </div>
                 <div class="title-btn" id="signup-btn">
@@ -48,11 +63,15 @@
 
                 <div class="signup-slide m-slide">
                 	<div class="signup-wrapper">
-	                    <form action="/mlogin/" method="post">
+	                    <form action={% url 'msignup' %} method="post">
 	                    {% csrf_token %}
 	                    {% for field in signup_form %}
 	                        <div class="input-wrapper">
-	                            {{ field.errors }}
+	                            {% if field.errors %}
+                                    {% for err in field.errors %}
+                                        <div class="error-div">{{ err|escape }}</div>
+                                    {% endfor %}
+                                {% endif %}
 	                            {{ field }}
                                 <label for="{{ field.id_for_label }}">{{ field.label }}</label>
 	                            <div class="focus-line"></div>

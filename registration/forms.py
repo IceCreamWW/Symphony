@@ -35,10 +35,24 @@ class LoginForm(forms.Form):
 
 class SignUpForm(forms.Form):
     email = forms.EmailField(widget=forms.TextInput(attrs={'placeholder': ' ', 'id': 'signup_id_email'}),
-                               max_length=20, label="Email")
+                               max_length=30, label="Email")
 
     password = forms.CharField(widget=forms.PasswordInput(attrs={'placeholder': ' '}),
                                min_length=5, max_length=20, label="Password")
 
     password_again = forms.CharField(widget=forms.PasswordInput(attrs={'placeholder': ' '}),
                               min_length=5, max_length=20, label="Password Again")
+
+    def clean_email(self):
+        email = self.cleaned_data['email']
+        if len(User.objects.filter(email=email)) != 0:
+            raise forms.ValidationError("邮箱已被注册")
+        return email
+
+    def clean_password_again(self):
+        password = self.cleaned_data['password']
+        password_again = self.cleaned_data['password_again']
+        if password != password_again:
+            raise forms.ValidationError("两次输入的密码不一致")
+        return password_again
+

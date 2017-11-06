@@ -45,7 +45,7 @@ body, .center-div::before{
 .log-secion{
     width: 200%;
     overflow: hidden; 
-    transition: 500ms;
+    transition: 700ms;
 }
 .m-slide{
     width: 50%;
@@ -66,7 +66,7 @@ body, .center-div::before{
     margin: auto;
 }
 /* add underline for active section title -- log in button or sign up button under line*/
-.title-btn.section-active{
+.title-btn.menu-slide-active{
 	border-color: rgba(0,0,0,0.7);
 }
 .title-btn{
@@ -108,9 +108,9 @@ input:not([type='submit']):placeholder-shown:not(:focus) + label{
     color: rgba(0,0,0,0.7);
 }
 input::selection {
-  background: rgba(255,255,255,0.4); /* WebKit/Blink Browsers */
+    background: rgba(255,255,255,0.4); /* WebKit/Blink Browsers */
+    color: green;
 }
-
 
 .login-wrapper input:not([type='submit']):placeholder-shown:not(:focus) + label{
     font-size: 17pt;
@@ -217,7 +217,7 @@ input[type='submit']:focus{
 	text-align: right;
 }
 
-/*Errors*/
+/* Errors */
 ul{
     list-style: none;
 }
@@ -229,19 +229,22 @@ ul{
     bottom: 120%;
     right: 0;
 }
+
+.signup-wrapper .error-div{
+    position: absolute;
+    bottom: 110%;
+    right: 0;
+}
  .error-div + input{
     color: red;
 }
 
-
  /*Fix yellow background*/
-
-
 input:-webkit-autofill,
 input:-webkit-autofill:hover,
 input:-webkit-autofill:focus
 input:-webkit-autofill{
-  border:none !important;
+  border: none !important;
   -webkit-text-fill-color: inherit !important;
-  transition: background-color 5000s ease-in-out 0s;
+  transition: background-color 9999s ease-in-out 0s;
 }

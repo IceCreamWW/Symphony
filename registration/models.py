@@ -33,6 +33,7 @@ class MyUser(AbstractBaseUser):
     is_admin = models.BooleanField(default=False)
 
     USERNAME_FIELD= 'email'
+    EMAIL_FIELD = 'email'
 
     def get_full_name(self):
         # The user is identified by their email address
@@ -66,7 +67,7 @@ class UserProfile(models.Model):
     intro = models.TextField(default="TA 还没有添加任何介绍")
     label = models.TextField(default="TA 还没有添加任何标签")
     phone = models.CharField(max_length=20, blank=True, null=True)
-    route_follow = models.ManyToManyField(Route, blank=True, null=True)
+    route_follow = models.ManyToManyField(Route)
 
     def __str__(self):
         return self.user.email
