@@ -109,7 +109,6 @@ input:not([type='submit']):placeholder-shown:not(:focus) + label{
 }
 input::selection {
     background: rgba(255,255,255,0.4); /* WebKit/Blink Browsers */
-    color: green;
 }
 
 .login-wrapper input:not([type='submit']):placeholder-shown:not(:focus) + label{
@@ -222,22 +221,26 @@ ul{
     list-style: none;
 }
 .error-div {
-    color: red;
+    color: red !important;
 }
-.login-wrapper .error-div{
+.login-wrapper .error-div, .login-wrapper .no-error-div{
     position: absolute;
     bottom: 120%;
     right: 0;
 }
 
-.signup-wrapper .error-div{
+.signup-wrapper .error-div, .signup-wrapper .no-error-div{
     position: absolute;
     bottom: 110%;
     right: 0;
 }
- .error-div + input{
+ .error-div + input[type='text']{
     color: red;
 }
+.no-error-div{
+    visibility: hidden;
+}
+
 
  /*Fix yellow background*/
 input:-webkit-autofill,
@@ -247,4 +250,9 @@ input:-webkit-autofill{
   border: none !important;
   -webkit-text-fill-color: inherit !important;
   transition: background-color 9999s ease-in-out 0s;
+}
+
+.error-div{
+    animation-duration: 200ms;
+    animation-iteration-count: 1;
 }

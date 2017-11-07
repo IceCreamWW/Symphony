@@ -56,3 +56,12 @@ function moveToSlide(cls_prefix, parent_id, target) {
 	$('#' + parent_id + '>.m-slide').eq(target - 1).addClass("m-active")
 	$('#' + parent_id + '>.m-slide').eq(target - 1).siblings().removeClass("m-active")
 }
+$.fn.extend({
+    animateCss: function (animationName) {
+        var animationEnd = 'webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend';
+        this.addClass('animated ' + animationName).one(animationEnd, function() {
+            $(this).removeClass('animated ' + animationName);
+        });
+        return this;
+    }
+});

@@ -8,9 +8,9 @@ from django.db.models import QuerySet
 User = get_user_model()
 
 class LoginForm(forms.Form):
-    email = forms.EmailField(widget=forms.TextInput(attrs={'placeholder': ' ', 'id': 'login_id_email'}),
+    email = forms.EmailField(widget=forms.TextInput(attrs={'placeholder': ' ', 'id': 'id_login_email'}),
                              max_length=30, label="Email")
-    password = forms.CharField(widget=forms.PasswordInput(attrs={'placeholder': ' ', 'id': 'login-password'}),
+    password = forms.CharField(widget=forms.PasswordInput(attrs={'placeholder': ' ', 'id': 'id_login_password'}),
                                min_length=5, max_length=20, label="Password")
 
     def clean_email(self):
@@ -34,7 +34,7 @@ class LoginForm(forms.Form):
 
 
 class SignUpForm(forms.Form):
-    email = forms.EmailField(widget=forms.TextInput(attrs={'placeholder': ' ', 'id': 'signup_id_email'}),
+    email = forms.EmailField(widget=forms.TextInput(attrs={'placeholder': ' ', 'id': 'id_signup_email'}),
                                max_length=30, label="Email")
 
     password = forms.CharField(widget=forms.PasswordInput(attrs={'placeholder': ' '}),

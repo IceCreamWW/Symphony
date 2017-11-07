@@ -4,6 +4,7 @@
 	<title></title>
     {% load static %}
     <link rel="stylesheet" type="text/css" href="{% static 'css/registration.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/animate.css' %}">
     <script src="{% static 'js/jquery.min.js' %}"></script>
     <script src="{% static 'js/mslider.js' %}"></script>
     <script src="{% static 'js/registration.js' %}"></script>
@@ -37,7 +38,7 @@
             <div class="log-secion m-cur-slide-1" id="log-section">
                 <div class="login-slide m-slide" >
                 	<div class="login-wrapper">
-	                    <form action={% url 'mlogin' %} method="post">
+	                    <form action={% url 'mlogin' %} method="post" id="login-form">
 	                    {% csrf_token %}
 	                     {% for field in login_form %}
 	                        <div class="input-wrapper">
@@ -45,6 +46,8 @@
                                     {% for err in field.errors %}
                                         <div class="error-div">{{ err|escape }}</div>
                                     {% endfor %}
+                                {% else %}
+                                    <div class="no-error-div"></div>
                                 {% endif %}
 
 	                            {{ field }}
@@ -63,7 +66,7 @@
 
                 <div class="signup-slide m-slide">
                 	<div class="signup-wrapper">
-	                    <form action={% url 'msignup' %} method="post">
+	                    <form action={% url 'msignup' %} method="post" id="signup-form">
 	                    {% csrf_token %}
 	                    {% for field in signup_form %}
 	                        <div class="input-wrapper">
@@ -71,6 +74,8 @@
                                     {% for err in field.errors %}
                                         <div class="error-div">{{ err|escape }}</div>
                                     {% endfor %}
+                                {% else %}
+                                    <div class="no-error-div"></div>
                                 {% endif %}
 	                            {{ field }}
                                 <label for="{{ field.id_for_label }}">{{ field.label }}</label>
