@@ -2,7 +2,6 @@ var center_coordinate = {lat: -34.397, lng: 150.644};
 var map, markercluster;
 var allMarkers = []
 
-
 function MapStatus(){
 
 }

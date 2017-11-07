@@ -1,0 +1,26 @@
+/* Description Auto Wrap */
+article {
+    word-wrap: break-word;
+    color: white;
+}
+/* Movie Wrapper Style */
+.movie{
+    border: solid rgba(0,0,0,0.7);
+    padding: 10px;
+    margin: 10px;
+    margin-right: 15px;
+}
+
+/*  Movie Image Size */
+img.movie-img{
+    float: left;
+    max-width: 100% !important;
+    width: auto;
+    height: auto;
+}
+
+/* Enable ScrollBar */
+#movies-content{
+    flex-grow: 1;
+    margin-bottom: 20%;
+}

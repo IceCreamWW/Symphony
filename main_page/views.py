@@ -3,6 +3,8 @@ from django.http import JsonResponse
 from django.template.loader import render_to_string
 
 from django.contrib.auth.decorators import login_required
+from django.views.decorators.csrf import csrf_exempt
+
 from main_page.models import *
 from random import *
 import json
@@ -33,6 +35,22 @@ def get_marker_plots(request):
     }
     return JsonResponse(plots_info, safe=False)
 
+@csrf_exempt
+def search_movie(request):
+    if request.method == "GET":
+        movie_name = request.GET['movie']
+        movies = Movie.objects.filter(name__icontains=movie_name)
+        context = {
+            "movies" : movies,
+        }
+        html = render_to_string('main_page/movies_overview.html', context)
+        movies_info = {
+            "html" : html,
+        }
+        return JsonResponse(movies_info, safe=False)
+
+
+
 
 def get_random(a, b):
     return a + (b - a) * random()
@@ -49,3 +67,4 @@ def generate_random_marks(cnt=100):
 def get_init_markers():
     site_set = Site.objects.values('id', 'lat', 'lng')
     marks = [{"latlng": {"lat": site['lat'], "lng": site['lng']}, "name": "test"} for site in site_set]
+
