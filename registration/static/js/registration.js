@@ -31,7 +31,6 @@ $(function() {
         }
     });
 
-
     $("input").not('input[type="submit"]').focusout(function () {
         $(this).parent().removeClass('input-focused')
     });

@@ -34,4 +34,3 @@ class Plot(models.Model):
     img = models.CharField(max_length=255)
     site = models.ForeignKey(Site, on_delete=models.CASCADE)
     movie = models.ForeignKey(Movie, on_delete=models.CASCADE)
-
