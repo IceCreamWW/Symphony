@@ -138,39 +138,3 @@ $(document).on('click', '#profile_follow_route_num_td', function () {
     $("#profile_detail_wrapper").getNiceScroll().hide();
     $("#profile_content_5").hide();
 });
-
-// 修改密码
-$(document).on('click', '#profile_password_submit', function () {
-    var cur_password = $("#profile_ori_password").val();
-    var new_password = $("#profile_new_password").val();
-    var new_password_again = $("#profile_new_password_again").val();
-    if (cur_password == "" || new_password == "" || new_password_again == "") {
-        $("#profile_password_warning").text("请输入原密码与新密码");
-        return;
-    }
-    if (new_password != new_password_again) {
-        $("#profile_password_warning").text("两次输入的新密码不一致");
-        return;
-    }
-    $.post("change_password", {
-        "cur_password": cur_password,
-        "new_password": new_password
-    }, function (json, textStatus) {
-        if (json["status"] == "success") {
-            $("#profile_password_warning").text("");
-            switch_nav(1);
-            $("#profile_content_1").show();
-            $("#profile_content_body_1").getNiceScroll().show().resize();
-            $("#profile_content_2").hide();
-            $("#profile_content_body_2").getNiceScroll().hide();
-            $("#profile_content_3").hide();
-            $("#profile_content_4").hide();
-            $(".profile_detail_wrapper").getNiceScroll().hide();
-            $("#profile_content_5").hide();
-        } else if (json["status"] == "fail") {
-            $("#profile_password_warning").text("原密码错误");
-        } else {
-            $("#profile_password_warning").text("操作异常");
-        }
-    });
-});

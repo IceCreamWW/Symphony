@@ -41,6 +41,36 @@
             });
         {% endfor %}
     </script>
+    <script>
+        $(document).on('click', '#profile_password_submit', function () {
+            var cur_password = $("#profile_ori_password").val();
+            var new_password = $("#profile_new_password").val();
+            var new_password_again = $("#profile_new_password_again").val();
+            if (cur_password == "" || new_password == "" || new_password_again == "") {
+                $("#profile_password_warning").text("请输入原密码与新密码");
+                return;
+            }
+            if (new_password != new_password_again) {
+                $("#profile_password_warning").text("两次输入的新密码不一致");
+                return;
+            }
+            $.post("change_password", {
+                "cur_password": cur_password,
+                "new_password": new_password
+            }, function (json, textStatus) {
+                if (json["status"] == "success") {
+                    window.location.replace("{% url "main" %}");
+                } else if (json["status"] == "fail") {
+                    $("#profile_password_warning").text("原密码错误");
+                } else {
+                    $("#profile_password_warning").text("操作异常");
+                }
+                $("#profile_ori_password").val("");
+                $("#profile_new_password").val("");
+                $("#profile_new_password_again").val("");
+            });
+        });
+    </script>
     <link rel="stylesheet" type="text/css" href="{% static 'css/profile.css' %}">
 </head>
 <body class="profile_body">
@@ -196,7 +226,8 @@
                         重复新密码
                     </div>
                     <div class="profile_detail_value">
-                        <input type="password" placeholder="请再次输入新密码" class="profile_password" id="profile_new_password_again"/>
+                        <input type="password" placeholder="请再次输入新密码" class="profile_password"
+                               id="profile_new_password_again"/>
                     </div>
                 </li>
                 <div class="profile_password_submit" id="profile_password_submit">提交</div>

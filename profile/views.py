@@ -2,6 +2,7 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, get_object_or_404
 from django.template.loader import render_to_string
 from django.views.decorators.csrf import csrf_exempt
+from django.contrib.auth import logout
 
 from .user import User
 from django.http import JsonResponse
@@ -69,6 +70,8 @@ def change_password(requests):
         my_user_obj = requests.user
         if my_user_obj.check_password(cur_password):
             my_user_obj.set_password(new_password)
+            my_user_obj.save()
+            logout(requests)
             return JsonResponse({"status": "success"})
         else:
             return JsonResponse({"status": "fail"})
