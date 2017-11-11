@@ -157,6 +157,7 @@ $(document).on('click', '#profile_password_submit', function () {
         "new_password": new_password
     }, function (json, textStatus) {
         if (json["status"] == "success") {
+            $("#profile_password_warning").text("");
             switch_nav(1);
             $("#profile_content_1").show();
             $("#profile_content_body_1").getNiceScroll().show().resize();
