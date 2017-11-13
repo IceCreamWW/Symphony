@@ -31,6 +31,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'tempprofile.apps.TempprofileConfig',
     'registration.apps.RegistrationConfig',
     'main_page.apps.MainMapConfig',
     'django.contrib.admin',

@@ -13,24 +13,25 @@ Markers.prototype = {
         return this.curMarker;
     },
     getMarkerById: function (id) {
-        return markers[id];
+        return markers.get(id);
     },
     addMarker: function (marker) {
-        this.markers[marker.id][marker]
+        this.markers.set(marker.id, marker)
     },
     removeMarker: function (id) {
-        delete markers[id];
+        this.markers.delete(id);
     },
     addMarkers: function (markers) {
         self = this;
         markers.forEach(function (marker) {
-            self.markers[marker.id] = marker;
+            self.markers.set(marker.id, marker)
         })
     },
+    asIterable: function () {
+        return this.markers.values()
+    },
     asArray: function () {
-        return Object.keys(this.markers).map(function(key) {
-    	    return test[key]
-        })
+        return Array.from(this.markers.values())
     }
 }
 

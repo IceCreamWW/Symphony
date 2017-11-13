@@ -28,9 +28,15 @@ class Movie(models.Model):
     description = models.TextField()
     video = models.CharField(max_length=255)
 
+    def __str__(self):
+        return self.name
+
 class Plot(models.Model):
     keyword = models.CharField(max_length=100)
     description = models.TextField()
     img = models.CharField(max_length=255)
     site = models.ForeignKey(Site, on_delete=models.CASCADE)
     movie = models.ForeignKey(Movie, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.keyword

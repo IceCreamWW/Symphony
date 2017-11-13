@@ -61,7 +61,7 @@
 
 img.plot-img{
     float: left;
-    max-width: 100%;
+    max-width: 100% !important;
     width: auto;
     height: auto;
 }
@@ -103,4 +103,8 @@ img.plot-img{
     display: table-cell;
     vertical-align: middle;
     padding: 0 15px; 
+}
+
+.map-custom-control{
+    /*display: none;*/
 }

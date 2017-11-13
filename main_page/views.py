@@ -22,10 +22,10 @@ def init_marks(request):
 
 
 def get_marker_plots(request):
-    if request.method == "POST":
-        id = request.POST['id']
-        cur_site = Site.objects.get(id=1)
-        plots = Plot.objects.filter(site=1).values('keyword', 'movie__name', 'img')
+    if request.method == "GET":
+        id = request.GET['id']
+        cur_site = Site.objects.get(id=id)
+        plots = Plot.objects.filter(site__id=1).values('keyword', 'movie__name', 'img')
         context = {
             "plots": plots,
         }

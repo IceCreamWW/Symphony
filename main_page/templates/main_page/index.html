@@ -27,6 +27,8 @@
 
     <script src="{% static "js/jquery.min.js" %}"></script>
     <script src="{% static "js/jquery.easing.js" %}"></script>
+    <script src="{% static "js/main.common.js" %}"></script>
+    <script src="{% static "js/route.control.js" %}"></script>
     <script src="{% static "js/fullpage.continuousHorizontal.limited.min.js" %}"></script>
     <script src="{% static "js/markerclusterer.js" %}"></script>
     <script src="{% static "js/map.js" %}"></script>
@@ -34,7 +36,6 @@
     <script src="{% static "js/jquery.nicescroll.min.js" %}"></script>
     <script src="{% static "js/mslider.js" %}"></script>
     <script src="{% static "js/maprightdiv.js" %}"></script>
-    <script src="{% static "js/route.control.js" %}"></script>
 
     <script src="https://maps.google.cn/maps/api/js?key=AIzaSyC5VIhPswBk-7iluvp6GGrmoL2nvNxoDek&libraries=places&language=zh-CN&callback=initMap"
             async defer></script>
@@ -47,7 +48,7 @@
         <div class="slide" data-anchor="slide1">
             <div id="map"></div>
 
-            <div id="map_right_info_div">
+            <div id="map_right_info_div" class="map-custom-control">
                 <div id="title-div">
                     <div class="icon"><div class="arrow map-arrow-left"></div></div>
                     <div class="icon"><div class="arrow map-arrow-right"></div></div>
@@ -94,6 +95,7 @@
             slidesNavigation: true
         });
     });
+
     $(function() {
         $("input").attr("spellcheck","false");
         $("#plots-content").niceScroll({
