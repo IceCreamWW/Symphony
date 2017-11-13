@@ -22,5 +22,33 @@ img.movie-img{
 /* Enable ScrollBar */
 #movies-content{
     flex-grow: 1;
-    margin-bottom: 20%;
+}
+
+/*Search Box*/
+#id-search-movie-form{
+    width: 60%;
+    margin: 10px auto;
+}
+input#id-search-movie-input{
+    background: transparent;
+    border-color: transparent transparent white transparent;
+    color: white;
+    width: 100%;
+    font-size: 15pt;
+}
+input#id-search-movie-input:focus{
+    outline: none;
+}
+
+input#id-search-movie-submit{
+    background: transparent;
+    border: none;
+    color: white
+}
+input#id-search-movie-submit{
+    margin-top: 5%;
+    float: right; 
+}
+input#id-search-movie-submit:hover{
+    cursor: pointer;
 }

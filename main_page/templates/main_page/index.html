@@ -23,6 +23,7 @@
     <link rel="stylesheet" type="text/css" href="{% static "css/custome.fullPage.css" %}">
     <link rel="stylesheet" type="text/css" href="{% static "css/map_right_div.css" %}">
     <link rel="stylesheet" type="text/css" href="{% static "css/movie_div.css" %}">
+    <link rel="stylesheet" type="text/css" href="{% static "css/main_page.common.css" %}">
 
     <script src="{% static "js/jquery.min.js" %}"></script>
     <script src="{% static "js/jquery.easing.js" %}"></script>
@@ -33,6 +34,7 @@
     <script src="{% static "js/jquery.nicescroll.min.js" %}"></script>
     <script src="{% static "js/mslider.js" %}"></script>
     <script src="{% static "js/maprightdiv.js" %}"></script>
+    <script src="{% static "js/route.control.js" %}"></script>
 
     <script src="https://maps.google.cn/maps/api/js?key=AIzaSyC5VIhPswBk-7iluvp6GGrmoL2nvNxoDek&libraries=places&language=zh-CN&callback=initMap"
             async defer></script>
@@ -55,8 +57,10 @@
                 <div class="m-cur-slide-1" id="map-right-div-section">
 
                     <div class="m-slide" >
-                        <input type="text" name="movie" id="id-search-movie-input">
-                        <div class="search_movie_btn" id="search_movie_btn">Search</div>
+                    	<form id="id-search-movie-form">
+	                        <input type="text" name="movie" id="id-search-movie-input">
+	                        <input type="submit" id="id-search-movie-submit" value="Search">
+                        </form>
                         <div class="movies-info">
                             <h1></h1>
                         </div>

@@ -22,18 +22,19 @@ def init_marks(request):
 
 
 def get_marker_plots(request):
-    id = 1
-    cur_site = Site.objects.get(id=1)
-    plots = Plot.objects.filter(site=1).values('keyword', 'movie__name', 'img')
-    context = {
-        "plots": plots,
-    }
-    html = render_to_string('main_page/plots_overview.html', context)
-    plots_info = {
-        "html" : html,
-        "site": cur_site.name
-    }
-    return JsonResponse(plots_info, safe=False)
+    if request.method == "POST":
+        id = request.POST['id']
+        cur_site = Site.objects.get(id=1)
+        plots = Plot.objects.filter(site=1).values('keyword', 'movie__name', 'img')
+        context = {
+            "plots": plots,
+        }
+        html = render_to_string('main_page/plots_overview.html', context)
+        plots_info = {
+            "html" : html,
+            "site": cur_site.name
+        }
+        return JsonResponse(plots_info, safe=False)
 
 @csrf_exempt
 def search_movie(request):

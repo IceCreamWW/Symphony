@@ -54,8 +54,9 @@ function moveToSlide(cls_prefix, parent_id, target) {
 	$('#' + parent_id).removeClass(cur_class);
 	$('#' + parent_id).addClass(cls_prefix + target);
 	$('#' + parent_id + '>.m-slide').eq(target - 1).addClass("m-active")
-	$('#' + parent_id + '>.m-slide').eq(target - 1).siblings().removeClass("m-active")
+	$('#' + parent_id + '>.m-slide').eq(target - 1).siblings().removeClass("m-active");
 }
+
 $.fn.extend({
     animateCss: function (animationName) {
         var animationEnd = 'webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend';

@@ -2,11 +2,6 @@ var center_coordinate = {lat: -34.397, lng: 150.644};
 var map, markercluster;
 var allMarkers = []
 
-function MapStatus(){
-
-}
-
-
 function initMap() {
 	$.ajax({
     type: "get",
@@ -75,15 +70,16 @@ function init_marks(markers){
         map: map,
         id: markers[i]['id']
       })
-      map_marker.addListener('click', onMarkerClicked)
-      allMarkers.push(map_marker)
+      map_marker.addListener('click', onMarkerClicked.call(this))
+      all_markers.addMarker(map_marker);
   }
-  markercluster = new MarkerClusterer(map, allMarkers,  
+  markercluster = new MarkerClusterer(map, all_markers.asArray(),
     {imagePath: 'http://localhost:8000/static/img/m'});
 }
 
-function onMarkerClicked(event){
+function onMarkerClicked(){
   var csrftoken = getCookie('csrftoken');
+//  var data = {"id": this.id, "csrfmiddlewaretoken": csrftoken}
   var data = {"id": 1, "csrfmiddlewaretoken": csrftoken}
 
   $.getJSON('get_marker_plots', data, function(json, textStatus) {
@@ -94,18 +90,3 @@ function onMarkerClicked(event){
   });
 }
 
-function getCookie(name) {
-    var cookieValue = null;
-    if (document.cookie && document.cookie !== '') {
-        var cookies = document.cookie.split(';');
-        for (var i = 0; i < cookies.length; i++) {
-            var cookie = jQuery.trim(cookies[i]);
-            // Does this cookie string begin with the name we want?
-            if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                break;
-            }
-        }
-    }
-    return cookieValue;
-}

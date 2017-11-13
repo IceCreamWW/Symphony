@@ -7,23 +7,28 @@ $(function() {
 		moveNextSlide('m-cur-slide-', 'map-right-div-section');
 	});
 
-	$('#search_movie_btn').click(function () {
+    $("#map_right_info_div").on('keydown', '*', function(event) {
+        if (event.keyCode == 9) {
+            event.preventDefault();            
+        }
+    });
+
+	$('#id-search-movie-form').submit(function (e) {
+        e.preventDefault();
 	    var movie = $('#id-search-movie-input').val();
 	    $.getJSON("search_movie", {"movie": movie}, function (json, textStatus) {
             $("#movies-content").html(json["html"])
 
             $("#movies-content img").load(function () {
-            $("#movies-content").getNiceScroll().resize()
+                setTimeout(function() {
+                    $("#movies-content").getNiceScroll().resize()
+                },100)
             }).each(function() {
                 if(this.complete) $(this).load();
             });
-
-            setTimeout(function () {
-                $("#movies-content").getNiceScroll().resize()
-            }, 100)
-        } )
-
+        })
     })
+
 });
 
 
