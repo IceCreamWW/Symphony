@@ -1,0 +1,368 @@
+html.profile_html {
+    height: 100%;
+}
+
+div.profile_body_div {
+    height: 100%;
+}
+
+div.profile_background_div {
+    background-image: url("../img/profile_background.jpg");
+    background-position: center center;
+    background-size: cover;
+    background-repeat: no-repeat;
+    height: 150px;
+    position: relative;
+
+}
+
+body.profile_body {
+    margin: 0;
+    height: 100%;
+}
+
+div.head_portrait_div {
+    border-radius: 50%;
+    padding: 10px;
+    height: 140px;
+    width: 140px;
+    background-color: white;
+    box-shadow: 0.5px 0.5px 10px #797979;
+    position: absolute;
+    bottom: 0;
+    left: 100px;
+}
+
+div.profile_head {
+    height: 32%;
+    position: relative;
+}
+
+img.profile_portrait {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+}
+
+div.profile_username_div {
+    position: absolute;
+    top: 70px;
+    left: 300px;
+    text-shadow: 0.5px 0.5px 10px #797979;
+    font-size: 40pt;
+    color: white;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    width: 600px;
+}
+
+div.profile_user_summary_div {
+    position: absolute;
+    top: 90px;
+    right: 30px;
+    background-color: white;
+    box-shadow: 0.5px 0.5px 10px #797979;
+    border-radius: 5px;
+    padding: 5px;
+}
+
+div.profile_user_summary_div table {
+    text-align: center;
+    table-layout: fixed;
+    font-size: 10pt;
+    color: #888888;
+}
+
+div.profile_user_summary_div tbody {
+    vertical-align: middle;
+    border-color: inherit;
+}
+
+div.profile_user_summary_div td.middle {
+    border-left-width: 1px;
+    border-left-style: solid;
+}
+
+div.profile_user_summary_div td {
+    width: 100px;
+}
+
+aside.profile_nav_aside {
+    height: auto;
+    margin-left: 125px;
+    padding: 10px;
+    padding-top: 40px;
+    width: 100px;
+    text-align: center;
+}
+
+aside.profile_nav_aside p {
+    font-size: 12pt;
+    color: #505050;
+}
+
+aside.profile_nav_aside hr {
+    border: none;
+    border-top: 1px solid #888888;
+}
+
+div.profile_body_wrapper {
+    position: relative;
+    height: 68%;
+}
+
+div.profile_content {
+    position: absolute;
+    top: -20px;
+    left: 300px;
+    right: 30px;
+    color: #505050;
+    height: 100%;
+}
+
+div.profile_content h2 {
+    margin: 0;
+    font-size: 20pt;
+    margin-bottom: 10px;
+    margin-left: 10px;
+    font-weight: 500;
+}
+
+div.profile_content_body {
+    height: 100%;
+}
+
+div.profile_content_body ul {
+    list-style-type: none;
+    padding-left: 0;
+    height: 100%;
+}
+
+div.profile_content_body li {
+    position: relative;
+    width: inherit;
+    height: 100px;
+    margin: 5px 30px 20px 5px;
+    border-radius: 5px;
+    box-shadow: 0.5px 0.5px 10px #797979;
+}
+
+div.profile_content_body img {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    width: 80px;
+    height: 80px;
+}
+
+div.profile_content_body div.profile_follow_email {
+    position: absolute;
+    bottom: 20px;
+    left: 110px;
+    font-size: 10pt;
+    color: #9f9f9f;
+}
+
+div.profile_content_body div.profile_follow_nickname {
+    position: absolute;
+    left: 108px;
+    font-size: 20pt;
+    top: 20px;
+}
+
+div.profile_content_body div.profile_unfollow {
+    position: absolute;
+    top: 30px;
+    right: 60px;
+    font-size: 15pt;
+    box-shadow: 0 0 0 1px #9f0b0c inset;
+    color: #9f0b0c;
+    width: 120px;
+    height: 40px;
+    text-align: center;
+    border-radius: 10px;
+    line-height: 40px;
+}
+
+div.profile_content_body div.profile_unfollow:hover {
+    cursor: pointer;
+    background-color: #9f0b0c;
+    color: white;
+    -webkit-transition: all 0.1s;
+}
+
+aside.profile_nav_aside p {
+    border-left: 3px solid #9f9f9f;
+    margin: 0;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    padding-left: 0;
+    color: #9f9f9f;
+}
+
+aside.profile_nav_aside p:hover {
+    border-left: 3px solid #50779f;
+    margin: 0;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    padding-left: 0;
+    color: #50779f;
+    -webkit-transition: all 0.3s;
+    cursor: pointer;
+}
+
+aside.profile_nav_aside p.nav_selected {
+    border-left: 3px solid #3b609f;
+    margin: 0;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    padding-left: 0;
+    color: #3b609f;
+    -webkit-transition: all 0.3s;
+    cursor: pointer;
+}
+
+aside.profile_nav_aside p.nav_selected:hover {
+    border-left: 3px solid #3b609f;
+    margin: 0;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    padding-left: 0;
+    color: #3b609f;
+    -webkit-transition: all 0.3s;
+    cursor: pointer;
+}
+
+div.profile_content_empty {
+    margin-left: 10px;
+    font-size: 50pt;
+    color: #9f9f9f;
+}
+
+div#profile_follow_body_wrapper {
+    height: 90%;
+}
+
+div.profile_route_name {
+    font-size: 20pt;
+    top: 10px;
+    left: 20px;
+    position: absolute;
+}
+
+div.profile_route_date {
+    position: absolute;
+    top: 45px;
+    left: 20px;
+    font-size: 10pt;
+    color: #9f9f9f;
+}
+
+div.profile_route_site {
+    position: absolute;
+    left: 20px;
+    bottom: 15px;
+    font-size: 10pt;
+}
+
+div#profile_route_body_wrapper {
+    height: 90%;
+}
+
+div.profile_user_summary_div td:hover {
+    cursor: pointer;
+}
+
+ul.profile_detail_ul {
+    list-style-type: none;
+    padding-left: 10px;
+    height: 100%;
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
+ul.profile_detail_ul li {
+    position: relative;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #f2f3f4;
+    height: 80px;
+    line-height: 80px;
+}
+
+div.profile_detail_name {
+    position: absolute;
+    font-weight: bold;
+    color: #9f9f9f;
+}
+
+div.profile_detail_value {
+    position: absolute;
+    left: 150px;
+}
+
+hr.profile_table_head_hr {
+    margin: 0;
+    border-style: solid;
+    border-width: 1px;
+    border-color: #bbbbbb;
+}
+
+div.profile_detail_wrapper {
+    height: 90%;
+}
+
+input.profile_password {
+    padding: 0;
+    border: 0;
+    line-height: 1.5em;
+    height: 1.5em;
+    overflow: visible;
+    color: #363636;
+    opacity: 1;
+    width: 300px;
+}
+
+ul.profile_password_ul {
+    list-style-type: none;
+    padding-left: 10px;
+    height: 90%;
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
+ul.profile_password_ul li {
+    position: relative;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #f2f3f4;
+    height: 80px;
+    line-height: 80px;
+}
+
+div.profile_password_submit {
+    font-size: 15pt;
+    box-shadow: 0 0 0 1px #3b609f inset;
+    color: #3b609f;
+    width: 120px;
+    height: 40px;
+    text-align: center;
+    border-radius: 10px;
+    line-height: 40px;
+    margin-top: 10px;
+}
+
+div.profile_password_submit:hover {
+    cursor: pointer;
+    background-color: #3b609f;
+    color: white;
+    -webkit-transition: all 0.1s;
+}
+
+div.profile_password_warning {
+    color: #9f0b0c;
+    margin-top: -30px;
+    margin-left: 150px;
+    font-weight: bold;
+}

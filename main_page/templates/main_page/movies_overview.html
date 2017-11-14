@@ -1,0 +1,13 @@
+{% if movies %}
+	{% for movie in movies %}
+		<div class="movie">
+			<img class="movie-img lazy" src="/static/img/{{ movie.video }}">
+            <div class="movie-intro">
+                <article>
+                <h2>{{ movie.name }}</h2>
+                {{ movie.description }}
+                </article>
+            </div>
+        </div>
+	{% endfor %}
+{% endif %}

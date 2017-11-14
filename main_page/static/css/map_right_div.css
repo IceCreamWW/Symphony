@@ -33,8 +33,6 @@
     transition: opacity 700ms;
 }
 #map-right-div-section{
-    position: absolute;
-    bottom: 0;
     height: 90%;
     width: 300%;
     transition: 500ms;
@@ -43,8 +41,10 @@
 
 .m-slide{
     width: 33.33%;
-    height: 100%;
     float: left;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
     min-height: 1px;
 }
 
@@ -61,11 +61,11 @@
 
 img.plot-img{
     float: left;
-    max-width: 100%;
+    max-width: 100% !important;
     width: auto;
     height: auto;
 }
-#map-right-scrollbar .nicescroll-cursors{
+.nicescroll-cursors{
     margin-right: 3px;
 }
 .plots-info{
@@ -103,4 +103,8 @@ img.plot-img{
     display: table-cell;
     vertical-align: middle;
     padding: 0 15px; 
+}
+
+.map-custom-control{
+    /*display: none;*/
 }

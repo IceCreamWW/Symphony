@@ -31,6 +31,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'tempprofile.apps.TempprofileConfig',
     'registration.apps.RegistrationConfig',
     'main_page.apps.MainMapConfig',
     'django.contrib.admin',
@@ -79,8 +80,8 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'symphony',
-        'USER': 'root',
-        'PASSWORD': 'wangwei',
+        'USER': 'symphony',
+        'PASSWORD': 'symphony',
         'HOST': 'localhost',
         'PORT': '3306',
     }
@@ -127,4 +128,4 @@ AUTHENTICATION_BACKENDS = ['django.contrib.auth.backends.ModelBackend']
 
 AUTH_USER_MODEL = 'registration.MyUser'
 
-LOGIN_URL = '/login/'
+LOGIN_URL = '/registration/'

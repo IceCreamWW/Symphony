@@ -45,26 +45,28 @@ body, .center-div::before{
 .log-secion{
     width: 200%;
     overflow: hidden; 
-    transition: 500ms;
+    transition: 700ms;
 }
 .m-slide{
     width: 50%;
     text-align: center;
     float: left;
 }
+
+/* Wrapper to Limit width -- Child of a slide*/
 .login-wrapper, .signup-wrapper{
 	width: 70%;
 	margin: 0 auto;
 	display: table;
 }
 
-/* Two Btns on the top*/
+/* Two buttons on the top -- log in button and sign up button*/
 .log-title{
     width: 70%;
     margin: auto;
 }
-
-.title-btn.section-active{
+/* add underline for active section title -- log in button or sign up button under line*/
+.title-btn.menu-slide-active{
 	border-color: rgba(0,0,0,0.7);
 }
 .title-btn{
@@ -101,9 +103,12 @@ label {
 }
 
 input:not([type='submit']):placeholder-shown:not(:focus) + label{
-    bottom: 10%;
+    bottom: 12%;
     cursor: text;
     color: rgba(0,0,0,0.7);
+}
+input::selection {
+    background: rgba(255,255,255,0.4); /* WebKit/Blink Browsers */
 }
 
 .login-wrapper input:not([type='submit']):placeholder-shown:not(:focus) + label{
@@ -117,13 +122,40 @@ input:not([type='submit']):hover:placeholder-shown + label{
 }
 
 input:not([type="submit"]){
-    border-color: transparent transparent rgba(0,0,0,0.5) transparent;
+    border-color: transparent;
     background: transparent;
     padding-bottom: 6px;
     width: 100%;
     transition: 400ms;
     user-select: text;
 }
+
+/*Input UnderLine and focus-line*/
+.input-underline{
+    position: absolute;
+    width: 100%;
+    border-bottom: 2px solid;
+    border-bottom-color: rgba(0,0,0,0.5);
+    transition: 500ms;
+}
+.input-hovered .input-underline{
+    border-bottom-color: rgba(0,0,0,1);
+}
+.focus-line{
+    color: white;
+    border-bottom: solid 2px;
+    width: 0;
+    position: absolute;
+    transition: 400ms;
+    z-index: 10;
+}
+.input-focused .focus-line{
+    width: 100%;
+}
+.focus-line, .input-underline{
+    bottom: 2px;
+}
+
 
 .login-wrapper input:not([type="submit"]){
 	font-size: 17pt;
@@ -132,9 +164,6 @@ input:not([type="submit"]){
 	font-size: 15pt;
 }
 
-input:not([type="submit"]):hover{
-    border-color: transparent transparent rgba(0,0,0,1) transparent;
-}
 input:not([type="submit"]):focus{
     outline: none;
 }
@@ -146,16 +175,10 @@ input:not([type="submit"]):focus{
     position: relative;
     margin-top: 12%;
 }
-.focus-line{
-    color: white;
-    border-bottom: solid 3.5px;
-    top: 92%;
-    width: 0;
-    position: absolute;
-    transition: 400ms;
-}
-.input-focused .focus-line{
-    width: 102%;
+
+input{
+    outline: none;
+    border: none;
 }
 
 input[type='submit']:focus{
@@ -168,6 +191,7 @@ input[type='submit']:focus{
     border-radius: 5px;
     padding: 5px 10px;
     font-size: 18px;
+    transition: 500ms;
 }
 .login-submit-wrapper{
 	padding: 10% 0;
@@ -176,7 +200,6 @@ input[type='submit']:focus{
 .login-submit:hover{
     cursor: pointer;
 }
-
 
 .signup-submit{
     background: transparent;
@@ -191,4 +214,45 @@ input[type='submit']:focus{
 .signup-submit-wrapper{
 	padding: 10% 0;
 	text-align: right;
+}
+
+/* Errors */
+ul{
+    list-style: none;
+}
+.error-div {
+    color: red !important;
+}
+.login-wrapper .error-div, .login-wrapper .no-error-div{
+    position: absolute;
+    bottom: 120%;
+    right: 0;
+}
+
+.signup-wrapper .error-div, .signup-wrapper .no-error-div{
+    position: absolute;
+    bottom: 110%;
+    right: 0;
+}
+ .error-div + input[type='text']{
+    color: red;
+}
+.no-error-div{
+    visibility: hidden;
+}
+
+
+ /*Fix yellow background*/
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus
+input:-webkit-autofill{
+  border: none !important;
+  -webkit-text-fill-color: inherit !important;
+  transition: background-color 9999s ease-in-out 0s;
+}
+
+.error-div{
+    animation-duration: 200ms;
+    animation-iteration-count: 1;
 }

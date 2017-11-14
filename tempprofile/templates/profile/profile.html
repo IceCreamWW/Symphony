@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en" class="profile_html">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    {% load static %}
+    <script src="{% static 'js/jquery.min.js' %}"></script>
+    <script src="{% static "js/jquery.nicescroll.min.js" %}"></script>
+    <script src="{% static 'js/profile.js' %}"></script>
+    <script>
+        {% for user in user_list %}
+            $(document).on('click', '#profile_switch_follow_{{ forloop.counter }}', function () {
+                var data = {
+                    "email": "{{user.email}}"
+                };
+                $.getJSON('unfollow_user', data, function (json, textStatus) {
+                    if (json["status"] == "success") {
+                        $("#profile_follow_li_{{ forloop.counter }}").remove();
+                        var cur_num = $("#profile_follow_user_counter").text() - 1;
+                        $("#profile_follow_user_counter").text(cur_num);
+                        check_follow_empty();
+                    }
+                });
+            });
+        {% endfor %}
+    </script>
+    <script>
+        {% for route in route_list %}
+            $(document).on('click', '#profile_switch_route_{{ forloop.counter }}', function () {
+                var data = {
+                    "id": "{{route.id}}"
+                };
+                $.getJSON('unfollow_route', data, function (json, textStatus) {
+                    if (json["status"] == "success") {
+                        $("#profile_route_li_{{ forloop.counter }}").remove();
+                        var cur_num = $("#profile_follow_route_counter").text() - 1;
+                        $("#profile_follow_route_counter").text(cur_num);
+                        check_route_empty();
+                    }
+                });
+            });
+        {% endfor %}
+    </script>
+    <script>
+        $(document).on('click', '#profile_password_submit', function () {
+            var cur_password = $("#profile_ori_password").val();
+            var new_password = $("#profile_new_password").val();
+            var new_password_again = $("#profile_new_password_again").val();
+            if (cur_password == "" || new_password == "" || new_password_again == "") {
+                $("#profile_password_warning").text("请输入原密码与新密码");
+                return;
+            }
+            if (new_password != new_password_again) {
+                $("#profile_password_warning").text("两次输入的新密码不一致");
+                return;
+            }
+            $.post("change_password", {
+                "cur_password": cur_password,
+                "new_password": new_password
+            }, function (json, textStatus) {
+                if (json["status"] == "success") {
+                    window.location.replace("{% url "main" %}");
+                } else if (json["status"] == "fail") {
+                    $("#profile_password_warning").text("原密码错误");
+                } else {
+                    $("#profile_password_warning").text("操作异常");
+                }
+                $("#profile_ori_password").val("");
+                $("#profile_new_password").val("");
+                $("#profile_new_password_again").val("");
+            });
+        });
+    </script>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/profile.css' %}">
+</head>
+<body class="profile_body">
+<div class="profile_body_div">
+    <div class="profile_head">
+        <div class="profile_background_div"></div>
+        <div class="head_portrait_div">
+            <img class="profile_portrait" src="{% static portrait %}">
+        </div>
+        <div class="profile_username_div">
+            {{ nickname }}
+        </div>
+        <div class="profile_user_summary_div">
+            <table>
+                <tbody>
+                <tr>
+                    <td id="profile_follow_user_num_td">关注数<br/><label
+                            id="profile_follow_user_counter">{{ follow_num }}</label></td>
+                    <td class="middle" id="profile_follow_route_num_td">路线数<br/><label
+                            id="profile_follow_route_counter">{{ route_num }}</label></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="profile_body_wrapper">
+        <aside class="profile_nav_aside">
+            <p class="nav_selected" id="profile_nav_1">我的关注</p>
+            <p id="profile_nav_2">我的路线</p>
+            <p id="profile_nav_3">推荐路线</p>
+            <p id="profile_nav_4">个人资料</p>
+            <p id="profile_nav_5">修改密码</p>
+        </aside>
+
+        <div class="profile_content" id="profile_content_1">
+            <h2>我的关注</h2>
+            <div class="profile_content_empty" style="display: none" id="profile_content_empty_user">无关注的用户</div>
+            <div id="profile_follow_body_wrapper">
+                <div class="profile_content_body" id="profile_content_body_1">
+                    <ul id="profile_follow_ul">
+                        {% for user in user_list %}
+                            <li id="profile_follow_li_{{ forloop.counter }}">
+                                <img src="{% static user.portrait %}">
+                                <div class="profile_follow_email">
+                                    {{ user.email }}
+                                </div>
+                                <div class="profile_follow_nickname">
+                                    {{ user.nickname }}
+                                </div>
+                                <div class="profile_unfollow" id="profile_switch_follow_{{ forloop.counter }}">
+                                    取消关注
+                                </div>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="profile_content" id="profile_content_2" style="display: none">
+            <h2>我的路线</h2>
+            <div class="profile_content_empty" style="display: none" id="profile_content_empty_route">无收藏的路线</div>
+            <div id="profile_route_body_wrapper">
+                <div class="profile_content_body" id="profile_content_body_2">
+                    <ul id="profile_route_ul">
+                        {% for route in route_list %}
+                            <li id="profile_route_li_{{ forloop.counter }}">
+                                <div class="profile_route_name">{{ route.name }}</div>
+                                <div class="profile_route_date">创建时间：{{ route.date }}</div>
+                                <div class="profile_route_site">{{ route.site }}</div>
+                                <div class="profile_unfollow" id="profile_switch_route_{{ forloop.counter }}">
+                                    取消收藏
+                                </div>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="profile_content" id="profile_content_3" style="display: none">
+            <h2>推荐路线</h2>
+            <div class="profile_content_empty">无推荐的路线</div>
+        </div>
+        <div class="profile_content" id="profile_content_4" style="display: none">
+            <h2>个人资料</h2>
+            <div class="profile_detail_wrapper" id="profile_detail_wrapper">
+                <hr class="profile_table_head_hr"/>
+                <ul class="profile_detail_ul">
+                    <li>
+                        <div class="profile_detail_name">
+                            邮箱
+                        </div>
+                        <div class="profile_detail_value">
+                            {{ email }}
+                        </div>
+                    </li>
+                    <li>
+                        <div class="profile_detail_name">
+                            昵称
+                        </div>
+                        <div class="profile_detail_value">
+                            {{ real_nickname }}
+                        </div>
+                    </li>
+                    <li>
+                        <div class="profile_detail_name">
+                            自我介绍
+                        </div>
+                        <div class="profile_detail_value">
+                            {{ introduction }}
+                        </div>
+                    </li>
+                    <li>
+                        <div class="profile_detail_name">
+                            标签
+                        </div>
+                        <div class="profile_detail_value">
+                            {{ label }}
+                        </div>
+                    </li>
+                    <li>
+                        <div class="profile_detail_name">
+                            手机号码
+                        </div>
+                        <div class="profile_detail_value">
+                            {{ phone }}
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="profile_content" id="profile_content_5" style="display: none">
+            <h2>修改密码</h2>
+            <hr class="profile_table_head_hr"/>
+            <ul class="profile_password_ul">
+                <li>
+                    <div class="profile_detail_name">
+                        原密码
+                    </div>
+                    <div class="profile_detail_value">
+                        <input type="password" placeholder="请输入原密码" class="profile_password" id="profile_ori_password"/>
+                    </div>
+                </li>
+                <li>
+                    <div class="profile_detail_name">
+                        新密码
+                    </div>
+                    <div class="profile_detail_value">
+                        <input type="password" placeholder="请输入新密码" class="profile_password" id="profile_new_password"/>
+                    </div>
+                </li>
+                <li>
+                    <div class="profile_detail_name">
+                        重复新密码
+                    </div>
+                    <div class="profile_detail_value">
+                        <input type="password" placeholder="请再次输入新密码" class="profile_password"
+                               id="profile_new_password_again"/>
+                    </div>
+                </li>
+                <div class="profile_password_submit" id="profile_password_submit">提交</div>
+                <div class="profile_password_warning" id="profile_password_warning"></div>
+            </ul>
+        </div>
+    </div>
+</div>
+</body>
+</html>
