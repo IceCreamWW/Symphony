@@ -1,0 +1,38 @@
+div#add_marker_btn {
+    height: 60px;
+    width: 60px;
+    background: black;
+    opacity: 0.5;
+    border-radius: 50%;
+    margin: 50px;
+}
+div#add_marker_btn:hover {
+	cursor: pointer;	
+}
+
+div#add_marker_btn::before {
+    content: "";
+    display: block;
+    height: 12%;
+    width: 50%;
+    position: absolute;
+    margin: auto;
+    top: 0;
+    background: white;
+    bottom: 0;
+    left: 0;
+    right: 0;
+}
+div#add_marker_btn::after {
+    content: "";
+    display: block;
+    width: 12%;
+    height: 50%;
+    position: absolute;
+    margin: auto;
+    top: 0;
+    background: white;
+    bottom: 0;
+    left: 0;
+    right: 0;
+}

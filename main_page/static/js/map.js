@@ -1,6 +1,9 @@
 var center_coordinate = {lat: -34.397, lng: 150.644};
 var map, markercluster;
-var allMarkers = []
+var poly;
+var all_markers = new Markers();
+var cur_marker;
+var all_routes = new Routes();
 
 function initMap() {
     $.ajax({
@@ -19,6 +22,7 @@ function initMap() {
 }
 
 function load_map(map_style_json) {
+    
     var styledMapType = new google.maps.StyledMapType(map_style_json, {name: "夜间模式"});
     map = new google.maps.Map(document.getElementById('map'), {
         center: center_coordinate,
@@ -32,39 +36,46 @@ function load_map(map_style_json) {
             mapTypeIds: ['roadmap', 'map_night']
         }
     });
+
+    // Define a symbol using SVG path notation, with an opacity of 1.
+        var lineSymbol = {
+          path: 'M 0,-1 0,1',
+          strokeOpacity: 1,
+          scale: 4
+        };
+
+
+    poly = new google.maps.Polyline({
+          strokeColor: '#FFFF33',
+          strokeOpacity: 0,
+          icons: [{
+            icon: lineSymbol,
+            offset: '0',
+            repeat: '20px'
+          }],
+          strokeWeight: 3,
+          map: map
+        });
+
     google.maps.event.addListenerOnce(map, 'idle', function(){
         $('.map-custom-control').css('display','block');
     });
 
     map.mapTypes.set('map_night', styledMapType);
     map.setMapTypeId('map_night');
-    var map_right_div = $('#map_right_info_div')
+    var map_right_div = $('#map_right_info_div');
+    
+    var add_marker_btn = $('#add_marker_btn');
+    var add_route_btn = $('#add_route_btn');
+
     map_right_div.index = 1;
+
     map.controls[google.maps.ControlPosition.RIGHT_TOP].push(map_right_div[0])
+    map.controls[google.maps.ControlPosition.LEFT_TOP].push(add_marker_btn[0])
 
     $.getJSON('init_marks', null, function (json, textStatus) {
         init_marks(json);
     });
-
-    /*
-    var marker = new google.maps.Marker({
-      position: center_coordinate,
-      map: map,
-      icon: {
-        path: google.maps.SymbolPath.CIRCLE,
-        scale: 5,
-        strokeColor: "rgba(255,255,0,0.5)",
-        strockOpacity: 0.5
-      },
-      draggable: false,
-      user_tag : "test_tag"
-    })
-
-    marker.addListener('click', function () {
-        //map.panTo(marker.getPosition())
-        map.setCenter(marker.getPosition())
-    })
-    */
 
 }
 
@@ -76,6 +87,7 @@ function init_marks(markers) {
             id: markers[i]['id']
         })
         map_marker.addListener('click', function () {
+            cur_marker = this.id;
             var csrftoken = getCookie('csrftoken');
 //  var data = {"id": this.id, "csrfmiddlewaretoken": csrftoken}
             var data = {"id": 1, "csrfmiddlewaretoken": csrftoken};

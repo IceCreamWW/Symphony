@@ -24,6 +24,7 @@
     <link rel="stylesheet" type="text/css" href="{% static "css/map_right_div.css" %}">
     <link rel="stylesheet" type="text/css" href="{% static "css/movie_div.css" %}">
     <link rel="stylesheet" type="text/css" href="{% static "css/main_page.common.css" %}">
+    <link rel="stylesheet" type="text/css" href="{% static "temp.css" %}">
 
     <script src="{% static "js/jquery.min.js" %}"></script>
     <script src="{% static "js/jquery.easing.js" %}"></script>
@@ -36,6 +37,7 @@
     <script src="{% static "js/jquery.nicescroll.min.js" %}"></script>
     <script src="{% static "js/mslider.js" %}"></script>
     <script src="{% static "js/maprightdiv.js" %}"></script>
+    <script src="{% static "temp.js" %}"></script>
 
     <script src="https://maps.google.cn/maps/api/js?key=AIzaSyC5VIhPswBk-7iluvp6GGrmoL2nvNxoDek&libraries=places&language=zh-CN&callback=initMap"
             async defer></script>
@@ -80,6 +82,12 @@
                 </div>
 
             </div>
+            
+            <!-- Temp -->
+            <div class="map-custom-control" id="add_route_btn"></div>
+            <div class="map-custom-control" id="add_marker_btn"></div>
+
+
         </div>
 
     </div>

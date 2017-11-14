@@ -1,7 +1,6 @@
-$(function() {
-    all_markers = new Markers();
-    all_routes = new Routes();
-});
+
+
+
 
 function Markers() {
     this.markers = new Map();
@@ -13,7 +12,7 @@ Markers.prototype = {
         return this.curMarker;
     },
     getMarkerById: function (id) {
-        return markers.get(id);
+        return this.markers.get(id);
     },
     addMarker: function (marker) {
         this.markers.set(marker.id, marker)
@@ -36,12 +35,11 @@ Markers.prototype = {
 }
 
 /*Route and Routes*/
-route_proto = new Markers();
 function Route(id){
     Markers.call(this);
 	this.id = id
 }
-Route.prototype = route_proto;
+Route.prototype = new Markers();
 Route.prototype.constructor = Route;
 Route.prototype.save = function (oper) {
     if(!oper) {
