@@ -6,19 +6,17 @@
     {% load static %}
     <script src="{% static 'js/jquery.min.js' %}"></script>
     <script src="{% static "js/jquery.nicescroll.min.js" %}"></script>
-    <script src="{% static 'js/profile.js' %}"></script>
+    <script src="{% static 'js/other_user.js' %}"></script>
     <script>
         {% for user in user_list %}
             $(document).on('click', '#profile_switch_follow_{{ forloop.counter }}', function () {
                 var data = {
                     "email": "{{user.email}}"
                 };
-                $.getJSON('unfollow_user', data, function (json, textStatus) {
+                $.post('follow_user', data, function (json, textStatus) {
                     if (json["status"] == "success") {
-                        $("#profile_follow_li_{{ forloop.counter }}").remove();
-                        var cur_num = $("#profile_follow_user_counter").text() - 1;
-                        $("#profile_follow_user_counter").text(cur_num);
-                        check_follow_empty();
+                        $("#profile_switch_follow_{{ forloop.counter }}").attr("class", "profile_followed");
+                        $("#profile_switch_follow_{{ forloop.counter }}").text("已关注");
                     }
                 });
             });
@@ -30,55 +28,26 @@
                 var data = {
                     "id": "{{route.id}}"
                 };
-                $.getJSON('unfollow_route', data, function (json, textStatus) {
+                $.post('follow_route', data, function (json, textStatus) {
                     if (json["status"] == "success") {
-                        $("#profile_route_li_{{ forloop.counter }}").remove();
-                        var cur_num = $("#profile_follow_route_counter").text() - 1;
-                        $("#profile_follow_route_counter").text(cur_num);
-                        check_route_empty();
+                        $("#profile_switch_route_{{ forloop.counter }}").attr("class", "profile_followed");
+                        $("#profile_switch_route_{{ forloop.counter }}").text("已收藏");
                     }
                 });
             });
         {% endfor %}
     </script>
     <script>
-        $(document).on('click', '#profile_password_submit', function () {
-            var cur_password = $("#profile_ori_password").val();
-            var new_password = $("#profile_new_password").val();
-            var new_password_again = $("#profile_new_password_again").val();
-            if (cur_password == "" || new_password == "" || new_password_again == "") {
-                $("#profile_password_warning").text("请输入原密码与新密码");
-                return;
-            }
-            if (new_password != new_password_again) {
-                $("#profile_password_warning").text("两次输入的新密码不一致");
-                return;
-            }
-            $.post("change_password", {
-                "cur_password": cur_password,
-                "new_password": new_password
-            }, function (json, textStatus) {
-                if (json["status"] == "success") {
-                    window.location.replace("{% url "main" %}");
-                } else if (json["status"] == "fail") {
-                    $("#profile_password_warning").text("原密码错误");
-                } else {
-                    $("#profile_password_warning").text("操作异常");
-                }
-                $("#profile_ori_password").val("");
-                $("#profile_new_password").val("");
-                $("#profile_new_password_again").val("");
-            });
-        });
-    </script>
-    <script>
-        $(document).on('click', '#profile_logout', function () {
+        $(document).on('click', '#profile_follow', function () {
             var data = {
                 "email": "{{email}}"
             };
-            $.getJSON("logout_user", data, function () {
-                window.location.replace("{% url "main" %}");
-            })
+            $.post('follow_user', data, function (json, textStatus) {
+                if (json["status"] == "success") {
+                    $("#profile_follow").attr("class", "profile_cur_followed");
+                    $("#profile_follow").text("已关注");
+                }
+            });
         })
     </script>
     <link rel="stylesheet" type="text/css" href="{% static 'css/profile.css' %}">
@@ -108,16 +77,14 @@
     </div>
     <div class="profile_body_wrapper">
         <aside class="profile_nav_aside">
-            <p class="nav_selected" id="profile_nav_1">我的关注</p>
-            <p id="profile_nav_2">我的路线</p>
-            <p id="profile_nav_3">推荐路线</p>
-            <p id="profile_nav_4">个人资料</p>
-            <p id="profile_nav_5">修改密码</p>
-            <p id="profile_nav_6">退出登陆</p>
+            <p class="nav_selected" id="profile_nav_1">他的关注</p>
+            <p id="profile_nav_2">他的路线</p>
+            <p id="profile_nav_3">他的资料</p>
+            <p id="profile_nav_4">设置关注</p>
         </aside>
 
         <div class="profile_content" id="profile_content_1">
-            <h2>我的关注</h2>
+            <h2>他的关注</h2>
             <div class="profile_content_empty" style="display: none" id="profile_content_empty_user">无关注的用户</div>
             <div id="profile_follow_body_wrapper">
                 <div class="profile_content_body" id="profile_content_body_1">
@@ -131,9 +98,15 @@
                                 <div class="profile_follow_nickname">
                                     {{ user.nickname }}
                                 </div>
-                                <div class="profile_follow" id="profile_switch_follow_{{ forloop.counter }}">
-                                    取消关注
-                                </div>
+                                {% if user.is_followed %}
+                                    <div class="profile_followed">
+                                        已关注
+                                    </div>
+                                {% else %}
+                                    <div class="profile_follow" id="profile_switch_follow_{{ forloop.counter }}">
+                                        设置关注
+                                    </div>
+                                {% endif %}
                             </li>
                         {% endfor %}
                     </ul>
@@ -141,7 +114,7 @@
             </div>
         </div>
         <div class="profile_content" id="profile_content_2" style="display: none">
-            <h2>我的路线</h2>
+            <h2>他的路线</h2>
             <div class="profile_content_empty" style="display: none" id="profile_content_empty_route">无收藏的路线</div>
             <div id="profile_route_body_wrapper">
                 <div class="profile_content_body" id="profile_content_body_2">
@@ -151,9 +124,15 @@
                                 <div class="profile_route_name">{{ route.name }}</div>
                                 <div class="profile_route_date">创建时间：{{ route.date }}</div>
                                 <div class="profile_route_site">{{ route.site }}</div>
-                                <div class="profile_follow" id="profile_switch_route_{{ forloop.counter }}">
-                                    取消收藏
-                                </div>
+                                {% if route.is_followed %}
+                                    <div class="profile_followed">
+                                        已收藏
+                                    </div>
+                                {% else %}
+                                    <div class="profile_follow" id="profile_switch_route_{{ forloop.counter }}">
+                                        设置收藏
+                                    </div>
+                                {% endif %}
                             </li>
                         {% endfor %}
                     </ul>
@@ -161,11 +140,7 @@
             </div>
         </div>
         <div class="profile_content" id="profile_content_3" style="display: none">
-            <h2>推荐路线</h2>
-            <div class="profile_content_empty">无推荐的路线</div>
-        </div>
-        <div class="profile_content" id="profile_content_4" style="display: none">
-            <h2>个人资料</h2>
+            <h2>他的资料</h2>
             <div class="profile_detail_wrapper" id="profile_detail_wrapper">
                 <hr class="profile_table_head_hr"/>
                 <ul class="profile_detail_ul">
@@ -212,44 +187,15 @@
                 </ul>
             </div>
         </div>
-        <div class="profile_content" id="profile_content_5" style="display: none">
-            <h2>修改密码</h2>
-            <hr class="profile_table_head_hr"/>
-            <ul class="profile_password_ul">
-                <li>
-                    <div class="profile_detail_name">
-                        原密码
-                    </div>
-                    <div class="profile_detail_value">
-                        <input type="password" placeholder="请输入原密码" class="profile_password" id="profile_ori_password"/>
-                    </div>
-                </li>
-                <li>
-                    <div class="profile_detail_name">
-                        新密码
-                    </div>
-                    <div class="profile_detail_value">
-                        <input type="password" placeholder="请输入新密码" class="profile_password" id="profile_new_password"/>
-                    </div>
-                </li>
-                <li>
-                    <div class="profile_detail_name">
-                        重复新密码
-                    </div>
-                    <div class="profile_detail_value">
-                        <input type="password" placeholder="请再次输入新密码" class="profile_password"
-                               id="profile_new_password_again"/>
-                    </div>
-                </li>
-                <div class="profile_submit_button" id="profile_password_submit">提交</div>
-                <div class="profile_password_warning" id="profile_password_warning"></div>
-            </ul>
-        </div>
-        <div class="profile_content" id="profile_content_6" style="display: none">
-            <h2>退出登录</h2>
+        <div class="profile_content" id="profile_content_4" style="display: none">
+            <h2>设置关注</h2>
             <div class="profile_content_text_wrapper">
-                请点击退出登录按钮退出登录。退出后，您将需要重新登录。
-                <div class="profile_submit_button" id="profile_logout">退出登陆</div>
+                请点击设置关注按钮关注此人。在关注后，您将会在您的关注的人的列表中看到他。
+                {% if is_followed %}
+                    <div class="profile_cur_followed">已关注</div>
+                {% else %}
+                    <div class="profile_submit_button" id="profile_follow">关注此人</div>
+                {% endif %}
             </div>
         </div>
     </div>

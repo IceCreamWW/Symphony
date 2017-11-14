@@ -23,7 +23,7 @@ function check_route_empty() {
 // 切换标签栏时转换颜色
 function switch_nav(nav_id) {
     var selector = "#profile_nav_" + nav_id;
-    for (i = 1; i <= 6; i++) {
+    for (i = 1; i <= 4; i++) {
         $("#profile_nav_" + i).attr("class", "")
     }
     $(selector).attr("class", "nav_selected");
@@ -47,7 +47,7 @@ $(document).ready(
     check_route_empty
 );
 
-// 通过导航切换标签页到我的关注
+// 通过导航切换标签页到他的关注
 $(document).on('click', '#profile_nav_1', function () {
     switch_nav(1);
     $("#profile_content_1").show();
@@ -57,11 +57,9 @@ $(document).on('click', '#profile_nav_1', function () {
     $("#profile_content_3").hide();
     $("#profile_content_4").hide();
     $(".profile_detail_wrapper").getNiceScroll().hide();
-    $("#profile_content_5").hide();
-    $("#profile_content_6").hide();
 });
 
-// 通过导航切换标签页到我的路线
+// 通过导航切换标签页到他的路线
 $(document).on('click', '#profile_nav_2', function () {
     switch_nav(2);
     $("#profile_content_1").hide();
@@ -71,11 +69,9 @@ $(document).on('click', '#profile_nav_2', function () {
     $("#profile_content_3").hide();
     $("#profile_content_4").hide();
     $("#profile_detail_wrapper").getNiceScroll().hide();
-    $("#profile_content_5").hide();
-    $("#profile_content_6").hide();
 });
 
-// 通过导航切换标签页到推荐路线
+// 通过导航切换标签页到他的资料
 $(document).on('click', '#profile_nav_3', function () {
     switch_nav(3);
     $("#profile_content_1").hide();
@@ -84,12 +80,10 @@ $(document).on('click', '#profile_nav_3', function () {
     $("#profile_content_body_2").getNiceScroll().hide();
     $("#profile_content_3").show();
     $("#profile_content_4").hide();
-    $("#profile_detail_wrapper").getNiceScroll().hide();
-    $("#profile_content_5").hide();
-    $("#profile_content_6").hide();
+    $("#profile_detail_wrapper").getNiceScroll().show().resize();
 });
 
-// 通过导航切换标签页到个人资料
+// 通过导航切换标签页到设置关注
 $(document).on('click', '#profile_nav_4', function () {
     switch_nav(4);
     $("#profile_content_1").hide();
@@ -98,40 +92,11 @@ $(document).on('click', '#profile_nav_4', function () {
     $("#profile_content_body_2").getNiceScroll().hide();
     $("#profile_content_3").hide();
     $("#profile_content_4").show();
-    $("#profile_detail_wrapper").getNiceScroll().show().resize();
-    $("#profile_content_5").hide();
-    $("#profile_content_6").hide();
-});
-
-// 通过导航切换标签页到修改密码
-$(document).on('click', '#profile_nav_5', function () {
-    switch_nav(5);
-    $("#profile_content_1").hide();
-    $("#profile_content_body_1").getNiceScroll().hide();
-    $("#profile_content_2").hide();
-    $("#profile_content_body_2").getNiceScroll().hide();
-    $("#profile_content_3").hide();
-    $("#profile_content_4").hide();
     $("#profile_detail_wrapper").getNiceScroll().hide();
-    $("#profile_content_5").show();
-    $("#profile_content_6").hide();
 });
 
-// 通过导航切换标签页到退出登陆
-$(document).on('click', '#profile_nav_6', function () {
-    switch_nav(6);
-    $("#profile_content_1").hide();
-    $("#profile_content_body_1").getNiceScroll().hide();
-    $("#profile_content_2").hide();
-    $("#profile_content_body_2").getNiceScroll().hide();
-    $("#profile_content_3").hide();
-    $("#profile_content_4").hide();
-    $("#profile_detail_wrapper").getNiceScroll().hide();
-    $("#profile_content_5").hide();
-    $("#profile_content_6").show();
-});
 
-// 通过顶部切换至我的关注
+// 通过顶部切换至他的关注
 $(document).on('click', '#profile_follow_user_num_td', function () {
     switch_nav(1);
     $("#profile_content_1").show();
@@ -141,11 +106,9 @@ $(document).on('click', '#profile_follow_user_num_td', function () {
     $("#profile_content_3").hide();
     $("#profile_content_4").hide();
     $("#profile_detail_wrapper").getNiceScroll().hide();
-    $("#profile_content_5").hide();
-    $("#profile_content_6").hide();
 });
 
-// 通过顶部切换标签页到我的路线
+// 通过顶部切换标签页到他的路线
 $(document).on('click', '#profile_follow_route_num_td', function () {
     switch_nav(2);
     $("#profile_content_1").hide();
@@ -155,6 +118,4 @@ $(document).on('click', '#profile_follow_route_num_td', function () {
     $("#profile_content_3").hide();
     $("#profile_content_4").hide();
     $("#profile_detail_wrapper").getNiceScroll().hide();
-    $("#profile_content_5").hide();
-    $("#profile_content_6").hide();
 });
