@@ -6,20 +6,12 @@ var all_routes = new Routes();
 var cur_marker;
 
 function initMap() {
-    $.ajax({
-        type: "get",
-        url: "../static/json/night_map_style.json",
-        dataType: "json",
-        success: function (data) {
-            load_map(data)
-        },
-        error: function () {
-            alert("json load failed")
-            load_map(null)
-        }
-    });
 
+    $.getJSON('../static/json/night_map_style.json', function(data){
+        load_map(data)
+    })
 }
+
 
 function load_map(map_style_json) {
     
@@ -38,24 +30,24 @@ function load_map(map_style_json) {
     });
 
     // Define a symbol using SVG path notation, with an opacity of 1.
-        var lineSymbol = {
-          path: 'M 0,-1 0,1',
-          strokeOpacity: 1,
-          scale: 4
-        };
+    var lineSymbol = {
+      path: 'M 0,-1 0,1',
+      strokeOpacity: 1,
+      scale: 4
+    };
 
 
-    poly = new google.maps.Polyline({
-          strokeColor: '#FFFF33',
-          strokeOpacity: 0,
-          icons: [{
-            icon: lineSymbol,
-            offset: '0',
-            repeat: '20px'
-          }],
-          strokeWeight: 3,
-          map: map
-        });
+    // poly = new google.maps.Polyline({
+    //       strokeColor: '#FFFF33',
+    //       strokeOpacity: 0,
+    //       icons: [{
+    //         icon: lineSymbol,
+    //         offset: '0',
+    //         repeat: '20px'
+    //       }],
+    //       strokeWeight: 3,
+    //       map: map
+    //     });
 
     google.maps.event.addListenerOnce(map, 'idle', function(){
         $('.map-custom-control').css('display','block');

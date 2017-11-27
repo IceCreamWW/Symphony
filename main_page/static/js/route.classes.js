@@ -1,7 +1,3 @@
-
-
-
-
 function Markers() {
     this.markers = new Map();
     this.curMarker = null
@@ -34,7 +30,28 @@ Markers.prototype = {
     }
 }
 
-/*Route and Routes*/
+
+
+
+function RouteFactory(){
+    this.createRoute = function (name) {
+        var route = new Route();
+        route.name = name;
+        return route;
+    }
+    this.openRoute = function (id){
+        var route = new Route()
+    }
+
+}
+
+function Route(name, id){
+}
+
+
+
+
+/*Route 组合继承 Marker*/
 function Route(id){
     Markers.call(this);
 	this.id = id

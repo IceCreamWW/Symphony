@@ -24,12 +24,19 @@
     <link rel="stylesheet" type="text/css" href="{% static "css/map_right_div.css" %}">
     <link rel="stylesheet" type="text/css" href="{% static "css/movie_div.css" %}">
     <link rel="stylesheet" type="text/css" href="{% static "css/main_page.common.css" %}">
+    <link rel="stylesheet" type="text/css" href="{% static "css/route-tools.css" %}">
+    <link rel="stylesheet" type="text/css" href="{% static "css/font-awesome/css/font-awesome.min.css" %}">
     <link rel="stylesheet" type="text/css" href="{% static "temp.css" %}">
+
+
 
     <script src="{% static "js/jquery.min.js" %}"></script>
     <script src="{% static "js/jquery.easing.js" %}"></script>
     <script src="{% static "js/main.common.js" %}"></script>
-    <script src="{% static "js/route.control.js" %}"></script>
+
+    <script src="{% static "js/route.classes.js" %}"></script>
+    
+
     <script src="{% static "js/fullpage.continuousHorizontal.limited.min.js" %}"></script>
     <script src="{% static "js/markerclusterer.js" %}"></script>
     <script src="{% static "js/map.js" %}"></script>
@@ -81,6 +88,23 @@
                     <div class="m-slide"></div>
                 </div>
 
+            </div>
+
+            <div id="route-tools-div" class="map-custom-control">
+                <ul class="route-tools-list">
+                    <li>
+                        <i class="fa fa-floppy-o fa-4x route-tools-icon" aria-hidden="true"></i>
+                    <li>
+
+                    <li>
+                        <i class="fa fa-plus fa-4x route-tools-icon" aria-hidden="true"></i>
+                    </li>
+                    <li>
+                        <i class="fa fa-minus fa-4x route-tools-icon" aria-hidden="true"></i>
+                    </li>
+                    
+                    
+                </ul>
             </div>
             
             <!-- Temp -->

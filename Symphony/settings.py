@@ -31,6 +31,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'administrator.apps.AdministratorConfig',
     'tempprofile.apps.TempprofileConfig',
     'registration.apps.RegistrationConfig',
     'main_page.apps.MainMapConfig',
@@ -57,7 +58,7 @@ ROOT_URLCONF = 'Symphony.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': ['registration/templates'],
+        'DIRS': ['registration/templates', 'administrator/templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [

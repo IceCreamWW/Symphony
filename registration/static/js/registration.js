@@ -2,6 +2,7 @@ $(function() {
     $('input[type="text"]').attr('autocomplete', 'off');
     $('input[type="text"]').attr('spellcheck', 'false');
 
+    /* 不能使用focus，Chrome自动聚焦会直接消除错误样式 */
     $("input").not('input[type="submit"]').keyup(function () {
         $(this).parent().addClass('input-focused');
         if ($(this).attr("id").indexOf("id_password") < 0) {
@@ -49,7 +50,7 @@ $(function() {
 	        return;
         }
 	    if(!is_email_valid(email)){
-	        addError(this, "Email格式无效");
+	        addError.call(this, "Email格式无效");
             return;
         }
         var self = $(this);
