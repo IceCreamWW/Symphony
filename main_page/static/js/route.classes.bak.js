@@ -30,6 +30,27 @@ Markers.prototype = {
     }
 }
 
+
+
+
+function RouteFactory(){
+    this.createRoute = function (name) {
+        var route = new Route();
+        route.name = name;
+        return route;
+    }
+    this.openRoute = function (id){
+        var route = new Route()
+    }
+
+}
+
+function Route(name, id){
+}
+
+
+
+
 /*Route 组合继承 Marker*/
 function Route(id){
     Markers.call(this);
@@ -80,16 +101,3 @@ Routes.prototype = {
         this.curRoute = this.routes.get(route_name)
     }
 }
-
-
-poly = new google.maps.Polyline({
-          strokeColor: '#FFFF33',
-          strokeOpacity: 0,
-          icons: [{
-            icon: lineSymbol,
-            offset: '0',
-            repeat: '20px'
-          }],
-          strokeWeight: 3,
-          map: map
-        });

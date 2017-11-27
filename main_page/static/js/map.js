@@ -45,6 +45,7 @@ function load_map(map_style_json) {
         };
 
 
+    
     poly = new google.maps.Polyline({
           strokeColor: '#FFFF33',
           strokeOpacity: 0,
@@ -56,6 +57,9 @@ function load_map(map_style_json) {
           strokeWeight: 3,
           map: map
         });
+
+
+
 
     google.maps.event.addListenerOnce(map, 'idle', function(){
         $('.map-custom-control').css('display','block');
@@ -83,16 +87,24 @@ function load_map(map_style_json) {
 }
 
 function init_marks(markers) {
-    for (var i in markers) {
+
+    // for (var i in markers) {
+    //     var map_marker = new google.maps.Marker({
+    //         position: markers[i]['latlng'],
+    //         map: map,
+    //         id: markers[i]['id']
+    //     })
+
+    markers.forEach(function(marker){
         var map_marker = new google.maps.Marker({
-            position: markers[i]['latlng'],
+            position: marker['latlng'],
             map: map,
-            id: markers[i]['id']
-        })
+            id: marker['id']
+        })   
         map_marker.addListener('click', function () {
             cur_marker = this.id;
             var csrftoken = getCookie('csrftoken');
-//  var data = {"id": this.id, "csrfmiddlewaretoken": csrftoken}
+        //  var data = {"id": this.id, "csrfmiddlewaretoken": csrftoken}
             var data = {"id": 1, "csrfmiddlewaretoken": csrftoken};
 
             $.getJSON('get_marker_plots', data, function (json, textStatus) {
@@ -102,8 +114,8 @@ function init_marks(markers) {
                 moveToSlide('m-cur-slide-', 'map-right-div-section', 2);
             });
         });
-        all_markers.addMarker(map_marker);
-    }
+        all_markers.addMarker(map_marker);     
+    })
     markercluster = new MarkerClusterer(map, all_markers.asArray(),
         {imagePath: 'http://localhost:8000/static/img/m'});
 }
