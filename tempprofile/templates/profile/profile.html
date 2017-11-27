@@ -71,6 +71,16 @@
             });
         });
     </script>
+    <script>
+        $(document).on('click', '#profile_logout', function () {
+            var data = {
+                "email": "{{email}}"
+            };
+            $.getJSON("logout_user", data, function () {
+                window.location.replace("{% url "main" %}");
+            })
+        })
+    </script>
     <link rel="stylesheet" type="text/css" href="{% static 'css/profile.css' %}">
 </head>
 <body class="profile_body">
@@ -103,6 +113,7 @@
             <p id="profile_nav_3">推荐路线</p>
             <p id="profile_nav_4">个人资料</p>
             <p id="profile_nav_5">修改密码</p>
+            <p id="profile_nav_6">退出登陆</p>
         </aside>
 
         <div class="profile_content" id="profile_content_1">
@@ -120,7 +131,7 @@
                                 <div class="profile_follow_nickname">
                                     {{ user.nickname }}
                                 </div>
-                                <div class="profile_unfollow" id="profile_switch_follow_{{ forloop.counter }}">
+                                <div class="profile_follow" id="profile_switch_follow_{{ forloop.counter }}">
                                     取消关注
                                 </div>
                             </li>
@@ -140,7 +151,7 @@
                                 <div class="profile_route_name">{{ route.name }}</div>
                                 <div class="profile_route_date">创建时间：{{ route.date }}</div>
                                 <div class="profile_route_site">{{ route.site }}</div>
-                                <div class="profile_unfollow" id="profile_switch_route_{{ forloop.counter }}">
+                                <div class="profile_follow" id="profile_switch_route_{{ forloop.counter }}">
                                     取消收藏
                                 </div>
                             </li>
@@ -230,9 +241,16 @@
                                id="profile_new_password_again"/>
                     </div>
                 </li>
-                <div class="profile_password_submit" id="profile_password_submit">提交</div>
+                <div class="profile_submit_button" id="profile_password_submit">提交</div>
                 <div class="profile_password_warning" id="profile_password_warning"></div>
             </ul>
+        </div>
+        <div class="profile_content" id="profile_content_6" style="display: none">
+            <h2>退出登录</h2>
+            <div class="profile_content_text_wrapper">
+                请点击退出登录按钮退出登录。退出后，您将需要重新登录。
+                <div class="profile_submit_button" id="profile_logout">退出登陆</div>
+            </div>
         </div>
     </div>
 </div>
