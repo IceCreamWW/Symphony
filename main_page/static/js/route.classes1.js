@@ -1,3 +1,4 @@
+// zyh
 Object.prototype.updateAttrs = function(attrs){
     var self = this;
     Object.keys(attrs).forEach(function(key){
@@ -27,20 +28,20 @@ Markers.prototype = {
     getCurMarker: function () {
         return this.curMarker;
     },
-    getMarkerById: function (id) {
-        return this.markers.get(id);
+    getMarkerById: function (markerId) {
+        return this.markers.get(markerId);
     },
     addMarker: function (marker) {
         this.markers.set(marker.id, marker)
     },
-    removeMarker: function (id) {
-        this.markers.delete(id);
+    removeMarker: function (markerId) {
+        this.markers.delete(markerId);
     },
     addMarkers: function (markers) {
         self = this;
         markers.forEach(function (marker) {
             self.markers.set(marker.id, marker)
-        })
+nn        })
     },
     asIterable: function () {
         return this.markers.values()
@@ -53,11 +54,11 @@ Markers.prototype = {
 /*Route 组合继承 Marker*/
 function RouteState(options){
     Markers.call(this);
-    this.settings = $.extend({
+    var settings = $.extend({
         id: -1,
-        geomap: null,
-        geocluster: null,
-        geomarkers: null,
+        geoMap: null,
+        geoCluster: null,
+        geoMarkers: null,
         name: undefined,
         routelineSetting: lineSetting    //json expected
     }, options);
@@ -65,26 +66,32 @@ function RouteState(options){
     this.routeLine = null;
     this.updateAttrs(settings);
     this.order = [];
-
-
 }
 RouteState.prototype = new Markers();
 RouteState.prototype.constructor = RouteState;
-RouteState.prototype.save = function (isNew) {
+RouteState.prototype.save = function (isNew, callback) {
     var self = this;
     routeInfo = {};
     routeInfo["isNew"] = isNew;
-    $.getJSON('save_route',routeInfo, function (json) {
-        // 若isNew，赋值id
-        // 否则返回success
-        alert(json['success'])
-    });
+    $.getJSON('save_route',routeInfo, callback);
 }                         
-RouteState.prototype.clear = function(){
-    var self = this;
-    this.asIterable().forEach(function(marker){
-        self.routeLine.setMap(null);
-    })
+RouteState.prototype.hide = function(){
+    if (this.routeLine) {
+        this.routeLine.setMap(null);
+    }
+}
+
+RouteState.prototype.show = function(){
+    self.routeLine.setMap(self.geoMap);
+    // var self = this;
+    // var path = self.routeLine.getPath();
+    // if(self.routeLine == null){
+    //     this.asIterable().forEach(function(marker){
+    //         path.push(marker);
+    //     });    
+    // }else{
+    //     self.routeLine.setMap(self.geoMap);
+    // }
 }
 
 RouteState.prototype.updateRouteline = function(){
@@ -95,7 +102,7 @@ RouteState.prototype.updateRouteline = function(){
     }
     this.routeLine = new google.maps.Polyline(routelineSetting);
 
-    path = this.routeLine.getPath();
+    var path = this.routeLine.getPath();
     this.order.forEach(function(id){
         path.push(self.getMarkerById(id).position);
     })
@@ -108,118 +115,125 @@ RouteState.prototype.exchangeMarker = function(id1, id2){
     this.order[index2] = id1;
 }
 
-RouteState.prototype.display = function(){
-    var self = this;
-    this.asIterable().forEach(function(marker){
-        self.routeLine.setMap(self.geomap);
-    })
-}
-
 RouteState.prototype.addMarker = function (marker, nodraw=false) {
     this.markers.set(marker.id, marker);
     this.order.push(marker.id);
-    this.geocluster.removeMarker(this.geomarkers.getMarkerById(id), nodraw)
+    this.geoCluster.removeMarker(this.geoMarkers.getMarkerById(id), nodraw)
 }
 
 RouteState.prototype.removeMarker = function (id) {
     this.markers.delete(id);
     this.order.splice(this.order.indexOf(id), 1);
-    this.geocluster.addMarker(this.geomarkers.getMarkerById(id))
+    this.geoCluster.addMarker(this.geoMarkers.getMarkerById(id))
 }
 
 
 function Route(options){
     
-    this.settings = $.extend({
+    var settings = $.extend({
         id: -1,
-        geomap: null,
-        geocluster: null,
-        geomarkers: null,
+        geoMap: null,
+        geoCluster: null,
+        geoMarkers: null,
         name: undefined,
-        isNew : true,
+        isNew: true,
+    bufferSize: 50,
         routelineSetting: lineSetting    //json expected
     }, options);
 
     this.updateAttrs(settings);
+    this.geoCluster = $.extend(true, {}, this.geoCluster);
 
     this.routeStates = [];
-    this.curRouteIndex = -1;
-    this.latestIndex = -1;
-    this.newState = new RouteState(this.settings)
+    this.latestIndex = 0;
+    this.curRouteStateIndex = 0;
+    this.earliestIndex = 0;
+    this.routeStates[0] = new RouteState(this.settings);
 }
 
 Route.prototype = {
     constructor: Route,
+    getBufferIndex: function(rawIndex) {
+    return (rawIndex + this.bufferSize) % this.bufferSize;
+    },
     undo: function(){
-        if (this.curRouteIndex <= 0) {
+        if (this.curRouteStateIndex == this.earliestIndex) {
             return;
         }else{
-            this.changeState(this.curRouteIndex - 1);
+            this.changeState(this.getBufferIndex(this.curRouteStateIndex - 1));
         }
     },
     redo: function(){
-        if(this.latestIndex == this.curRouteIndex){
+        if(this.latestIndex == this.curRouteStateIndex){
             return;
         }else{
-            this.changeState(this.curRouteIndex + 1);
-            this.latestIndex = this.curRouteIndex;
+            this.changeState(this.getBufferIndex(this.curRouteStateIndex + 1));
+            this.latestIndex = this.curRouteStateIndex;
         }
     },
     show: function(){
-        this.routeStates[this.curRouteIndex].display();
+        this.geoCluster.setMap(this.geoMap)
+        this.routeStates[this.curRouteStateIndex].show();
     },
     hide: function(){
-        this.routeStates[this.curRouteIndex].clear();
+        this.geoCluster.setMap(null);
+        this.routeStates[this.curRouteStateIndex].hide();
     },
-    changeState: function(newRouteIndex){
-        this.routeStates[this.curRouteIndex].clear()
-        this.routeStates[newRouteIndex].updateRouteline();
-        this.routeStates[newRouteIndex].display();
-        this.curRouteIndex = this.newRouteIndex;
+    changeState: function(targetIndex, isNewState=false, newState=null){
+        targetIndex = this.getBufferIndex(targetIndex);
+        this.routeStates[this.curRouteStateIndex].hide();
+        this.curRouteStateIndex = this.targetIndex;
+        this.routeStates[this.targetIndex] = newState;
+        if(isNewState){
+            this.latestState = this.targetIndex;
+            if (this.latestIndex == this.earliestIndex) {
+               this.earliestIndex = this.getBufferIndex(this.earliestIndex + 1);
+            } 
+            this.routeStates[latestIndex].updateRouteline();
+        } 
+        this.routeStates[targetIndex].show();
     }
 
     addMarker: function(id){
-        this.latestIndex = this.curRouteIndex + 1;
-        this.routeStates[this.curRouteIndex + 1] = this.newState;
-        this.newState = $.extend(true, {}, this.newState);
-        this.newState.addMarker(id);
-        this.changeState(this.curRouteIndex + 1);
-        
+        var newState = $.extend(true, {}, this.routeStates[this.curRouteStateIndex]);
+        newState.addMarker(id);
+        this.changeState(this.curRouteStateIndex + 1, true, newState);
     },
     removeMarker: function(id){
-        this.latestIndex = this.curRouteIndex + 1;
-        this.routeStates[this.curRouteIndex + 1] = this.newState;
-        this.newState = $.extend(true, {}, this.newState);
-        this.newState.removeMarker(id);
-        this.changeState(this.curRouteIndex + 1);
+        var newState = $.extend(true, {}, this.routeStates[this.curRouteStateIndex]);
+        newState.removeMarker(id);
+        this.changeState(this.curRouteStateIndex + 1, true, newState);
     },
     exchangeMarker: function(id1, id2, commit){
         if(commit){
-            this.latestIndex = this.curRouteIndex + 1;
-            this.routeStates[this.curRouteIndex + 1] = this.newState;
-            this.newState = $.extend(true, {}, this.newState);
-            this.newState.exchangeMarker(id1, id2);
-            this.changeState(this.curRouteIndex + 1);
+            var newState = $.extend(true, {}, this.routeStates[this.curRouteStateIndex]);
+            newState.exchangeMarker(id1, id2);
         }
         else{
-            this.newState.exchangeMarker(id1, id2);
-            this.newState.updateRouteline();
+            this.routeStates[curRouteStateIndex].exchangeMarker(id1, id2);
+            this.routeStates[curRouteStateIndex].updateRouteline();
+            this.changeState(this.curRouteStateIndex + 1, true, newState);
         }
     },
-    save: function(){
-        this.routeStates[this.curRouteIndex].save(this.isNew);
+    save: function(callback){
+        this.routeStates[this.curRouteStateIndex].save(this.isNew, callback);
         this.isNew = false;
+    
+    }
+    delete: function(callback){
+        $.getJSON('delete_route', {"id": this.id}, callback);
     }
     loadRoute: function(id){
         var self = this;
-        $.getJSON("load_route", function(markers){
+        // FIX_ME What data should I pass?
+        $.getJSON("load_route", DATA, function(markers){
             self.newState = new RouteState(self.settings)
             markers.forEach(function(id){
                 // no draw is true
                 self.newState.addMarker(id, true);
             })
-            self.geomarkers.resetViewport();
-            self.geomarkers.redraw();
+            self.geoMarkers.resetViewport();
+            self.geoMarkers.redraw();
             self.isNew = false;
         })
     }
@@ -227,40 +241,158 @@ Route.prototype = {
 
 
 
+
+
+
+function Routes(options){
+
+    var settings = $.extend({
+        geoMap: null,
+        geoCluster: null,
+        geoMarkers: null,
+        routelineSetting: null,
+    }, options);
+    
+
+    this.routes = new Map();
+    this.updateAttrs(settings);
+    this.curRouteId = -1;
+    this.browseOrder = [];
+}
+
+
+Routes.prototype = {
+    constructor: Routes,
+    generateName: function(){
+        var i  = 1;
+        name = "新建路线";
+        while(!this.existName_(name + i)){
+            i += 1；
+        }
+        name = name + i;
+        return name;
+    },
+    existName_: function (name) {
+        return Array.from(this.routes.values()).indexOf(name) >= 0;
+    },
+    showRoute: function(id){
+        if (id==undefined) {
+            return;
+        }
+        if(this.curRouteId != -1){
+            this.getCurRoute().hide();
+        }
+        this.curRouteId = id;
+
+        var thisOrder = this.browseOrder.indexOf()
+        if (this.browseOrder.indexOf(thisOrder) >= 0) {
+            this.browseOrder.push(this.curRouteId);
+            this.splice(thisOrder,1);
+        }
+
+        this.getCurRoute().show();
+    },
+    createRoute: function(name){
+        if (!name) {
+            name = this.generateName();
+        }else if (this.existName_(name)) {
+            return false;
+        }
+        var route = new Route({
+            geoMap: this.geoMap,
+            geoCluster: this.geoCluster,
+            geoMap: this.geoMap,
+            isNew: true,
+            name: name,
+        });
+        var self = this;
+        route.save(function(json){
+            this.routes.set(json["id"], route);
+            this.showRoute(json["id"]);
+        }.bind(self));
+    },
+
+    deleteRoute: function(id){
+        id = id || this.curRouteId;
+        this.routes.get(id).delete();
+        this.routes.delete(id);
+        
+        if (this.browseOrder[-1] == id) {
+            this.browseOrder.length -= 1;
+            this.getCurRoute().hide();
+            if (this.browseOrder.length != 0) {
+                this.showRoute(this.browseOrder[-1]);
+            }
+        } else{
+            this.browseOrder.splice(this.indexOf(id), 1);
+        }       
+
+    },
+    getCurRoute: function(){
+        return this.routes.get(this.curRouteId);
+    },
+    loadRoute: function(id){
+        var route = new Route({
+            geoMap: this.geoMap,
+            geoCluster: this.geoCluster,
+            geoMap: this.geoMap,
+        });
+        route.loadRoute(id);
+    }
+
+
+}
+
+
+
+
 function ExtMap(options){
 
     this.settings = $.extend({
-        mapDisplaySettings: null,
-        lineSymbolSettings: null,
+        mapDisplayOptions: null,
+        lineSymbol: null,
         markerSymbolSettings: null,
-        clusterSymbolSettings: null,
+        clusterOptions: null,
         mapId: null;
     }, options);
 
  //   var styledMapType = new google.maps.StyledMapType(map_style_json, { name: "夜间模式" });
-    this.map = new google.maps.Map(document.getElementById(mapId), 
-        this.settings.mapDisplaySettings
+    this.geoMap = new google.maps.Map(document.getElementById(mapId), 
+        this.settings.mapDisplayOptions
     );
-    this.Routes = []
-    this.curRouteIndex = -1;
 
+    this.routes = new Routes();
+    this.geoMarkers = new Markers();
+
+    this.geoCluster = new MarkerClusterer(map, null, this.settings.clusterOptions);
+
+    this.curRouteIndex = -1;
 }
+
 
 ExtMap.prototype = {
     constructor: ExtMap,
-    createRoute: function(name){
-        Route
+    setMapStyle: function(json_url, name){
+        var self = this;
+        $.getJSON(json_url, null, function(json){
+            var mapstyle = new google.maps.StyledMapType(json, {name: json_url});
+            self.geoMap.mapTypes.set(json_url, styledMapType);
+            self.geoMap.setMapTypeId(json_url);
+        });
+    },
+    initMarkers: function(){
+        var self = this;
+        $.getJSON('init_marks', null, function(markers){
+            markers.forEach(function(marker){
+                var mMarker = new google.maps.Marker({
+                    position: marker['latlng'],
+                    map: self.geoMap;
+                    id: marker['id']
+                });
+                self.geoMarkers.addMarker(mMarker);
+            });
+            self.geoCluster.addMarkers(self.geoMarkers.asArray());
+        });
     }
 }
 
-// {
-//         center: center_coordinate,
-//         zoom: 5,
-//         zoomControl: false,
-//         streetViewControl: false,
-//         fullscreenControl: false,
-//         mapTypeControl: false,
-//         gestureHandling: 'cooperative',
-//         mapTypeControlOptions: {
-//             mapTypeIds: ['roadmap', 'map_night']
-//         }

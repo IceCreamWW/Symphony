@@ -12,6 +12,7 @@ Markers.prototype = {
     },
     addMarker: function (marker) {
         this.markers.set(marker.id, marker)
+
     },
     removeMarker: function (id) {
         this.markers.delete(id);
@@ -93,3 +94,21 @@ poly = new google.maps.Polyline({
           strokeWeight: 3,
           map: map
         });
+
+
+
+
+var bounds = new google.maps.LatLngBounds();
+
+for (i = 0; i < LatLngs.length; i++) {
+    position = new google.maps.LatLng(LatLngs[i][0], LatLngs[i][1]);
+
+    marker = new google.maps.Marker({
+        position: position,
+        map: map
+    });
+
+    bounds.extend(position)
+}
+
+map.fitBounds(bounds);

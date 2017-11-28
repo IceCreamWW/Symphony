@@ -1,48 +1,68 @@
 var center_coordinate = {lat: -34.397, lng: 150.644};
-var map, markercluster;
 var poly;
-var all_markers = new Markers();
-var all_routes = new Routes();
-var cur_marker;
+var extMap;
 
-function initMap() {
-    $.ajax({
-        type: "get",
-        url: "../static/json/night_map_style.json",
-        dataType: "json",
-        success: function (data) {
-            load_map(data)
-        },
-        error: function () {
-            alert("json load failed")
-            load_map(null)
-        }
+var mOptions = {
+    center: center_coordinate,
+    zoom: 5,
+    zoomControl: false,
+    streetViewControl: false,
+    fullscreenControl: false,
+    mapTypeControl: false,
+    gestureHandling: 'cooperative',
+}
+
+var lineSymbol = {
+    path: 'M 0,-1 0,1',
+    strokeOpacity: 1,
+    scale: 4
+};
+
+var mcOptions = {
+    imagePath: 'http://localhost:8000/static/img/m'
+}
+
+function initMap(){
+
+    extMap = new extMap({
+        mapId: 'map',
+        lineSymbol: lineSymbol,
+        mapDisplayOptions: mOptions,
+        clusterOptions: mcOptions;
     });
 
+
+
+    var mapInfoDiv = document.getElementById("map_right_info_div");
+    extMap.geoMap.controls[google.maps.ControlPosition.RIGHT_TOP].push(map_right_div)
 }
+
+
+
+
 
 function load_map(map_style_json) {
     
     var styledMapType = new google.maps.StyledMapType(map_style_json, {name: "夜间模式"});
     map = new google.maps.Map(document.getElementById('map'), {
-        center: center_coordinate,
-        zoom: 5,
-        zoomControl: false,
-        streetViewControl: false,
-        fullscreenControl: false,
-        mapTypeControl: false,
-        gestureHandling: 'cooperative',
+        // center: center_coordinate,
+        // zoom: 5,
+        // zoomControl: false,
+        // streetViewControl: false,
+        // fullscreenControl: false,
+        // mapTypeControl: false,
+        // gestureHandling: 'cooperative',
         mapTypeControlOptions: {
             mapTypeIds: ['roadmap', 'map_night']
         }
     });
 
     // Define a symbol using SVG path notation, with an opacity of 1.
-        var lineSymbol = {
-          path: 'M 0,-1 0,1',
-          strokeOpacity: 1,
-          scale: 4
-        };
+        // var lineSymbol = {
+        //   path: 'M 0,-1 0,1',
+        //   strokeOpacity: 1,
+        //   scale: 4
+        // };
 
 
     
