@@ -24,7 +24,6 @@
     <link rel="stylesheet" type="text/css" href="{% static "css/map_right_div.css" %}">
     <link rel="stylesheet" type="text/css" href="{% static "css/movie_div.css" %}">
     <link rel="stylesheet" type="text/css" href="{% static "css/main_page.common.css" %}">
-    <link rel="stylesheet" type="text/css" href="{% static "css/route-tools.css" %}">
     <link rel="stylesheet" type="text/css" href="{% static "css/font-awesome/css/font-awesome.min.css" %}">
 
 
@@ -40,7 +39,7 @@
     <script src="{% static "js/extmap.classes.js" %}"></script>
     <script src="{% static "js/map.js" %}"></script>
     <script src="{% static "js/jquery.nicescroll.min.js" %}"></script>
-    <script src="{% static "js/mslider.js" %}"></script>
+    <script src="{% static "js/jquery.mslider.js" %}"></script>
     <script src="{% static "js/maprightdiv.js" %}"></script>
 
     <script src="https://maps.google.cn/maps/api/js?key=AIzaSyC5VIhPswBk-7iluvp6GGrmoL2nvNxoDek&libraries=places&language=zh-CN&callback=initMap"
@@ -54,14 +53,15 @@
         <div class="slide" data-anchor="slide1">
             <div id="map"></div>
 
-            <div id="map_right_info_div" class="map-custom-control">
+            <div id="map-info-div" class="map-custom-control">
                 <div id="title-div">
                     <div class="icon"><div class="arrow map-arrow-left"></div></div>
                     <div class="icon"><div class="arrow map-arrow-right"></div></div>
-                    <!--div id="map_info_menu_btn"></div-->
                 </div>
 
-                <div class="m-cur-slide-1" id="map-right-div-section">
+                
+
+                <div class="m-cur-slide-1" id="map-info-slides">
 
                     <div class="m-slide" >
                     	<form id="id-search-movie-form">

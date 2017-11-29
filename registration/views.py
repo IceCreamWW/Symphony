@@ -19,7 +19,7 @@ def mlogin(request):
             user = authenticate(email=login_form.cleaned_data['email'], password=login_form.cleaned_data['password'])
             login(request, user)
             return HttpResponseRedirect('/main_page/')
-    return render(request, 'login.html', {"login_form": login_form, "signup_form": signup_form, "cur_slide": 1})
+    return render(request, 'login.html', {"login_form": login_form, "signup_form": signup_form, "cur_slide": 0})
 
 def msignup(request):
     login_form = LoginForm()
@@ -33,7 +33,7 @@ def msignup(request):
             return HttpResponseRedirect('/main_page/')
         else:
             login_form = LoginForm()
-    return render(request, 'login.html', {"login_form": login_form, "signup_form": signup_form, "cur_slide": 2})
+    return render(request, 'login.html', {"login_form": login_form, "signup_form": signup_form, "cur_slide": 1})
 
 
 @csrf_exempt

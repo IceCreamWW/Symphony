@@ -1,13 +1,11 @@
 
 $(function() {
-	$(".map-arrow-left").click(function() {
-		movePreSlide('m-cur-slide-', 'map-right-div-section');
-	});
-	$(".map-arrow-right").click(function() {
-		moveNextSlide('m-cur-slide-', 'map-right-div-section');
-	});
 
-    $("#map_right_info_div").on('keydown', '*', function(event) {
+    $("#map-info-slides").mslider();
+
+	
+    //Prevent Tab Break Layout
+    $("#map-info-slides").on('keydown', '*', function(event) {
         if (event.keyCode == 9) {
             event.preventDefault();            
         }

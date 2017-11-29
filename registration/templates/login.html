@@ -6,20 +6,14 @@
     <link rel="stylesheet" type="text/css" href="{% static 'css/registration.css' %}">
     <link rel="stylesheet" type="text/css" href="{% static 'css/animate.css' %}">
     <script src="{% static 'js/jquery.min.js' %}"></script>
-    <script src="{% static 'js/mslider.js' %}"></script>
+    <script src="{% static 'js/jquery.mslider.js' %}"></script>
     <script src="{% static 'js/registration.js' %}"></script>
     <script>
     $(function () {
-        var transition = $(".title-btn").css("transition");
-        $(".title-btn").css("transition", "none");
-    {% if cur_slide == 2 %}
-        signup_click.call($('#signup-btn'),true);
-    {% else %}
-        login_click.call($('#login-btn'), true);
-    {% endif %}
-        setTimeout(function () {
-            $(".title-btn").css("transition", transition)
-        }, 10);
+        $('#log-section').mslider({
+            menu: "#log-menu",
+            initSlide: {{ cur_slide }}
+        });
     });
     </script>
 
@@ -27,15 +21,15 @@
 <body>
     <div class="make-center-wrapper">
         <div class="center-div">
-            <div class="log-title">
-                <div class="title-btn menu-slide-active" id="login-btn">
+            <div class="log-title" id="log-menu">
+                <div class="title-btn" id="login-btn">
                     Log In
                 </div>
                 <div class="title-btn" id="signup-btn">
                     Sign Up
                 </div>
             </div>
-            <div class="log-secion m-cur-slide-1" id="log-section">
+            <div class="log-secion" id="log-section">
                 <div class="login-slide m-slide" >
                 	<div class="login-wrapper">
 	                    <form action={% url 'mlogin' %} method="post" id="login-form">

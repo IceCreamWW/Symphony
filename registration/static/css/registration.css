@@ -43,7 +43,7 @@ body, .center-div::before{
     box-shadow: 5px 3px 30px black;
 }
 .log-secion{
-    width: 200%;
+    width: 100%;
     overflow: hidden; 
     transition: 700ms;
 }
@@ -66,7 +66,7 @@ body, .center-div::before{
     margin: auto;
 }
 /* add underline for active section title -- log in button or sign up button under line*/
-.title-btn.menu-slide-active{
+#log-menu .m-menu-active{
 	border-color: rgba(0,0,0,0.7);
 }
 .title-btn{

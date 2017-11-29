@@ -1,4 +1,6 @@
 $(function() {
+
+
     $('input[type="text"]').attr('autocomplete', 'off');
     $('input[type="text"]').attr('spellcheck', 'false');
 
@@ -34,13 +36,6 @@ $(function() {
 
     $("input").not('input[type="submit"]').focusout(function () {
         $(this).parent().removeClass('input-focused')
-    });
-
-    $('#login-btn').click(function () {
-        login_click.call(this, false)
-    });
-    $('#signup-btn').click(function () {
-        signup_click.call(this, false);
     });
 
     /* Ajax 检测login email是否有效 */
@@ -98,28 +93,7 @@ $(function() {
         }
     });
 });
-function login_click(silent) {
-        $(this).siblings('.title-btn').removeClass('menu-slide-active');
-		$(this).addClass('menu-slide-active');
-		$(".login-wrapper input").removeAttr("tabindex");
-		$(".signup-wrapper input").attr('tabindex', "-1");
-		if(silent) {
-		    silentMoveToSlide('m-cur-slide-', 'log-section', 1)
-        }else{
-            moveToSlide('m-cur-slide-', 'log-section', 1);
-        }
-}
-function signup_click(silent) {
-    $(this).siblings('.title-btn').removeClass('menu-slide-active');
-    $(this).addClass('menu-slide-active');
-    $(".signup-wrapper input").removeAttr("tabindex");
-    $(".login-wrapper input").attr('tabindex', "-1");
-    if(silent){
-        silentMoveToSlide('m-cur-slide-','log-section',2);
-    }else{
-        moveToSlide('m-cur-slide-','log-section',2);
-    }
-}
+ 
 function check_password(){
     if ($("#id_password_again").val().length !== 0){
         if($("#id_password_again").val() !== $("#id_password").val()) {
