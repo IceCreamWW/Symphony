@@ -12,11 +12,24 @@ var mOptions = {
     gestureHandling: 'cooperative',
 }
 
+
 var lineSymbol = {
     path: 'M 0,-1 0,1',
     strokeOpacity: 1,
     scale: 4
 };
+
+var lineSetting = {
+    strokeColor: '#FFFF33',
+    strokeOpacity: 0,
+    icons: [{
+        icon: lineSymbol,
+        offset: '0',
+        repeat: '20px'
+    }],
+    strokeWeight: 3,
+}
+
 
 var mcOptions = {
     imagePath: 'http://localhost:8000/static/img/m'
@@ -24,17 +37,19 @@ var mcOptions = {
 
 function initMap(){
 
-    extMap = new extMap({
+    extMap = new ExtMap({
         mapId: 'map',
-        lineSymbol: lineSymbol,
+        lineSymbol: lineSetting,
         mapDisplayOptions: mOptions,
-        clusterOptions: mcOptions;
+        clusterOptions: mcOptions
     });
 
 
 
     var mapInfoDiv = document.getElementById("map_right_info_div");
-    extMap.geoMap.controls[google.maps.ControlPosition.RIGHT_TOP].push(map_right_div)
+    extMap.geoMap.controls[google.maps.ControlPosition.RIGHT_TOP].push(mapInfoDiv);
+    extMap.initMarkers('init_marks');
+    extMap.setMapStyle('http://localhost:8000/static/json/night_map_style.json/')
 }
 
 

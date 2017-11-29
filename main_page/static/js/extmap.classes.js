@@ -1,5 +1,5 @@
 // zyh
-Object.prototype.updateAttrs = function(attrs){
+function updateAttrs(attrs){
     var self = this;
     Object.keys(attrs).forEach(function(key){
         self[key] = attrs[key];
@@ -7,16 +7,16 @@ Object.prototype.updateAttrs = function(attrs){
 }
 
 
-lineSetting = {
-    strokeColor: '#FFFF33',
-    strokeOpacity: 0,
-    icons: [{
-    icon: lineSymbol,
-    offset: '0',
-    repeat: '20px'
-    }],
-    strokeWeight: 3,
-}
+// var lineSetting = {
+//     strokeColor: '#FFFF33',
+//     strokeOpacity: 0,
+//     icons: [{
+//     icon: lineSymbol,
+//     offset: '0',
+//     repeat: '20px'
+//     }],
+//     strokeWeight: 3,
+// }
 
 
 function Markers() {
@@ -60,11 +60,11 @@ function RouteState(options){
         geoCluster: null,
         geoMarkers: null,
         name: undefined,
-        routelineSetting: lineSetting    //json expected
+        routelineSetting: null    //json expected
     }, options);
 
     this.routeLine = null;
-    this.updateAttrs(settings);
+    updateAttrs.call(this, settings);
     this.order = [];
 }
 RouteState.prototype = new Markers();
@@ -137,11 +137,11 @@ function Route(options){
         geoMarkers: null,
         name: undefined,
         isNew: true,
-    bufferSize: 50,
-        routelineSetting: lineSetting    //json expected
+        bufferSize: 50,
+        routelineSetting: null    //json expected
     }, options);
 
-    this.updateAttrs(settings);
+    updateAttrs.call(this, settings);
     this.geoCluster = $.extend(true, {}, this.geoCluster);
 
     this.routeStates = [];
@@ -192,7 +192,7 @@ Route.prototype = {
             this.routeStates[latestIndex].updateRouteline();
         } 
         this.routeStates[targetIndex].show();
-    }
+    },
 
     addMarker: function(id){
         var newState = $.extend(true, {}, this.routeStates[this.curRouteStateIndex]);
@@ -219,10 +219,10 @@ Route.prototype = {
         this.routeStates[this.curRouteStateIndex].save(this.isNew, callback);
         this.isNew = false;
     
-    }
+    },
     delete: function(callback){
         $.getJSON('delete_route', {"id": this.id}, callback);
-    }
+    },
     loadRoute: function(id){
         var self = this;
         // FIX_ME What data should I pass?
@@ -231,16 +231,13 @@ Route.prototype = {
             markers.forEach(function(id){
                 // no draw is true
                 self.newState.addMarker(id, true);
-            })
+            });
             self.geoMarkers.resetViewport();
             self.geoMarkers.redraw();
             self.isNew = false;
-        })
+        });
     }
 }
-
-
-
 
 
 
@@ -255,7 +252,7 @@ function Routes(options){
     
 
     this.routes = new Map();
-    this.updateAttrs(settings);
+    updateAttrs.call(this, settings);
     this.curRouteId = -1;
     this.browseOrder = [];
 }
@@ -267,7 +264,7 @@ Routes.prototype = {
         var i  = 1;
         name = "新建路线";
         while(!this.existName_(name + i)){
-            i += 1；
+            i += 1;
         }
         name = name + i;
         return name;
@@ -304,6 +301,7 @@ Routes.prototype = {
             geoMap: this.geoMap,
             isNew: true,
             name: name,
+            routelineSetting: this.routelineSetting
         });
         var self = this;
         route.save(function(json){
@@ -350,43 +348,45 @@ function ExtMap(options){
 
     this.settings = $.extend({
         mapDisplayOptions: null,
-        lineSymbol: null,
+        lineSetting: null,
         markerSymbolSettings: null,
         clusterOptions: null,
-        mapId: null;
+        mapId: null
     }, options);
 
- //   var styledMapType = new google.maps.StyledMapType(map_style_json, { name: "夜间模式" });
-    this.geoMap = new google.maps.Map(document.getElementById(mapId), 
+    this.geoMap = new google.maps.Map(document.getElementById(this.settings.mapId), 
         this.settings.mapDisplayOptions
     );
 
-    this.routes = new Routes();
     this.geoMarkers = new Markers();
+    this.geoCluster = new MarkerClusterer(this.geoMap, null, this.settings.clusterOptions);
 
-    this.geoCluster = new MarkerClusterer(map, null, this.settings.clusterOptions);
-
-    this.curRouteIndex = -1;
+    this.routes = new Routes({
+        geoMap: this.geoMap,
+        geoCluster: this.geoCluster,
+        geoMarkers: this.geoMarkers,
+        routelineSetting: this.settings.lineSetting,
+    });
 }
 
 
 ExtMap.prototype = {
     constructor: ExtMap,
-    setMapStyle: function(json_url, name){
+    setMapStyle: function(json_url){
         var self = this;
         $.getJSON(json_url, null, function(json){
-            var mapstyle = new google.maps.StyledMapType(json, {name: json_url});
-            self.geoMap.mapTypes.set(json_url, styledMapType);
+            var mapStyle = new google.maps.StyledMapType(json, {name: json_url});
+            self.geoMap.mapTypes.set(json_url, mapStyle);
             self.geoMap.setMapTypeId(json_url);
         });
     },
-    initMarkers: function(){
+    initMarkers: function(markersUrl){
         var self = this;
-        $.getJSON('init_marks', null, function(markers){
+        $.getJSON(markersUrl, null, function(markers){
             markers.forEach(function(marker){
                 var mMarker = new google.maps.Marker({
                     position: marker['latlng'],
-                    map: self.geoMap;
+                    map: self.geoMap,
                     id: marker['id']
                 });
                 self.geoMarkers.addMarker(mMarker);
