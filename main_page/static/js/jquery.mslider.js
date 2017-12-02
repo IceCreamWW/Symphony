@@ -73,7 +73,10 @@
 				$menu.children().eq(target)
 						.addClass('m-menu-active').siblings()
 						.removeClass('m-menu-active');
-	}
+
+		$slider.children('.m-slide').eq(target).find('*').removeAttr("tabindex");
+		$slider.children('.m-slide').eq(target).siblings().find('*').attr("tabindex", -1);
+	};
 
 	$.fn.moveToSlideSelector = function (target) {
 		var target = $(this).getMSlider().children(target + '.m-slide').index();

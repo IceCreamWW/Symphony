@@ -1,12 +1,25 @@
+$.fn.extend({
+    animateCss: function (animationName, callback) {
+        var animationEnd = 'webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend';
+        this.addClass('animated ' + animationName).one(animationEnd, function() {
+            $(this).removeClass('animated ' + animationName);
+            if (callback) {
+              callback();
+            }
+        });
+        return this;
+    }
+});
 $(function() {
-
-
     $('input[type="text"]').attr('autocomplete', 'off');
     $('input[type="text"]').attr('spellcheck', 'false');
 
+    $("input").not('input[type="submit"]').focus(function () {
+        $(this).parent().addClass('input-focused');
+    });
+
     /* 不能使用focus，Chrome自动聚焦会直接消除错误样式 */
     $("input").not('input[type="submit"]').keyup(function () {
-        $(this).parent().addClass('input-focused');
         if ($(this).attr("id").indexOf("id_password") < 0) {
             $(this).siblings(".error-div").addClass("no-error-div").removeClass("error-div")
         }
@@ -93,7 +106,7 @@ $(function() {
         }
     });
 });
- 
+
 function check_password(){
     if ($("#id_password_again").val().length !== 0){
         if($("#id_password_again").val() !== $("#id_password").val()) {
