@@ -41,21 +41,23 @@ def main(requests):
     return render(requests, "profile/profile.html", context)
 
 
+@csrf_exempt
 def unfollow_user(requests):
     my_user_obj = requests.user
     user_profile_obj = my_user_obj.userprofile
     follow_set = user_profile_obj.user_follow
-    removing_email = requests.GET["email"]
+    removing_email = requests.POST["email"]
     removing_user = get_object_or_404(MyUser, email=removing_email)
     follow_set.remove(removing_user)
     return JsonResponse({"status": "success"})
 
 
+@csrf_exempt
 def unfollow_route(requests):
     my_user_obj = requests.user
     user_profile_obj = my_user_obj.userprofile
     route_set = user_profile_obj.route_follow
-    route_id = requests.GET["id"]
+    route_id = requests.POST["id"]
     removing_route = get_object_or_404(Route, id=route_id)
     route_set.remove(removing_route)
     return JsonResponse({"status": "success"})

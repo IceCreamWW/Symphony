@@ -8,47 +8,19 @@
     <script src="{% static "js/jquery.nicescroll.min.js" %}"></script>
     <script src="{% static 'js/other_user.js' %}"></script>
     <script>
-        {% for user in user_list %}
-            $(document).on('click', '#profile_switch_follow_{{ forloop.counter }}', function () {
+        $(function () {
+            $("#profile_follow").on("click", function () {
                 var data = {
-                    "email": "{{user.email}}"
+                    "email": "{{email}}"
                 };
-                $.post('follow_user', data, function (json, textStatus) {
+                $.post('follow_user', data, function (json) {
                     if (json["status"] == "success") {
-                        $("#profile_switch_follow_{{ forloop.counter }}").attr("class", "profile_followed");
-                        $("#profile_switch_follow_{{ forloop.counter }}").text("已关注");
+                        $("#profile_follow").attr("class", "profile_cur_followed");
+                        $("#profile_follow").text("已关注");
                     }
                 });
-            });
-        {% endfor %}
-    </script>
-    <script>
-        {% for route in route_list %}
-            $(document).on('click', '#profile_switch_route_{{ forloop.counter }}', function () {
-                var data = {
-                    "id": "{{route.id}}"
-                };
-                $.post('follow_route', data, function (json, textStatus) {
-                    if (json["status"] == "success") {
-                        $("#profile_switch_route_{{ forloop.counter }}").attr("class", "profile_followed");
-                        $("#profile_switch_route_{{ forloop.counter }}").text("已收藏");
-                    }
-                });
-            });
-        {% endfor %}
-    </script>
-    <script>
-        $(document).on('click', '#profile_follow', function () {
-            var data = {
-                "email": "{{email}}"
-            };
-            $.post('follow_user', data, function (json, textStatus) {
-                if (json["status"] == "success") {
-                    $("#profile_follow").attr("class", "profile_cur_followed");
-                    $("#profile_follow").text("已关注");
-                }
-            });
-        })
+            })
+        });
     </script>
     <link rel="stylesheet" type="text/css" href="{% static 'css/profile.css' %}">
 </head>
@@ -77,10 +49,10 @@
     </div>
     <div class="profile_body_wrapper">
         <aside class="profile_nav_aside">
-            <p class="nav_selected" id="profile_nav_1">他的关注</p>
-            <p id="profile_nav_2">他的路线</p>
-            <p id="profile_nav_3">他的资料</p>
-            <p id="profile_nav_4">设置关注</p>
+            <p class="nav_selected" id="profile_nav_1" index="1">他的关注</p>
+            <p id="profile_nav_2" index="2">他的路线</p>
+            <p id="profile_nav_3" index="3">他的资料</p>
+            <p id="profile_nav_4" index="4">设置关注</p>
         </aside>
 
         <div class="profile_content" id="profile_content_1">
@@ -103,7 +75,8 @@
                                         已关注
                                     </div>
                                 {% else %}
-                                    <div class="profile_follow" id="profile_switch_follow_{{ forloop.counter }}">
+                                    <div class="profile_user_follow" id="profile_switch_follow_{{ forloop.counter }}"
+                                         email="{{ user.email }}">
                                         设置关注
                                     </div>
                                 {% endif %}
@@ -129,7 +102,8 @@
                                         已收藏
                                     </div>
                                 {% else %}
-                                    <div class="profile_follow" id="profile_switch_route_{{ forloop.counter }}">
+                                    <div class="profile_route_follow" id="profile_switch_route_{{ forloop.counter }}"
+                                         route_id="{{ route.id }}">
                                         设置收藏
                                     </div>
                                 {% endif %}

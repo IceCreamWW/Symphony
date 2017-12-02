@@ -171,7 +171,7 @@ div.profile_content_body div.profile_follow_nickname {
     top: 18%;
 }
 
-div.profile_content_body div.profile_follow {
+div.profile_content_body div.profile_user_follow {
     position: absolute;
     top: 31%;
     right: 4%;
@@ -185,7 +185,28 @@ div.profile_content_body div.profile_follow {
     line-height: 200%;
 }
 
-div.profile_content_body div.profile_follow:hover {
+div.profile_content_body div.profile_route_follow {
+    position: absolute;
+    top: 31%;
+    right: 4%;
+    font-size: 15pt;
+    box-shadow: 0 0 0 1px #9f0b0c inset;
+    color: #9f0b0c;
+    width: 14%;
+    height: 42%;
+    text-align: center;
+    border-radius: 10px;
+    line-height: 200%;
+}
+
+div.profile_content_body div.profile_user_follow:hover {
+    cursor: pointer;
+    background-color: #9f0b0c;
+    color: white;
+    -webkit-transition: all 0.1s;
+}
+
+div.profile_content_body div.profile_route_follow:hover {
     cursor: pointer;
     background-color: #9f0b0c;
     color: white;
@@ -348,13 +369,13 @@ ul.profile_password_ul li {
 div.profile_submit_button {
     font-size: 15pt;
     box-shadow: 0 0 0 1px #3b609f inset;
-    color: #3b609f;
-    width: 13%;
-    height: 11%;
+    width: 120px;
+    height: 40px;
     text-align: center;
     border-radius: 10px;
-    line-height: 180%;
-    margin-top: 1%;
+    line-height: 40px;
+    margin-top: 2%;
+    color: #3b609f;
 }
 
 div.profile_submit_button:hover {
@@ -394,11 +415,11 @@ div.profile_content_body div.profile_followed {
 div.profile_cur_followed {
     font-size: 15pt;
     box-shadow: 0 0 0 1px #3b609f inset;
-    width: 13%;
-    height: 42%;
+    width: 120px;
+    height: 40px;
     text-align: center;
     border-radius: 10px;
-    line-height: 200%;
+    line-height: 40px;
     margin-top: 2%;
     background-color: #3b609f;
     color: white;
