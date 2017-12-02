@@ -11,7 +11,7 @@ div.profile_background_div {
     background-position: center center;
     background-size: cover;
     background-repeat: no-repeat;
-    height: 150px;
+    height: 80%;
     position: relative;
 
 }
@@ -30,7 +30,7 @@ div.head_portrait_div {
     box-shadow: 0.5px 0.5px 10px #797979;
     position: absolute;
     bottom: 0;
-    left: 100px;
+    left: 8%;
 }
 
 div.profile_head {
@@ -46,21 +46,21 @@ img.profile_portrait {
 
 div.profile_username_div {
     position: absolute;
-    top: 70px;
-    left: 300px;
+    top: 40%;
+    left: 24%;
     text-shadow: 0.5px 0.5px 10px #797979;
     font-size: 40pt;
     color: white;
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
-    width: 600px;
+    width: 40%;
 }
 
 div.profile_user_summary_div {
     position: absolute;
-    top: 90px;
-    right: 30px;
+    top: 50%;
+    right: 2%;
     background-color: white;
     box-shadow: 0.5px 0.5px 10px #797979;
     border-radius: 5px;
@@ -90,10 +90,10 @@ div.profile_user_summary_div td {
 
 aside.profile_nav_aside {
     height: auto;
-    margin-left: 125px;
-    padding: 10px;
-    padding-top: 40px;
-    width: 100px;
+    margin-left: 10%;
+    padding: 1%;
+    padding-top: 3%;
+    width: 8%;
     text-align: center;
 }
 
@@ -114,9 +114,9 @@ div.profile_body_wrapper {
 
 div.profile_content {
     position: absolute;
-    top: -20px;
-    left: 300px;
-    right: 30px;
+    top: -4%;
+    left: 24%;
+    right: 0;
     color: #505050;
     height: 100%;
 }
@@ -124,8 +124,8 @@ div.profile_content {
 div.profile_content h2 {
     margin: 0;
     font-size: 20pt;
-    margin-bottom: 10px;
-    margin-left: 10px;
+    margin-bottom: 1%;
+    margin-left: 1%;
     font-weight: 500;
 }
 
@@ -142,8 +142,8 @@ div.profile_content_body ul {
 div.profile_content_body li {
     position: relative;
     width: inherit;
-    height: 100px;
-    margin: 5px 30px 20px 5px;
+    height: 28%;
+    margin: 1% 3% 2% 1%;
     border-radius: 5px;
     box-shadow: 0.5px 0.5px 10px #797979;
 }
@@ -158,31 +158,31 @@ div.profile_content_body img {
 
 div.profile_content_body div.profile_follow_email {
     position: absolute;
-    bottom: 20px;
-    left: 110px;
+    bottom: 25%;
+    left: 12%;
     font-size: 10pt;
     color: #9f9f9f;
 }
 
 div.profile_content_body div.profile_follow_nickname {
     position: absolute;
-    left: 108px;
+    left: 12%;
     font-size: 20pt;
-    top: 20px;
+    top: 18%;
 }
 
 div.profile_content_body div.profile_follow {
     position: absolute;
-    top: 30px;
-    right: 60px;
+    top: 31%;
+    right: 4%;
     font-size: 15pt;
     box-shadow: 0 0 0 1px #9f0b0c inset;
     color: #9f0b0c;
-    width: 120px;
-    height: 40px;
+    width: 14%;
+    height: 42%;
     text-align: center;
     border-radius: 10px;
-    line-height: 40px;
+    line-height: 200%;
 }
 
 div.profile_content_body div.profile_follow:hover {
@@ -195,8 +195,8 @@ div.profile_content_body div.profile_follow:hover {
 aside.profile_nav_aside p {
     border-left: 3px solid #9f9f9f;
     margin: 0;
-    padding-top: 10px;
-    padding-bottom: 10px;
+    padding-top: 10%;
+    padding-bottom: 10%;
     padding-left: 0;
     color: #9f9f9f;
 }
@@ -204,8 +204,8 @@ aside.profile_nav_aside p {
 aside.profile_nav_aside p:hover {
     border-left: 3px solid #50779f;
     margin: 0;
-    padding-top: 10px;
-    padding-bottom: 10px;
+    padding-top: 10%;
+    padding-bottom: 10%;
     padding-left: 0;
     color: #50779f;
     -webkit-transition: all 0.3s;
@@ -215,8 +215,8 @@ aside.profile_nav_aside p:hover {
 aside.profile_nav_aside p.nav_selected {
     border-left: 3px solid #3b609f;
     margin: 0;
-    padding-top: 10px;
-    padding-bottom: 10px;
+    padding-top: 10%;
+    padding-bottom: 10%;
     padding-left: 0;
     color: #3b609f;
     -webkit-transition: all 0.3s;
@@ -226,8 +226,8 @@ aside.profile_nav_aside p.nav_selected {
 aside.profile_nav_aside p.nav_selected:hover {
     border-left: 3px solid #3b609f;
     margin: 0;
-    padding-top: 10px;
-    padding-bottom: 10px;
+    padding-top: 10%;
+    padding-bottom: 10%;
     padding-left: 0;
     color: #3b609f;
     -webkit-transition: all 0.3s;
@@ -235,7 +235,7 @@ aside.profile_nav_aside p.nav_selected:hover {
 }
 
 div.profile_content_empty {
-    margin-left: 10px;
+    margin-left: 2%;
     font-size: 50pt;
     color: #9f9f9f;
 }
@@ -246,24 +246,28 @@ div#profile_follow_body_wrapper {
 
 div.profile_route_name {
     font-size: 20pt;
-    top: 10px;
-    left: 20px;
+    top: 8%;
+    left: 2%;
     position: absolute;
 }
 
 div.profile_route_date {
     position: absolute;
-    top: 45px;
-    left: 20px;
+    top: 45%;
+    left: 2%;
     font-size: 10pt;
     color: #9f9f9f;
 }
 
 div.profile_route_site {
     position: absolute;
-    left: 20px;
-    bottom: 15px;
+    left: 2%;
+    bottom: 11%;
     font-size: 10pt;
+    width: 60%;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
 }
 
 div#profile_route_body_wrapper {
@@ -276,7 +280,7 @@ div.profile_user_summary_div td:hover {
 
 ul.profile_detail_ul {
     list-style-type: none;
-    padding-left: 10px;
+    padding-left: 1%;
     height: 100%;
     margin-top: 0;
     margin-bottom: 0;
@@ -284,11 +288,11 @@ ul.profile_detail_ul {
 
 ul.profile_detail_ul li {
     position: relative;
-    padding-top: 10px;
-    padding-bottom: 10px;
+    padding-top: 2%;
+    padding-bottom: 2%;
     border-bottom: 1px solid #f2f3f4;
-    height: 80px;
-    line-height: 80px;
+    height: 16%;
+    line-height: 400%;
 }
 
 div.profile_detail_name {
@@ -299,7 +303,7 @@ div.profile_detail_name {
 
 div.profile_detail_value {
     position: absolute;
-    left: 150px;
+    left: 17%;
 }
 
 hr.profile_table_head_hr {
@@ -321,12 +325,12 @@ input.profile_password {
     overflow: visible;
     color: #363636;
     opacity: 1;
-    width: 300px;
+    width: 250%;
 }
 
 ul.profile_password_ul {
     list-style-type: none;
-    padding-left: 10px;
+    padding-left: 1%;
     height: 90%;
     margin-top: 0;
     margin-bottom: 0;
@@ -334,23 +338,23 @@ ul.profile_password_ul {
 
 ul.profile_password_ul li {
     position: relative;
-    padding-top: 10px;
-    padding-bottom: 10px;
+    padding-top: 2%;
+    padding-bottom: 2%;
     border-bottom: 1px solid #f2f3f4;
-    height: 80px;
-    line-height: 80px;
+    height: 16%;
+    line-height: 400%;
 }
 
 div.profile_submit_button {
     font-size: 15pt;
     box-shadow: 0 0 0 1px #3b609f inset;
     color: #3b609f;
-    width: 120px;
-    height: 40px;
+    width: 13%;
+    height: 11%;
     text-align: center;
     border-radius: 10px;
-    line-height: 40px;
-    margin-top: 10px;
+    line-height: 180%;
+    margin-top: 1%;
 }
 
 div.profile_submit_button:hover {
@@ -362,40 +366,40 @@ div.profile_submit_button:hover {
 
 div.profile_password_warning {
     color: #9f0b0c;
-    margin-top: -30px;
-    margin-left: 150px;
+    margin-top: -3.4%;
+    margin-left: 17%;
     font-weight: bold;
 }
 
 div.profile_content_text_wrapper {
-    margin-left: 10px;
-    margin-top: 20px;
+    margin-left: 1%;
+    margin-top: 2%;
 }
 
 div.profile_content_body div.profile_followed {
-    position: absolute;
-    top: 30px;
-    right: 60px;
-    font-size: 15pt;
-    box-shadow: 0 0 0 1px #9f0b0c inset;
-    width: 120px;
-    height: 40px;
-    text-align: center;
-    border-radius: 10px;
-    line-height: 40px;
     background-color: #9f0b0c;
     color: white;
+    position: absolute;
+    top: 31%;
+    right: 4%;
+    font-size: 15pt;
+    box-shadow: 0 0 0 1px #9f0b0c inset;
+    width: 14%;
+    height: 42%;
+    text-align: center;
+    border-radius: 10px;
+    line-height: 200%;
 }
 
 div.profile_cur_followed {
     font-size: 15pt;
     box-shadow: 0 0 0 1px #3b609f inset;
-    width: 120px;
-    height: 40px;
+    width: 13%;
+    height: 42%;
     text-align: center;
     border-radius: 10px;
-    line-height: 40px;
-    margin-top: 10px;
+    line-height: 200%;
+    margin-top: 2%;
     background-color: #3b609f;
     color: white;
 }
