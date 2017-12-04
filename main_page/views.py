@@ -4,6 +4,7 @@ from django.template.loader import render_to_string
 
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
+from django.utils import timezone
 
 from main_page.models import *
 from random import *
@@ -20,6 +21,13 @@ def init_marks(request):
     # return JsonResponse(get_random_marks(), safe=False)
     return JsonResponse(generate_random_marks(), safe=False)
 
+@csrf_exempt
+def save_route(request):
+    if request.method == 'GET':
+        if request.GET['isNew'] == 'true':
+            route = Route(name=request.GET['name'], date=timezone.now())
+            route.save()
+            return JsonResponse({"id": route.id})
 
 def get_marker_plots(request):
     if request.method == "GET":

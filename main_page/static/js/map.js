@@ -39,6 +39,7 @@ function initMap(){
 
     extMap = new ExtMap({
         mapId: 'map',
+        hiddenMapId: 'hidden-map',
         lineSymbol: lineSetting,
         mapDisplayOptions: mOptions,
         clusterOptions: mcOptions
@@ -157,5 +158,6 @@ function init_marks(markers) {
     })
     markercluster = new MarkerClusterer(map, all_markers.asArray(),
         {imagePath: 'http://localhost:8000/static/img/m'});
+    
 }
 

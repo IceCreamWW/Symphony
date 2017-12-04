@@ -27,6 +27,9 @@ function switch_nav(tarId) {
         $("#profile_content_" + i).hide();
         $("#profile_content_body_" + i).getNiceScroll().hide();
     }
+
+    $('#nav').children().eq(tarId)
+
     $("#profile_nav_" + tarId).attr("class", "nav_selected");
     $("#profile_content_" + tarId).show();
     $("#profile_content_body_" + tarId).getNiceScroll().show().resize();

@@ -23,6 +23,7 @@
     border-color: green;
     padding: 5%;
     margin: 5%;
+    cursor: pointer;
 }
 #create-route-icon::before, #create-route-icon::after {
     content: "";
@@ -45,6 +46,78 @@
     width: 20%;
 }
 .route{
-    padding: 5%;
+    padding: 2%;
     margin: 5%;
+    position: relative;
+    background: rgba(0,0,0,0.7);
+    overflow: hidden;
+}
+.route-name-wrapper{
+	height: 40%;
+	width: 100%;
+	display: table;
+}
+.route-name{
+    display: table-cell;
+    font-size: 1.2vw;
+    letter-spacing: 0.1vw;
+    color: white;
+    vertical-align: middle;
+    text-align: center;
+}
+hr {
+    width: 70%;
+    background: white;
+    height: 2px;
+    border: none;
+    margin: auto;
+}
+.route-control {
+    z-index: 2;
+    position: absolute;
+    left: 0;
+    /*top: 0;*/
+    top: 62%;
+    height: 100%;
+    width: 100%;
+    background: black;
+    opacity: 0.7;
+    transition: top 0.4s;
+}
+.route:hover .route-control {
+	top: 0;
+}
+img.route-thumbnail{
+	max-width: 100% !important;
+    width: auto;
+    height: auto;
+}
+.route-icons-list{
+	position: relative;
+	height: 60%;
+}
+.route-icons-wrapper{
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	width: 100%;
+	display: table;
+	margin: auto;
+}
+.route-icon{
+	text-align: center;
+	width: 33.3%;
+	float: left;
+}
+.route-remove-icon {
+    transform: translateY(-0.5vh);
+}
+.route-detail-icon {
+    transform: translateY(-0.2vh);
+}
+.fa{
+	color: white;
+	opacity: 0.7;
+	font-size: 3.3vw;
+	cursor: pointer;
 }

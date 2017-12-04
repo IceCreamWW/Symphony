@@ -491,11 +491,15 @@ MarkerClusterer.prototype.removeMarker = function(marker, opt_nodraw) {
   if (!opt_nodraw && removed) {
     this.resetViewport();
     this.redraw();
+    // FIXED
+    marker.setMap(this.map_)
     return true;
   } else {
    return false;
   }
 };
+
+
 
 
 /**
@@ -515,6 +519,11 @@ MarkerClusterer.prototype.removeMarkers = function(markers, opt_nodraw) {
   if (!opt_nodraw && removed) {
     this.resetViewport();
     this.redraw();
+
+    // FIX
+    for (var i = 0, marker; marker = markers[i]; i++) {
+      marker.setMap(this.map_)
+    }
     return true;
   }
 };
@@ -553,6 +562,26 @@ MarkerClusterer.prototype.getMap = function() {
   return this.map_;
 };
 
+
+// FIXED
+/**
+ * Sets the google map that the clusterer is associated with.
+ *
+ * @param {google.maps.Map} map The map.
+ */
+MarkerClusterer.prototype.mSetMap = function(map) {
+  if(!map){
+    this.saved_markers_ = this.markers_
+    this.markers_ = []
+    this.resetViewport()
+    for (var i = 0, marker; marker = this.saved_markers_[i]; i++) {
+      marker.setMap(this.map_)
+    }
+  }else{
+    this.map_ = map
+    this.saved_markers_ && this.addMarkers(this.saved_markers_)    
+  }
+}
 
 /**
  * Sets the google map that the clusterer is associated with.
@@ -661,7 +690,6 @@ MarkerClusterer.prototype.clearMarkers = function() {
   // Set the markers a empty array.
   this.markers_ = [];
 };
-
 
 /**
  * Clears all existing clusters and recreates them.
