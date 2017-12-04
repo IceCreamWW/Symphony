@@ -20,141 +20,88 @@ function check_route_empty() {
     }
 }
 
-// 切换标签栏时转换颜色
-function switch_nav(nav_id) {
-    var selector = "#profile_nav_" + nav_id;
-    for (i = 1; i <= 6; i++) {
+// 切换导航栏
+function switch_nav(tarId) {
+    for (var i = 1; i <= 6; ++i) {
         $("#profile_nav_" + i).attr("class", "")
+        $("#profile_content_" + i).hide();
+        $("#profile_content_body_" + i).getNiceScroll().hide();
     }
-    $(selector).attr("class", "nav_selected");
+    $("#profile_nav_" + tarId).attr("class", "nav_selected");
+    $("#profile_content_" + tarId).show();
+    $("#profile_content_body_" + tarId).getNiceScroll().show().resize();
+    if (tarId == 4) {
+        $("#profile_detail_wrapper").getNiceScroll().show().resize();
+    } else {
+        $("#profile_detail_wrapper").getNiceScroll().hide();
+    }
 }
 
 // 关注者列表/路线列表滚动
-$(document).ready(
-    function () {
-        $(".profile_content_body").niceScroll({});
-        $("#profile_detail_wrapper").niceScroll({});
-    }
-);
+$(function () {
+    $(".profile_content_body").niceScroll({});
+    $("#profile_detail_wrapper").niceScroll({});
+});
 
 // 检查关注用户数量是否为零
-$(document).ready(
-    check_follow_empty
-);
+$(check_follow_empty);
 
 // 检查关注路线数量是否为零
-$(document).ready(
-    check_route_empty
-);
+$(check_route_empty);
 
-// 通过导航切换标签页到我的关注
-$(document).on('click', '#profile_nav_1', function () {
-    switch_nav(1);
-    $("#profile_content_1").show();
-    $("#profile_content_body_1").getNiceScroll().show().resize();
-    $("#profile_content_2").hide();
-    $("#profile_content_body_2").getNiceScroll().hide();
-    $("#profile_content_3").hide();
-    $("#profile_content_4").hide();
-    $(".profile_detail_wrapper").getNiceScroll().hide();
-    $("#profile_content_5").hide();
-    $("#profile_content_6").hide();
+// 通过导航栏转移
+$(function () {
+    $(".profile_nav_aside > p").on("click", function () {
+        switch_nav($(this).attr("index"));
+    })
 });
 
-// 通过导航切换标签页到我的路线
-$(document).on('click', '#profile_nav_2', function () {
-    switch_nav(2);
-    $("#profile_content_1").hide();
-    $("#profile_content_body_1").getNiceScroll().hide();
-    $("#profile_content_2").show();
-    $("#profile_content_body_2").getNiceScroll().show().resize();
-    $("#profile_content_3").hide();
-    $("#profile_content_4").hide();
-    $("#profile_detail_wrapper").getNiceScroll().hide();
-    $("#profile_content_5").hide();
-    $("#profile_content_6").hide();
+// 通过顶部标签栏转移
+$(function () {
+    $("#profile_follow_user_num_td").on("click", function () {
+        switch_nav(1);
+    })
+});
+$(function () {
+   $("#profile_follow_route_num_td").on("click", function () {
+       switch_nav(2);
+   })
 });
 
-// 通过导航切换标签页到推荐路线
-$(document).on('click', '#profile_nav_3', function () {
-    switch_nav(3);
-    $("#profile_content_1").hide();
-    $("#profile_content_body_1").getNiceScroll().hide();
-    $("#profile_content_2").hide();
-    $("#profile_content_body_2").getNiceScroll().hide();
-    $("#profile_content_3").show();
-    $("#profile_content_4").hide();
-    $("#profile_detail_wrapper").getNiceScroll().hide();
-    $("#profile_content_5").hide();
-    $("#profile_content_6").hide();
+// 取消关注用户
+$(function () {
+    $(".profile_user_follow").on("click", function () {
+        var data = {
+            "email": $(this).attr("email")
+        };
+        var self = this;
+        $.post('unfollow_user', data, function (json) {
+            if (json["status"] == "success") {
+                var li_id = "#" + $(self).attr("li_id");
+                $(li_id).remove();
+                var cur_num = $("#profile_follow_user_counter").text() - 1;
+                $("#profile_follow_user_counter").text(cur_num);
+                check_follow_empty();
+            }
+        });
+    })
 });
 
-// 通过导航切换标签页到个人资料
-$(document).on('click', '#profile_nav_4', function () {
-    switch_nav(4);
-    $("#profile_content_1").hide();
-    $("#profile_content_body_1").getNiceScroll().hide();
-    $("#profile_content_2").hide();
-    $("#profile_content_body_2").getNiceScroll().hide();
-    $("#profile_content_3").hide();
-    $("#profile_content_4").show();
-    $("#profile_detail_wrapper").getNiceScroll().show().resize();
-    $("#profile_content_5").hide();
-    $("#profile_content_6").hide();
-});
-
-// 通过导航切换标签页到修改密码
-$(document).on('click', '#profile_nav_5', function () {
-    switch_nav(5);
-    $("#profile_content_1").hide();
-    $("#profile_content_body_1").getNiceScroll().hide();
-    $("#profile_content_2").hide();
-    $("#profile_content_body_2").getNiceScroll().hide();
-    $("#profile_content_3").hide();
-    $("#profile_content_4").hide();
-    $("#profile_detail_wrapper").getNiceScroll().hide();
-    $("#profile_content_5").show();
-    $("#profile_content_6").hide();
-});
-
-// 通过导航切换标签页到退出登陆
-$(document).on('click', '#profile_nav_6', function () {
-    switch_nav(6);
-    $("#profile_content_1").hide();
-    $("#profile_content_body_1").getNiceScroll().hide();
-    $("#profile_content_2").hide();
-    $("#profile_content_body_2").getNiceScroll().hide();
-    $("#profile_content_3").hide();
-    $("#profile_content_4").hide();
-    $("#profile_detail_wrapper").getNiceScroll().hide();
-    $("#profile_content_5").hide();
-    $("#profile_content_6").show();
-});
-
-// 通过顶部切换至我的关注
-$(document).on('click', '#profile_follow_user_num_td', function () {
-    switch_nav(1);
-    $("#profile_content_1").show();
-    $("#profile_content_body_1").getNiceScroll().show().resize();
-    $("#profile_content_2").hide();
-    $("#profile_content_body_2").getNiceScroll().hide();
-    $("#profile_content_3").hide();
-    $("#profile_content_4").hide();
-    $("#profile_detail_wrapper").getNiceScroll().hide();
-    $("#profile_content_5").hide();
-    $("#profile_content_6").hide();
-});
-
-// 通过顶部切换标签页到我的路线
-$(document).on('click', '#profile_follow_route_num_td', function () {
-    switch_nav(2);
-    $("#profile_content_1").hide();
-    $("#profile_content_body_1").getNiceScroll().hide();
-    $("#profile_content_2").show();
-    $("#profile_content_body_2").getNiceScroll().show().resize();
-    $("#profile_content_3").hide();
-    $("#profile_content_4").hide();
-    $("#profile_detail_wrapper").getNiceScroll().hide();
-    $("#profile_content_5").hide();
-    $("#profile_content_6").hide();
+// 取消收藏路线
+$(function () {
+    $(".profile_route_follow").on("click", function () {
+        var data = {
+            "id": $(this).attr("route_id")
+        };
+        var self = this;
+        $.post('unfollow_route', data, function (json) {
+            if (json["status"] == "success") {
+                var li_id = "#" + $(self).attr("li_id");
+                $(li_id).remove();
+                var cur_num = $("#profile_follow_route_counter").text() - 1;
+                $("#profile_follow_route_counter").text(cur_num);
+                check_route_empty();
+            }
+        });
+    })
 });
