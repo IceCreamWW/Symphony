@@ -46,9 +46,13 @@ function initMap(){
 
 
 
-    var mapInfoDiv = document.getElementById("map-info-div");
-    extMap.geoMap.controls[google.maps.ControlPosition.RIGHT_TOP].push(mapInfoDiv);
-    extMap.initMarkers('init_marks');
+    // var mapInfoDiv = document.getElementById("map-info-div");
+    // var routesDiv = document.getElementById("routes-div");
+    // extMap.geoMap.controls[google.maps.ControlPosition.RIGHT_TOP].push(mapInfoDiv);
+    // extMap.geoMap.controls[google.maps.ControlPosition.LEFT_TOP].push(routesDiv);
+    extMap.addControl($('#map-info-div'), 'RIGHT_TOP')
+    extMap.addControl($('#routes-div'), 'LEFT_TOP')
+    extMap.initMarkersFrom('init_marks');
     extMap.setMapStyle('http://localhost:8000/static/json/night_map_style.json/')
 }
 

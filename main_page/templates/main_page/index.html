@@ -25,18 +25,21 @@
     <link rel="stylesheet" type="text/css" href="{% static "css/movie_div.css" %}">
     <link rel="stylesheet" type="text/css" href="{% static "css/main_page.common.css" %}">
     <link rel="stylesheet" type="text/css" href="{% static "css/font-awesome/css/font-awesome.min.css" %}">
+    <link rel="stylesheet" type="text/css" href="{% static "css/routes.css" %}">
 
 
 
     <script src="{% static "js/jquery.min.js" %}"></script>
     <script src="{% static "js/jquery.easing.js" %}"></script>
     <script src="{% static "js/main.common.js" %}"></script>
+    <script src="{% static "js/html2canvas.min.js" %}"></script>
 
     <script src="{% static "js/fullpage.continuousHorizontal.limited.min.js" %}"></script>
     <script src="{% static "js/jquery.fullpage.extensions.min.js" %}"></script>
 
     <script src="{% static "js/markerclusterer.js" %}"></script>
     <script src="{% static "js/extmap.classes.js" %}"></script>
+    <script src="{% static "js/routes.js" %}"></script>
     <script src="{% static "js/map.js" %}"></script>
     <script src="{% static "js/jquery.nicescroll.min.js" %}"></script>
     <script src="{% static "js/jquery.mslider.js" %}"></script>
@@ -61,7 +64,7 @@
 
                 
 
-                <div class="m-cur-slide-1" id="map-info-slides">
+                <div id="map-info-slides">
 
                     <div class="m-slide" >
                     	<form id="id-search-movie-form">
@@ -86,7 +89,27 @@
                 </div>
 
             </div>
+
+            <!-- Routes Div -->
+            <div id='routes-div'>
+                <div id="routes-tools-list"></div>
+                <div id="routes-slides">
+                    <div class="m-slide">
+                        <div id="routes-list">
+                            <div id="create-route-icon"></div>
+                        </div>
+                    </div>
+
+                    <div class="m-slide">
+                        
+                    </div>
+                </div>
+            </div>
+
         </div>
+        
+        
+
 
     </div>
 </div>

@@ -1,0 +1,50 @@
+#routes-div{
+	height: 100%;
+	width: 20%;
+	background-color: rgba(44,44,44,0.5);
+}
+
+#routes-list{
+	height: 100%;	
+	width: 100%;
+}
+
+#routes-slides{
+	position: absolute;
+	height: 80%;
+	width: 100%;
+	bottom: 0;
+}
+
+#create-route-icon{
+    height: 20%;
+    position: relative;
+    border-style: dashed;
+    border-color: green;
+    padding: 5%;
+    margin: 5%;
+}
+#create-route-icon::before, #create-route-icon::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    display: block;
+    border: 4px solid;
+    margin: auto;
+    color: green;
+}
+#create-route-icon::before{
+	height: 30%;
+    width: 0;
+}
+#create-route-icon::after {
+	height: 0;
+    width: 20%;
+}
+.route{
+    padding: 5%;
+    margin: 5%;
+}
