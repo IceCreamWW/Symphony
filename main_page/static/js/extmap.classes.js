@@ -79,10 +79,12 @@ RouteState.prototype.save = function (isNew, callback) {
     });
 }
 RouteState.prototype.hide = function () {
+    this.savedClusterMarkers = this.geoCluster.markers_.slice()
     this.routeLine && this.routeLine.setMap(null);
 }
 
 RouteState.prototype.show = function () {
+    this.savedClusterMarkers && this.geoMarkers.update(this.savedClusterMarkers)
     this.routeLine && self.routeLine.setMap(self.geoMap);
 }
 
@@ -135,7 +137,6 @@ function Route(options) {
     }, options);
 
     updateAttrs.call(this, settings);
-    this.geoCluster = $.extend(true, {}, this.geoCluster);
 
     this.routeStates = [];
     this.latestIndex = 0;
@@ -161,11 +162,11 @@ Route.prototype = {
         }
     },
     show: function () {
-        this.geoCluster.mSetMap(this.geoMap);
+        this.savedClusterMarkers && this.geoCluster.update(this.savedClusterMarkers);
         this.routeStates[this.curRouteStateIndex].show();
     },
     hide: function () {
-        this.geoCluster.mSetMap(null);
+        this.savedClusterMarkers = this.geoCluster.markers_.slice()
         this.routeStates[this.curRouteStateIndex].hide();
     },
     changeState: function (targetIndex, newState) {
@@ -258,7 +259,9 @@ Routes.prototype = {
         return name;
     },
     existName_: function (name) {
-        return Array.from(this.routes.values()).indexOf(name) >= 0;
+        return Array.from(this.routes.values()).some(function(route){
+            return route.name === name;
+        })
     },
     showRoute: function (id) {
         if (typeof id == "undefined") {
@@ -307,6 +310,8 @@ Routes.prototype = {
             this.getCurRoute().hide();
             if (this.browseOrder.length !== 0) {
                 this.showRoute(this.browseOrder[-1]);
+            }else{
+                this.geoCluster.update(this.geoMarkers.asArray());
             }
         } else {
             this.browseOrder.splice(this.indexOf(id), 1);
@@ -334,14 +339,11 @@ function ExtMap(options) {
         markerSymbolSettings: null,
         clusterOptions: null,
         mapId: null,
-        hiddenMapId: null
     }, options);
 
     this.geoMap = new google.maps.Map(document.getElementById(this.settings.mapId),
         this.settings.mapDisplayOptions
     );
-    this.hiddenMap = new google.maps.Map(document.getElementById(this.settings.hiddenMapId));
-
     this.geoMarkers = new Markers();
     this.geoCluster = new MarkerClusterer(this.geoMap, null, this.settings.clusterOptions);
 

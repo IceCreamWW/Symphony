@@ -7,6 +7,7 @@
 #routes-list{
 	height: 100%;	
 	width: 100%;
+	position: relative; /*For the scroll bar*/
 }
 
 #routes-slides{
@@ -51,6 +52,12 @@
     position: relative;
     background: rgba(0,0,0,0.7);
     overflow: hidden;
+}
+#routes-list .route:first-child{
+	margin-top: 1%;
+}
+#routes-list .route:last-child{
+	margin-bottom: 1%;
 }
 .route-name-wrapper{
 	height: 40%;
@@ -109,8 +116,12 @@ img.route-thumbnail{
 	width: 33.3%;
 	float: left;
 }
-.route-remove-icon {
+.route-delete-icon {
     transform: translateY(-0.5vh);
+}
+.route-delete-icon .fa:hover{
+	opacity: 1;
+	color: red;
 }
 .route-detail-icon {
     transform: translateY(-0.2vh);
@@ -118,6 +129,25 @@ img.route-thumbnail{
 .fa{
 	color: white;
 	opacity: 0.7;
-	font-size: 3.3vw;
+	font-size: 2.8vw;
 	cursor: pointer;
+	transition: color 0.2s;
+}
+.fa:hover {
+  position: relative;
+}
+
+.fa[data-title]:hover:after {
+	content: attr(data-title);
+	display: table;
+	color: white;
+	position: absolute;
+	top: 0;
+	font-size: 0.5vw;
+	background: black;
+	opacity: 1;
+	white-space: nowrap;
+	letter-spacing: 0.1vw;
+	padding: 0 5px;
+	left: 100%;
 }

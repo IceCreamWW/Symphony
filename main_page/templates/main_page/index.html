@@ -26,12 +26,14 @@
     <link rel="stylesheet" type="text/css" href="{% static "css/main_page.common.css" %}">
     <link rel="stylesheet" type="text/css" href="{% static "css/font-awesome/css/font-awesome.min.css" %}">
     <link rel="stylesheet" type="text/css" href="{% static "css/routes.css" %}">
+    <link rel="stylesheet" type="text/css" href="{% static "css/perfect-scrollbar.css" %}">
 
 
 
     <script src="{% static "js/jquery.min.js" %}"></script>
     <script src="{% static "js/jquery.easing.js" %}"></script>
     <script src="{% static "js/main.common.js" %}"></script>
+    <script src="{% static "js/perfect-scrollbar.js" %}"></script>
     <script src="{% static "js/html2canvas.min.js" %}"></script>
 
     <script src="{% static "js/fullpage.continuousHorizontal.limited.min.js" %}"></script>
@@ -96,7 +98,7 @@
                 <div id="routes-tools-list"></div>
                 <div id="routes-slides">
                     <div class="m-slide">
-                        <div id="routes-list">
+                        <div id="routes-list" class="routes-list">
 
                         <!-- TEST -->
                             <div class='route'>
@@ -111,8 +113,8 @@
                                             <div class='route-edit-icon route-icon'>
                                                 <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
                                             </div>
-                                            <div class='route-remove-icon route-icon'>
-                                                <i class="fa fa-trash-o" aria-hidden="true"></i>
+                                            <div class='route-delete-icon route-icon'>
+                                                <i data-title="删除" class="fa fa-trash-o" aria-hidden="true"></i>
                                             </div>
                                             <div class='route-detail-icon route-icon'>
                                                 <i class="fa fa-list-ul" aria-hidden="true"></i>

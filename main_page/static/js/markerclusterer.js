@@ -71,6 +71,7 @@ function MarkerClusterer(map, opt_markers, opt_options) {
   // there is no point going ahead :)
   this.extend(MarkerClusterer, google.maps.OverlayView);
   this.map_ = map;
+  this.hidden_ = false;
 
   /**
    * @type {Array.<google.maps.Marker>}
@@ -562,27 +563,6 @@ MarkerClusterer.prototype.getMap = function() {
   return this.map_;
 };
 
-
-// FIXED
-/**
- * Sets the google map that the clusterer is associated with.
- *
- * @param {google.maps.Map} map The map.
- */
-MarkerClusterer.prototype.mSetMap = function(map) {
-  if(!map){
-    this.saved_markers_ = this.markers_
-    this.markers_ = []
-    this.resetViewport()
-    for (var i = 0, marker; marker = this.saved_markers_[i]; i++) {
-      marker.setMap(this.map_)
-    }
-  }else{
-    this.map_ = map
-    this.saved_markers_ && this.addMarkers(this.saved_markers_)    
-  }
-}
-
 /**
  * Sets the google map that the clusterer is associated with.
  *
@@ -690,6 +670,14 @@ MarkerClusterer.prototype.clearMarkers = function() {
   // Set the markers a empty array.
   this.markers_ = [];
 };
+
+
+
+
+MarkerClusterer.prototype.update = function(markers) {
+  this.clearMarkers();
+  this.addMarkers(markers);
+}
 
 /**
  * Clears all existing clusters and recreates them.
