@@ -1,14 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="3af8185b-f5ba-4d09-a60e-5b5fe9099c2e" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/main_page/static/css/routes.css" afterPath="$PROJECT_DIR$/main_page/static/css/routes.css" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/main_page/static/js/extmap.classes.js" afterPath="$PROJECT_DIR$/main_page/static/js/extmap.classes.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/main_page/static/js/jquery.mslider.js" afterPath="$PROJECT_DIR$/main_page/static/js/jquery.mslider.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/main_page/static/js/markerclusterer.js" afterPath="$PROJECT_DIR$/main_page/static/js/markerclusterer.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/main_page/static/js/routes.js" afterPath="$PROJECT_DIR$/main_page/static/js/routes.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/main_page/templates/main_page/index.html" afterPath="$PROJECT_DIR$/main_page/templates/main_page/index.html" />
-    </list>
+    <list default="true" id="3af8185b-f5ba-4d09-a60e-5b5fe9099c2e" name="Default" comment="" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -35,7 +28,7 @@
         <entry file="file://$PROJECT_DIR$/main_page/templates/main_page/index.html">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="271">
-              <caret line="40" column="0" lean-forward="true" selection-start-line="40" selection-start-column="0" selection-end-line="40" selection-end-column="0" />
+              <caret line="40" column="0" lean-forward="false" selection-start-line="40" selection-start-column="0" selection-end-line="40" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -762,7 +755,7 @@
     <entry file="file://$PROJECT_DIR$/main_page/templates/main_page/index.html">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="271">
-          <caret line="40" column="0" lean-forward="true" selection-start-line="40" selection-start-column="0" selection-end-line="40" selection-end-column="0" />
+          <caret line="40" column="0" lean-forward="false" selection-start-line="40" selection-start-column="0" selection-end-line="40" selection-end-column="0" />
           <folding />
         </state>
       </provider>

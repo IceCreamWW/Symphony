@@ -574,16 +574,18 @@ function bindMouseScrollHandler(
 
 // My Solution To Smooth Scroll
 var doSmoothScroll = function(i, deltaX, deltaY, type){
-  var duration = type == "wheel" ? 300 : 150;
+  var duration = type == "wheel" ? 100 : 50;
   var animation = "linear"
   var element = i.element;
+  deltaY /= 1.5;
+  deltaX /= 1.5;
 
   var expectTop = $(element).attr('expectTop');
   if (expectTop) {
     expectTop = parseInt(expectTop); 
   }
   if(i.scrollbarYHeight != 0){
-    deltaY *= (Math.min(1 / 3 + i.railYHeight / i.scrollbarYHeight * 2 / 3, 2))
+    deltaY *= (Math.min(i.railYHeight / i.scrollbarYHeight, 2))
   }
 
   var bottomExpectTop = element.scrollHeight - element.offsetHeight;
