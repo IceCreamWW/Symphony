@@ -4,6 +4,9 @@
     <title>Simple Map</title>
     <meta name="viewport" content="initial-scale=1.0">
     <meta charset="utf-8">
+    <style name="impostor_size">
+        .marker + li:not(:last-child) { border-top-width:20px; }
+    </style>
     <style>
         /* Always set the map height explicitly to define the size of the div
          * element that contains the map. */
@@ -27,6 +30,7 @@
     <link rel="stylesheet" type="text/css" href="{% static "css/font-awesome/css/font-awesome.min.css" %}">
     <link rel="stylesheet" type="text/css" href="{% static "css/routes.css" %}">
     <link rel="stylesheet" type="text/css" href="{% static "css/perfect-scrollbar.css" %}">
+    <link rel="stylesheet" type="text/css" href="{% static "css/common/jquery-ui.min.css" %}">
 
 
 
@@ -38,12 +42,14 @@
 
     <script src="{% static "js/fullpage.continuousHorizontal.limited.min.js" %}"></script>
     <script src="{% static "js/jquery.fullpage.extensions.min.js" %}"></script>
+    
+    <!-- Replace it with min -->
+    <script src="{% static "js/common/jquery-ui.js" %}"></script>
 
     <script src="{% static "js/markerclusterer.js" %}"></script>
     <script src="{% static "js/extmap.classes.js" %}"></script>
     <script src="{% static "js/routes.js" %}"></script>
     <script src="{% static "js/map.js" %}"></script>
-    <script src="{% static "js/jquery.nicescroll.min.js" %}"></script>
     <script src="{% static "js/jquery.mslider.js" %}"></script>
     <script src="{% static "js/maprightdiv.js" %}"></script>
 
@@ -97,53 +103,110 @@
             <div id='routes-div'>
                 <div id="routes-tools-list"></div>
                 <div id="routes-slides">
+                    
+                    <div class="user-info">
+                        {# to be implemented #}
+                    </div>
+
                     <div class="m-slide">
+
                         <div id="routes-list" class="routes-list">
 
-                        <!-- TEST -->
+                        <!-- ROUTE EXAMPLE -->
                             <div class='route'>
                                 <img class='route-thumbnail' src="http://localhost:8000/static/img/default_thumbnail.jpg">
                                 <div class='route-control'>
                                     <div class='route-name-wrapper'>
-                                        <div class='route-name'>新建路线1</div>
+                                        <div class='route-name'>示例路线</div>
                                     </div>
                                     <hr align="center">
                                     <div class='route-icons-list'>
                                         <div class='route-icons-wrapper'>
-                                            <div class='route-edit-icon route-icon'>
-                                                <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                                            <div class='route-share-icon route-icon'>
+                                                <i class="fa fa-share-square-o " aria-hidden="true"></i>
                                             </div>
                                             <div class='route-delete-icon route-icon'>
                                                 <i data-title="删除" class="fa fa-trash-o" aria-hidden="true"></i>
                                             </div>
-                                            <div class='route-detail-icon route-icon'>
-                                                <i class="fa fa-list-ul" aria-hidden="true"></i>
+                                            <div class='route-edit-icon route-icon'>
+                                                <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        <!-- TEST -->
+                        <!-- ROUTE EXAMPLE -->
                         
 
-                            <div id="create-route-icon"></div>
+                            <div id="create-route-wrapper">
+                                <i class="fa fa-plus" aria-hidden="true"></i>
+                                <div id="create-route-text">create a new route</div>
+                            </div>
                         </div>
                     </div>
 
                     <div class="m-slide">
-                        
+                        <ul class="places-tools-list">
+                            <li class="route-tool-current-marker places-icon">
+                                <i class="fa fa-map-marker" aria-hidden="true"></i>
+                            </li>
+                            <li class="route-tool-screenshot places-icon">
+                                <i class="fa fa-picture-o" aria-hidden="true"></i>
+                            </li>
+                            <li class='route-tool-share places-icon'>
+                                <i class="fa fa-share-square-o " aria-hidden="true"></i>
+                            </li>
+                            <li class="route-tool-return-routes places-icon">
+                                <i class="fa fa-chevron-left" aria-hidden="true"></i>
+                            </li>
+                        </ul>
+
+                            <ul class="places-list sortable">
+                                
+                                <!-- Place Example -->
+                                <li class="place">
+                                    <div class="place-index">1</div>
+                                    <div class="place-name">Australia - New South Wales - Upper Dartbrook</div>
+                                </li>
+                                <!-- Place Example -->
+
+                                <!-- Place Example -->
+                                <li class="place">
+                                    <div class="place-index">2</div>
+                                    <div class="place-name">Australia - Victoria - Golden Beach</div>
+                                </li>
+                                <!-- Place Example -->
+
+                                <!-- Place Example -->
+                                <li class="place">
+                                    <div class="place-index">3</div>
+                                    <div class="place-name">Australia - Victoria - Golden Beach</div>
+                                </li>
+                                <!-- Place Example -->
+
+                                <!-- Place Example -->
+                                <li class="place">
+                                    <div class="place-index">4</div>
+                                    <div class="place-name">Australia - Victoria - Golden Beach</div>
+                                </li>
+                                <!-- Place Example -->
+                                
+                                <li class="sortable-divider"></li>
+                                
+                                <li title="选择一个地点" id="add-place-wrapper" class="unsortable">
+                                    <i class="fa fa-plus" aria-hidden="true"></i>
+                                    <div id="add-place-text">add a new place</div>
+                                </li>
+
+                            </ul>
+
+                        </div>
                     </div>
                 </div>
             </div>
 
-        </div>
-        
-        
-
-
     </div>
 </div>
-
 
 
 <script type="text/javascript">
@@ -157,26 +220,6 @@
 
     $(function() {
         $("input").attr("spellcheck","false");
-        $("#plots-content").niceScroll({
-            cursorcolor: "white",
-            cursorborder: "none",
-            cursoropacitymax: 0.6,
-            cursoropacitymin: 0.2,
-            scrollbarid: "plots-scrollbar"
-        });
-
-        $("#movies-content").niceScroll({
-            cursorcolor: "white",
-            cursorborder: "none",
-            cursoropacitymax: 0.6,
-            cursoropacitymin: 0.2,
-            scrollbarid: "movies-scrollbar"
-        });
-        $(window).resize(function () {
-            setTimeout(function () {
-                $("#movies-content").getNiceScroll().resize();
-            },500)
-        })
     });
     /*
     $(document).ready(function() {

@@ -346,6 +346,8 @@ function ExtMap(options) {
     );
     this.geoMarkers = new Markers();
     this.geoCluster = new MarkerClusterer(this.geoMap, null, this.settings.clusterOptions);
+    this.placeService = new google.maps.places.PlacesService(this.geoMap);
+
 
     this.routes = new Routes({
         geoMap: this.geoMap,
@@ -365,18 +367,20 @@ ExtMap.prototype = {
             self.geoMap.setMapTypeId(json_url);
         });
     },
-    initMarkersFrom: function (markersUrl) {
+    initMarkersFrom: function (markersUrl, callback) {
         var self = this;
         $.getJSON(markersUrl, null, function (markers) {
             markers.forEach(function (marker) {
                 var mMarker = new google.maps.Marker({
                     position: marker['latlng'],
                     map: self.geoMap,
-                    id: marker['id']
+                    id: marker['id'],
+                    name: marker['name'],
                 });
                 self.geoMarkers.addMarker(mMarker);
             });
             self.geoCluster.addMarkers(self.geoMarkers.asArray());
+            callback(markers);
         });
     },
     addControl: function (control, position, options) {
@@ -401,6 +405,11 @@ ExtMap.prototype = {
                 this.geoMap.controls[google.maps.ControlPosition.LEFT_BOTTOM].push(control[0]);
                 break;
         }
+    },
+    addMarkerEvent: function(event, handler){
+        Array.from(this.geoMarkers.markers.values()).forEach(function(marker){
+            marker.addListener(event, handler);
+        });
     },
     toCanvas: function (callback) {
         html2canvas(document.getElementById(this.settings.mapId), {

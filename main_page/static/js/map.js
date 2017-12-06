@@ -53,17 +53,29 @@ function initMap(){
     // extMap.geoMap.controls[google.maps.ControlPosition.LEFT_TOP].push(routesDiv);
     extMap.addControl($('#map-info-div'), 'RIGHT_TOP')
     extMap.addControl($('#routes-div'), 'LEFT_TOP')
-    extMap.initMarkersFrom('init_marks');
+    extMap.initMarkersFrom('init_marks',function () {
+        extMap.addMarkerEvent('click', function(){
+            if (extMap.geoMarkers.curMarker == this) {
+                this.setAnimation(this.animation ? null : google.maps.Animation.BOUNCE);
+            }
+            else{
+                if (extMap.geoMarkers.curMarker) {
+                    extMap.geoMarkers.curMarker.setAnimation(null);
+                }
+                extMap.geoMarkers.curMarker = this;
+                this.setAnimation(google.maps.Animation.BOUNCE)
+            }
+            
+        })    
+    });
     extMap.setMapStyle('http://localhost:8000/static/json/night_map_style.json/')
 }
 
 
 
 
-
 function load_map(map_style_json) {
     
-    var styledMapType = new google.maps.StyledMapType(map_style_json, {name: "夜间模式"});
     map = new google.maps.Map(document.getElementById('map'), {
         // center: center_coordinate,
         // zoom: 5,
@@ -84,8 +96,6 @@ function load_map(map_style_json) {
         //   scale: 4
         // };
 
-
-    
     poly = new google.maps.Polyline({
           strokeColor: '#FFFF33',
           strokeOpacity: 0,
@@ -97,7 +107,6 @@ function load_map(map_style_json) {
           strokeWeight: 3,
           map: map
         });
-
 
 
 
@@ -124,40 +133,5 @@ function load_map(map_style_json) {
         init_marks(json);
     });
 
-}
-
-function init_marks(markers) {
-
-    // for (var i in markers) {
-    //     var map_marker = new google.maps.Marker({
-    //         position: markers[i]['latlng'],
-    //         map: map,
-    //         id: markers[i]['id']
-    //     })
-
-    markers.forEach(function(marker){
-        var map_marker = new google.maps.Marker({
-            position: marker['latlng'],
-            map: map,
-            id: marker['id']
-        })   
-        map_marker.addListener('click', function () {
-            cur_marker = this.id;
-            var csrftoken = getCookie('csrftoken');
-        //  var data = {"id": this.id, "csrfmiddlewaretoken": csrftoken}
-            var data = {"id": 1, "csrfmiddlewaretoken": csrftoken};
-
-            $.getJSON('get_marker_plots', data, function (json, textStatus) {
-                $("#plots-content").html(json['html']);
-
-                $('.plots-info>h1').text(json['site']);
-                moveToSlide('m-cur-slide-', 'map-right-div-section', 2);
-            });
-        });
-        all_markers.addMarker(map_marker);     
-    })
-    markercluster = new MarkerClusterer(map, all_markers.asArray(),
-        {imagePath: 'http://localhost:8000/static/img/m'});
-    
 }
 
