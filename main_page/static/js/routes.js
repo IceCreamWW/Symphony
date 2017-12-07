@@ -21,15 +21,21 @@ $(function() {
 	setPadding($('li.place').outerHeight() * 2)
 	$('.sortable').sortable({
 	    placeholder: 'marker',
+	    // placeholder: 'place',
 	    items: 'li.place',
 	    containment: 'parent',
 	    axis: "y",
-	    cursor: "move",
+	    cursor: "default",
 	    opacity: 0.5,
 	    tolerance: "pointer",
-	    helper: "clone",
 	    start: function(ev, ui) {
-	        setPadding(rule, ui.item.outerHeight() + (ui.item.outerHeight() - ui.item.height()) / 2);
+	        var next = ui.item.nextAll('li.place').first();
+	        next.css({'-moz-transition':'none', '-webkit-transition':'none', 'transition':'none'});
+	        setPadding(rule, ui.item.outerHeight() + (ui.item.outerHeight() - ui.item.height()));
+	        setTimeout(next.css.bind(next, {'transition':'border-top-width 0.1s ease-in'}));
+	    },
+	    change: function(){
+	    	var fixme = 1;
 	    },
 	    stop: function(ev, ui) {
 	        var next = ui.item.next();

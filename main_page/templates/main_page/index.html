@@ -5,7 +5,8 @@
     <meta name="viewport" content="initial-scale=1.0">
     <meta charset="utf-8">
     <style name="impostor_size">
-        .marker + li:not(:last-child) { border-top-width:20px; }
+        .marker + li.place, .marker + li#add-place-wrapper { border-top-width: 0px;}
+        /*.marker + li:not(:last-child) { border-top-width:20px; }*/
     </style>
     <style>
         /* Always set the map height explicitly to define the size of the div
@@ -191,9 +192,7 @@
                                 </li>
                                 <!-- Place Example -->
                                 
-                                <li class="sortable-divider"></li>
-                                
-                                <li title="选择一个地点" id="add-place-wrapper" class="unsortable">
+                                <li title="选择一个地点" id="add-place-wrapper">
                                     <i class="fa fa-plus" aria-hidden="true"></i>
                                     <div id="add-place-text">add a new place</div>
                                 </li>
