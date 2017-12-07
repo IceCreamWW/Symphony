@@ -73,6 +73,12 @@ function MarkerClusterer(map, opt_markers, opt_options) {
   this.map_ = map;
   this.hidden_ = false;
 
+
+  /**
+   * marker should keep animatge
+   * @type {<google.maps.marker>}
+   */
+   this.animateMarker_ = undefined
   /**
    * @type {Array.<google.maps.Marker>}
    * @private
@@ -805,6 +811,9 @@ MarkerClusterer.prototype.createClusters_ = function() {
       this.addToClosestCluster_(marker);
     }
   }
+
+  // Recover Animation
+  this.animateMarker_ && this.animateMarker_.setAnimation(google.maps.Animation.BOUNCE);
 };
 
 

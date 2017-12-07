@@ -112,7 +112,7 @@ img.route-thumbnail{
 .fa{
 	color: white;
 	opacity: 0.7;
-	font-size: 2.8vw;
+	font-size: 2.3vw;
 	cursor: pointer;
 	transition: color 0.2s;
 }
@@ -139,29 +139,29 @@ img.route-thumbnail{
 
 /* Slide2 : Places */
 ul.places-tools-list{
+	width: 20%;
 	list-style: none;
 	text-align: center;
+	float: left;
 }
 ul.places-tools-list li{
-	float: left;
-	width: 25%;
 	text-align: center;
+	padding: 10% 2%;
+}
+ul.places-tools-list li:first-child{
+	padding-top: 0;
 }
 
-ul.places-list{
-	list-style: none;
-	position: relative;
-}
 
-ul.sortable li{
-	transition: border-top-width 0.1s ease-in
-}
 
+
+/* add place div */
 #add-place-wrapper{
     position: relative;
     color: gray;
-	padding: 3% 15% 1% 6%;
-    margin: 5%;
+    padding: 3% 10% 1% 6%;
+    margin: 5% 8%;
+    margin-left: 0;
     text-align: center;
     opacity: 0.5;
     cursor: default;
@@ -182,31 +182,43 @@ ul.sortable li{
 	color: green;
 }
 
+#add-place-wrapper::after{
+	border: dashed;	
+}
 #add-place-text{
     font-size: 1.4vw;
     font-weight: bold;
     text-align: right;
     text-overflow: ellipsis;
     overflow: hidden;
-}
-#add-place-wrapper::after{
-	border: dashed;	
-	color: gray;
+    white-space: nowrap;
 }
 
+
+/* Places List*/
+ul#places-list{
+	width: 80%;
+	height: 100%;
+	list-style: none;
+	position: relative;
+	float: left;
+}
 
 li.place{
     padding: 2%;
     margin: 5%;
+    margin-left: 0; 
     position: relative;
     overflow: hidden;
     font-size: 1.2vw;
+}
+li.place:first-child{
+	margin-top: 0;
 }
 li.place::after{
 	background:#18629D;
 	border-radius:6px;
 }
-
 
 .place-index{
 	float: left;
@@ -219,8 +231,10 @@ li.place::after{
     text-overflow: ellipsis;
     max-width: 25ch;
 }
-.marker{
-	opacity: 0;
+
+/* Smooth Sortable */
+ul.sortable li{
+	transition: border-top-width 0.1s ease-in
 }
 
 ul.sortable li{
@@ -237,3 +251,7 @@ ul.sortable li::after {
 	left:0px;
 	z-index:-1;
 }
+.marker{
+	opacity: 0;
+}
+
