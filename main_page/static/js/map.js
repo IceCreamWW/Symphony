@@ -1,8 +1,8 @@
 var center_coordinate = {lat: -34.397, lng: 150.644};
 var poly;
-var extMap;
+var mExtMap;
 
-var mOptions = {
+var mSettings = {
     center: center_coordinate,
     zoom: 5,
     zoomControl: false,
@@ -31,39 +31,52 @@ var lineSetting = {
 }
 
 
-var mcOptions = {
+var mcSettings = {
     imagePath: 'http://localhost:8000/static/img/m'
 }
 
 function initMap(){
 
-    extMap = new ExtMap({
+    mExtMap = new ExtMap({
         mapId: 'map',
         hiddenMapId: 'hidden-map',
-        lineSymbol: lineSetting,
-        mapDisplayOptions: mOptions,
-        clusterOptions: mcOptions
+        lineSymbolSettings: lineSetting,
+        mapDisplaySettings: mSettings,
+        clusterSettings: mcSettings
     });
 
 
+    mExtMap.addControl($('#map-info-div'), 'RIGHT_TOP')
+    mExtMap.addControl($('#routes-div'), 'LEFT_TOP')
+    mExtMap.initMarkersFrom('init_marks',function () {
+        mExtMap.addMarkerEvent('click', function(event){
+            $('#add-place-wrapper').trigger('marker-click',[this.id]);
+        })
+    });
 
-    // var mapInfoDiv = document.getElementById("map-info-div");
-    // var routesDiv = document.getElementById("routes-div");
-    // extMap.geoMap.controls[google.maps.ControlPosition.RIGHT_TOP].push(mapInfoDiv);
-    // extMap.geoMap.controls[google.maps.ControlPosition.LEFT_TOP].push(routesDiv);
-    extMap.addControl($('#map-info-div'), 'RIGHT_TOP')
-    extMap.addControl($('#routes-div'), 'LEFT_TOP')
-    extMap.initMarkersFrom('init_marks');
-    extMap.setMapStyle('http://localhost:8000/static/json/night_map_style.json/')
+    mExtMap.setMapStyle('http://localhost:8000/static/json/night_map_style.json/')
+
+    $('#map').on('marker-click', function(event, curMarkerId) {
+        var preMarker = mExtMap.geoMarkers.curMarker;
+        var curMarker = mExtMap.geoMarkers.getMarkerById(curMarkerId);
+        if (preMarker == curMarker) return;
+
+        var curRoute = mExtMap.routes.getCurRoute();
+        mExtMap.geoCluster.animateMarker_ = curMarker;
+        preMarker && preMarker.setAnimation(null)
+        preMarker && (!curRoute || !curRoute.hasMarker(preMarker.id)) && mExtMap.geoCluster.addMarker(preMarker);
+                
+        mExtMap.geoCluster.removeMarker(curMarker);
+        mExtMap.geoMarkers.curMarker = curMarker;
+        curMarker.setAnimation(google.maps.Animation.BOUNCE);
+    });
 }
-
 
 
 
 
 function load_map(map_style_json) {
     
-    var styledMapType = new google.maps.StyledMapType(map_style_json, {name: "夜间模式"});
     map = new google.maps.Map(document.getElementById('map'), {
         // center: center_coordinate,
         // zoom: 5,
@@ -84,8 +97,6 @@ function load_map(map_style_json) {
         //   scale: 4
         // };
 
-
-    
     poly = new google.maps.Polyline({
           strokeColor: '#FFFF33',
           strokeOpacity: 0,
@@ -97,7 +108,6 @@ function load_map(map_style_json) {
           strokeWeight: 3,
           map: map
         });
-
 
 
 
@@ -124,40 +134,5 @@ function load_map(map_style_json) {
         init_marks(json);
     });
 
-}
-
-function init_marks(markers) {
-
-    // for (var i in markers) {
-    //     var map_marker = new google.maps.Marker({
-    //         position: markers[i]['latlng'],
-    //         map: map,
-    //         id: markers[i]['id']
-    //     })
-
-    markers.forEach(function(marker){
-        var map_marker = new google.maps.Marker({
-            position: marker['latlng'],
-            map: map,
-            id: marker['id']
-        })   
-        map_marker.addListener('click', function () {
-            cur_marker = this.id;
-            var csrftoken = getCookie('csrftoken');
-        //  var data = {"id": this.id, "csrfmiddlewaretoken": csrftoken}
-            var data = {"id": 1, "csrfmiddlewaretoken": csrftoken};
-
-            $.getJSON('get_marker_plots', data, function (json, textStatus) {
-                $("#plots-content").html(json['html']);
-
-                $('.plots-info>h1').text(json['site']);
-                moveToSlide('m-cur-slide-', 'map-right-div-section', 2);
-            });
-        });
-        all_markers.addMarker(map_marker);     
-    })
-    markercluster = new MarkerClusterer(map, all_markers.asArray(),
-        {imagePath: 'http://localhost:8000/static/img/m'});
-    
 }
 

@@ -3,47 +3,34 @@
 	width: 20%;
 	background-color: rgba(44,44,44,0.5);
 }
-
 #routes-list{
 	height: 100%;	
 	width: 100%;
+	position: relative; /*For the scroll bar*/
 }
-
 #routes-slides{
 	position: absolute;
 	height: 80%;
 	width: 100%;
 	bottom: 0;
 }
-
-#create-route-icon{
-    height: 20%;
+#create-route-wrapper{
     position: relative;
     border-style: dashed;
     border-color: green;
     padding: 5%;
     margin: 5%;
     cursor: pointer;
+    text-align: center;
 }
-#create-route-icon::before, #create-route-icon::after {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    bottom: 0;
-    right: 0;
-    display: block;
-    border: 4px solid;
-    margin: auto;
-    color: green;
+#create-route-wrapper .fa{
+	color: green;
 }
-#create-route-icon::before{
-	height: 30%;
-    width: 0;
-}
-#create-route-icon::after {
-	height: 0;
-    width: 20%;
+#create-route-text{
+	text-align: center;
+	font-size: 1.6vw;
+	font-weight: bold;
+	color: green;
 }
 .route{
     padding: 2%;
@@ -51,6 +38,12 @@
     position: relative;
     background: rgba(0,0,0,0.7);
     overflow: hidden;
+}
+#routes-list .route:first-child{
+	margin-top: 1%;
+}
+#routes-list .route:last-child{
+	margin-bottom: 1%;
 }
 .route-name-wrapper{
 	height: 40%;
@@ -109,15 +102,155 @@ img.route-thumbnail{
 	width: 33.3%;
 	float: left;
 }
-.route-remove-icon {
+.route-delete-icon {
     transform: translateY(-0.5vh);
 }
-.route-detail-icon {
-    transform: translateY(-0.2vh);
+.route-delete-icon .fa:hover{
+	opacity: 1;
+	color: red;
 }
 .fa{
 	color: white;
 	opacity: 0.7;
-	font-size: 3.3vw;
+	font-size: 2.3vw;
+	cursor: pointer;
+	transition: color 0.2s;
+}
+.fa:hover {
+  position: relative;
+}
+
+.fa[data-title]:hover:after {
+	content: attr(data-title);
+	display: table;
+	color: white;
+	position: absolute;
+	top: 0;
+	font-size: 0.5vw;
+	background: black;
+	opacity: 1;
+	white-space: nowrap;
+	letter-spacing: 0.1vw;
+	padding: 0 5px;
+	left: 100%;
+}
+
+
+
+/* Slide2 : Places */
+ul.places-tools-list{
+	width: 20%;
+	list-style: none;
+	text-align: center;
+	float: left;
+}
+ul.places-tools-list li{
+	text-align: center;
+	padding: 10% 2%;
+}
+ul.places-tools-list li:first-child{
+	padding-top: 0;
+}
+
+
+
+
+/* add place div */
+#add-place-wrapper{
+    position: relative;
+    color: gray;
+    padding: 3% 10% 1% 6%;
+    margin: 5% 8%;
+    margin-left: 0;
+    text-align: center;
+    opacity: 0.5;
+    cursor: default;
+}
+
+#add-place-wrapper.active{
+	color: green;
+	opacity: 1;
 	cursor: pointer;
 }
+
+#add-place-wrapper .fa{
+    color: gray;
+    font-size: 1.9vw;
+    float: left;
+}
+#add-place-wrapper.active .fa{
+	color: green;
+}
+
+#add-place-wrapper::after{
+	border: dashed;	
+}
+#add-place-text{
+    font-size: 1.4vw;
+    font-weight: bold;
+    text-align: right;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+
+/* Places List*/
+ul#places-list{
+	width: 80%;
+	height: 100%;
+	list-style: none;
+	position: relative;
+	float: left;
+}
+
+li.place{
+    padding: 2%;
+    margin: 0 5% 5% 0;
+    position: relative;
+    overflow: hidden;
+    font-size: 1.2vw;
+}
+li.place:first-child{
+	/*margin-top: 0;*/
+}
+li.place::after{
+	background:#18629D;
+	border-radius:6px;
+}
+
+.place-index{
+	float: left;
+	width: 10%;
+}
+
+.place-name {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 25ch;
+}
+
+/* Smooth Sortable */
+ul.sortable li{
+	transition: border-top-width 0.1s ease-in
+}
+
+ul.sortable li{
+	border-top: 0px solid rgba(0,0,0,0);
+}
+
+ul.sortable li::after { 
+	content:' ';
+	display:block;
+	position:absolute;
+	height:100%;
+	width:100%;
+	top:0px;
+	left:0px;
+	z-index:-1;
+}
+.marker{
+	opacity: 0;
+}
+

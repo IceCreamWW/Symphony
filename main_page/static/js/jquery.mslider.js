@@ -9,11 +9,13 @@
 			leftArrow			: 	undefined,
 			rightArrow			:  	undefined,
 			menu 				: 	undefined,
+			done				: 	undefined
 
 		}, options)
 
 		var self = $(this);
 
+		
 		self.children().wrapAll('<div class="m-slider"></div>')
 		var $slider = self.getMSlider();
 		self.css('overflow-x', 'hidden');
@@ -54,7 +56,26 @@
 		$(settings.rightArrow).click(function() {
 			self.moveRight()
 		})
+		self.on('slide-done', function(event, target) {
+			settings.done(target)
+		});
+
 	}	
+
+
+	$.fn.addLeftArrow = function (arrowElement) {
+		var self = this;
+		$(arrowElement).click(function() {
+			self.moveLeft();
+		});
+	}
+
+	$.fn.addRightArrow = function (arrowElement) {
+		var self = this;
+		$(arrowElement).click(function() {
+			self.moveRight();
+		});
+	}
 
 	$.fn.moveToSlideNumber = function (target) {
 		var slidesCnt = $(this).getSlideCnt();
@@ -76,7 +97,9 @@
 
 		$slider.children('.m-slide').eq(target).find('*').removeAttr("tabindex");
 		$slider.children('.m-slide').eq(target).siblings().find('*').attr("tabindex", -1);
+		$(this).trigger('slide-done', [target]);
 	};
+
 
 	$.fn.moveToSlideSelector = function (target) {
 		var target = $(this).getMSlider().children(target + '.m-slide').index();
@@ -116,7 +139,7 @@
 		return $(this).getMSlider().children('.m-slide').length;
 	}
 	$.fn.getActiveSlideIndex = function(){
-		return $(this).getMSlider().children('.m-slide-active').index();
+		return $(this).getMSlider().children('.m-slide-active').index('.m-slide');
 	}
 	$.fn.getActiveSlide = function(){
 		return $(this).getMSlider().children('.m-slide-active');
