@@ -27,9 +27,14 @@ $(function() {
 	    opacity: 0.5,
 	    tolerance: "pointer",
 	    start: function(ev, ui) {
-	        var next = ui.item.nextAll('li.place').first();
+	        var next = ui.item.nextAll('li:not(.marker)').first();
 	        next.css({'-moz-transition':'none', '-webkit-transition':'none', 'transition':'none'});
-	        setPadding(rule, ui.item.outerHeight() + (ui.item.outerHeight() - ui.item.height()));
+	        /* 
+        	开始拖拽后占位符长度应为 (fisrt-element ? 0 : margin-bottom +) margin-bottom +  outerHeight() 
+          	由于prev-element具有margin-bottom, 只需要margin-bottom + outerHeight(true)
+           	这恰好是一个格子的高度（因为这里的list-item不具有margin-top）
+	        */
+	        setPadding(rule, ui.helper.outerHeight(true));
 	        setTimeout(next.css.bind(next, {'transition':'border-top-width 0.1s ease-in'}));
 	    },
 	    change: function(){
@@ -126,6 +131,10 @@ $(function() {
 				});
 				$placesList.sortable("refresh")
 				$placeslistPS.update();
+			},
+			'refresh-layout': function(event){
+				$placeslistPS.update();
+				$placesList.sortable("refresh")
 			}
 		});
 

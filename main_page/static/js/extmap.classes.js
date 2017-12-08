@@ -319,7 +319,7 @@ Routes.prototype = {
 
     },
     getRouteById: function (routeId){
-        this.routes.get(routeId)
+        return this.routes.get(routeId)
     },
     getCurRoute: function () {
         return this.getRouteById(this.curRouteId);

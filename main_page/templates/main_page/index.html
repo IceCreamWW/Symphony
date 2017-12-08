@@ -5,7 +5,8 @@
     <meta name="viewport" content="initial-scale=1.0">
     <meta charset="utf-8">
     <style name="impostor_size">
-        ul.sortable .marker + li{ border-top-width: 0px;}
+        ul.sortable .marker + li:not(.ui-sortable-helper),
+        ul.sortable .marker + .ui-sortable-helper + li{ border-top-width: 0px;}
     </style>
     <style>
         /* Always set the map height explicitly to define the size of the div
