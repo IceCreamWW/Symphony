@@ -9,7 +9,7 @@
 			leftArrow			: 	undefined,
 			rightArrow			:  	undefined,
 			menu 				: 	undefined,
-			done				: 	undefined
+			handler				: 	undefined
 
 		}, options)
 
@@ -46,18 +46,18 @@
 
 		// Menu Item Click Event, Animate to Div According Menu Item Index
 		$(settings.menu).children().click(function() {
-			self.moveToSlideNumber($(this).index())
+			self.moveToSlideNumber($(this).index());
 		});
 		
 
 		$(settings.leftArrow).click(function() {
-			self.moveLeft()
+			self.moveLeft();
 		})
 		$(settings.rightArrow).click(function() {
-			self.moveRight()
+			self.moveRight();
 		})
-		self.on('slide-done', function(event, target) {
-			settings.done(target)
+		self.on('slide', function(event, target) {
+			settings.handler && settings.handler(target);
 		});
 
 	}	
@@ -97,7 +97,7 @@
 
 		$slider.children('.m-slide').eq(target).find('*').removeAttr("tabindex");
 		$slider.children('.m-slide').eq(target).siblings().find('*').attr("tabindex", -1);
-		$(this).trigger('slide-done', [target]);
+		$(this).trigger('slide', [target]);
 	};
 
 
