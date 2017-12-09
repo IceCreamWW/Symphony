@@ -10,7 +10,6 @@ from main_page.models import *
 from random import *
 import json
 
-
 # Create your views here.
 @login_required
 def film_map(request):
@@ -66,19 +65,7 @@ def get_random(a, b):
 # For test, return all marker lat and lng in table site
 def generate_random_marks(cnt=100):
     seed(0)
-    marks = [{"latlng": {"lat": get_random(-30, -40), "lng": get_random(145, 155)},
-              "id": _,
-              "name": location_names[_]} for _ in range(100)]
-    return marks
-
-
-# For Real Usage
-def get_init_markers():
-    site_set = Site.objects.values('id', 'lat', 'lng')
-    marks = [{"latlng": {"lat": site['lat'], "lng": site['lng']}, "name": "test"} for site in site_set]
-
-
-location_names = '''
+    location_names = '''
 Unknown Place
 Australia - New South Wales - Barmedman
 Australia - New South Wales - Wallaroo
@@ -180,3 +167,16 @@ Australia - New South Wales - Bigga
 Australia - New South Wales - Mila
 Australia - Victoria - Miepoll
 '''
+    location_names = [location_name for location_name in location_names.split('\n') if len(location_name) > 0]
+    marks = [{"latlng": {"lat": get_random(-30, -40), "lng": get_random(145, 155)},
+              "id": _,
+              "name": location_names[_]} for _ in range(100)]
+    return marks
+
+
+# For Real Usage
+def get_init_markers():
+    site_set = Site.objects.values('id', 'lat', 'lng')
+    marks = [{"latlng": {"lat": site['lat'], "lng": site['lng']}, "name": "test"} for site in site_set]
+
+

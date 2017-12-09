@@ -51,18 +51,13 @@ Markers.prototype = {
 }
 
 /*Route 组合继承 Marker*/
-function RouteState(route, options) {
+function RouteState(options) {
     Markers.call(this);
     var settings = $.extend({
-        geoMap: null,
-        geoCluster: null,
-        geoMarkers: null,
-        name: undefined,
-        routelineSetting: null    //json expected
+        route: null,
+        lineSymbol: null    //json expected
     }, options);
 
-
-    this.route = route
     this.routeLine = null;
     updateAttrs.call(this, settings);
     this.order = [];
@@ -72,20 +67,20 @@ RouteState.prototype = new Markers();
 RouteState.prototype.constructor = RouteState;
 RouteState.prototype.save = function (isNew, callback) {
     var self = this;
-    routeInfo = {"name": this.name};
+    routeInfo = {"name": this.route.name};
     routeInfo["isNew"] = isNew;
     $.getJSON('save_route', routeInfo, function(json, textStatus){
         callback(json,textStatus);
     });
 }
 RouteState.prototype.hide = function () {
-    this.savedClusterMarkers = this.geoCluster.markers_.slice()
+    this.savedClusterMarkers = this.route.extMap.geoCluster.markers_.slice()
     this.routeLine && this.routeLine.setMap(null);
 }
 
 RouteState.prototype.show = function () {
-    this.savedClusterMarkers && this.geoMarkers.update(this.savedClusterMarkers)
-    this.routeLine && self.routeLine.setMap(self.geoMap);
+    this.savedClusterMarkers && this.route.extMap.geoMarkers.update(this.savedClusterMarkers)
+    this.routeLine && this.routeLine.setMap(this.route.extMap.geoMap);
 }
 
 RouteState.prototype.updateRouteline = function () {
@@ -94,7 +89,7 @@ RouteState.prototype.updateRouteline = function () {
     if (this.routeLine) {
         this.routeLine.setMap(null);
     }
-    this.routeLine = new google.maps.Polyline(routelineSetting);
+    this.routeLine = new google.maps.Polyline(this.route.extMap.settings.lineSymbolSettings);
 
     var path = this.routeLine.getPath();
     this.order.forEach(function (id) {
@@ -102,38 +97,42 @@ RouteState.prototype.updateRouteline = function () {
     })
 },
 
-    RouteState.prototype.exchangeMarker = function (id1, id2) {
-        index1 = this.order.indexOf(id1);
-        index2 = this.order.indexOf(id2);
-        this.order[index1] = id2;
-        this.order[index2] = id1;
-    };
+RouteState.prototype.exchangeMarker = function (id1, id2) {
+    index1 = this.order.indexOf(id1);
+    index2 = this.order.indexOf(id2);
+    this.order[index1] = id2;
+    this.order[index2] = id1;
+};
 
-RouteState.prototype.addMarker = function (marker, nodraw) {
+RouteState.prototype.addMarker = function (markerId, nodraw) {
     nodraw = nodraw || false
-    this.markers.set(marker.id, marker);
-    this.order.push(marker.id);
-    this.geoCluster.removeMarker(this.geoMarkers.getMarkerById(id), nodraw)
+    var marker = this.route.extMap.geoMarkers.getMarkerById(markerId);
+    this.markers.set(markerId, marker);
+    this.order.push(markerId);
+    this.route.extMap.geoCluster.removeMarker(marker, nodraw)
 };
 
 RouteState.prototype.removeMarker = function (id) {
     this.markers.delete(id);
     this.order.splice(this.order.indexOf(id), 1);
-    this.geoCluster.addMarker(this.geoMarkers.getMarkerById(id))
+    this.route.extMap.geoCluster.addMarker(this.route.extMap.geoMarkers.getMarkerById(id))
 };
+RouteState.prototype.asMarkerArray = function () {
+    var self = this;
+    return this.order.map(function (markerId) {
+        return self.getMarkerById(id);
+    })
+}
 
 
 function Route(options) {
 
     var settings = $.extend({
         id: -1,
-        geoMap: null,
-        geoCluster: null,
-        geoMarkers: null,
+        extMap: null,
         name: undefined,
         isNew: true,
         bufferSize: 50,
-        routelineSetting: null    //json expected
     }, options);
 
     updateAttrs.call(this, settings);
@@ -142,13 +141,16 @@ function Route(options) {
     this.latestIndex = 0;
     this.curRouteStateIndex = 0;
     this.earliestIndex = 0;
-    this.routeStates[0] = new RouteState(this, settings);
+    this.routeStates[0] = new RouteState($.extend({route : this}, settings));
 }
 
 Route.prototype = {
     constructor: Route,
     getBufferIndex: function (rawIndex) {
         return (rawIndex + this.bufferSize) % this.bufferSize;
+    },
+    hasMarker: function(markerId) {
+        return this.routeStates[this.curRouteStateIndex].getMarkerById(markerId) != undefined;
     },
     undo: function () {
         if (this.curRouteStateIndex !== this.earliestIndex) {
@@ -166,20 +168,20 @@ Route.prototype = {
         this.routeStates[this.curRouteStateIndex].show();
     },
     hide: function () {
-        this.savedClusterMarkers = this.geoCluster.markers_.slice()
+        this.savedClusterMarkers = this.extMap.geoCluster.markers_.slice()
         this.routeStates[this.curRouteStateIndex].hide();
     },
     changeState: function (targetIndex, newState) {
         targetIndex = this.getBufferIndex(targetIndex);
         this.routeStates[this.curRouteStateIndex].hide();
-        this.curRouteStateIndex = this.targetIndex;
+        this.curRouteStateIndex = targetIndex;
         if (newState) {
-            this.latestState = this.targetIndex;
-            this.routeStates[this.targetIndex] = newState;
+            this.latestIndex = targetIndex;
+            this.routeStates[targetIndex] = newState;
             if (this.latestIndex === this.earliestIndex) {
                 this.earliestIndex = this.getBufferIndex(this.earliestIndex + 1);
             }
-            this.routeStates[latestIndex].updateRouteline();
+            this.routeStates[targetIndex].updateRouteline();
         }
         this.routeStates[targetIndex].show();
     },
@@ -222,10 +224,13 @@ Route.prototype = {
                 // no draw is true
                 self.newState.addMarker(id, true);
             });
-            self.geoMarkers.resetViewport();
-            self.geoMarkers.redraw();
+            self.extMap.geoMarkers.resetViewport();
+            self.extMap.geoMarkers.redraw();
             self.isNew = false;
         });
+    },
+    getMarkerArray: function(){
+        return this.routeStates[this.curRouteStateIndex].asMarkerArray();
     }
 };
 
@@ -233,10 +238,7 @@ Route.prototype = {
 function Routes(options) {
 
     var settings = $.extend({
-        geoMap: null,
-        geoCluster: null,
-        geoMarkers: null,
-        routelineSetting: null
+        extMap: null,
     }, options);
 
 
@@ -285,11 +287,9 @@ Routes.prototype = {
             return false;
         }
         var route = new Route({
-            geoMap: this.geoMap,
-            geoCluster: this.geoCluster,
+            extMap: this.extMap,
             isNew: true,
             name: name,
-            routelineSetting: this.routelineSetting
         });
         var self = this;
         route.save(function (json) {
@@ -318,13 +318,15 @@ Routes.prototype = {
         }
 
     },
+    getRouteById: function (routeId){
+        return this.routes.get(routeId)
+    },
     getCurRoute: function () {
-        return this.routes.get(this.curRouteId);
+        return this.getRouteById(this.curRouteId);
     },
     loadRoute: function (id) {
         var route = new Route({
-            geoMap: this.geoMap,
-            geoCluster: this.geoCluster,
+            extMap: this.extMap,
         });
         route.loadRoute(id);
     }
@@ -334,26 +336,24 @@ Routes.prototype = {
 function ExtMap(options) {
 
     this.settings = $.extend({
-        mapDisplayOptions: null,
-        lineSetting: null,
+        mapDisplaySettings: null,
+        lineSymbolSettings: null,
         markerSymbolSettings: null,
-        clusterOptions: null,
+        clusterSettings: null,
         mapId: null,
     }, options);
 
     this.geoMap = new google.maps.Map(document.getElementById(this.settings.mapId),
-        this.settings.mapDisplayOptions
+        this.settings.mapDisplaySettings
     );
     this.geoMarkers = new Markers();
-    this.geoCluster = new MarkerClusterer(this.geoMap, null, this.settings.clusterOptions);
+    this.geoCluster = new MarkerClusterer(this.geoMap, null, this.settings.clusterSettings);
     this.placeService = new google.maps.places.PlacesService(this.geoMap);
 
 
     this.routes = new Routes({
-        geoMap: this.geoMap,
-        geoCluster: this.geoCluster,
-        geoMarkers: this.geoMarkers,
-        routelineSetting: this.settings.lineSetting
+        extMap: this,
+        lineSymbolSettings: this.settings.lineSymbolSettings
     });
 }
 
@@ -426,23 +426,6 @@ ExtMap.prototype = {
                 callback(canvas.toDataURL('image/' + picFormat));
             }
         });
-    },
-
-    // Fix html2canvas bug if top or left off-screen
-    hiddenClone: function (element) {
-        // Create clone of element
-        var clone = element.cloneNode(true);
-
-        // Position element relatively within the 
-        // body but still out of the viewport
-        var style = clone.style;
-        style.position = 'relative';
-        style.top = window.innerHeight + 'px';
-        style.left = 0;
-
-        // Append clone to body and return the clone
-        document.body.appendChild(clone);
-        return clone;
     }
 };
 

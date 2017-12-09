@@ -5,8 +5,8 @@
     <meta name="viewport" content="initial-scale=1.0">
     <meta charset="utf-8">
     <style name="impostor_size">
-        .marker + li.place, .marker + li#add-place-wrapper { border-top-width: 0px;}
-        /*.marker + li:not(:last-child) { border-top-width:20px; }*/
+        ul.sortable .marker + li:not(.ui-sortable-helper),
+        ul.sortable .marker + .ui-sortable-helper + li{ border-top-width: 0px;}
     </style>
     <style>
         /* Always set the map height explicitly to define the size of the div
@@ -146,8 +146,11 @@
                         </div>
                     </div>
 
-                    <div class="m-slide">
+                    <div class="m-slide places-div">
                         <ul class="places-tools-list">
+                            <li class="route-tool-return-routes places-icon">
+                                <i class="fa fa-chevron-left" aria-hidden="true"></i>
+                            </li>
                             <li class="route-tool-current-marker places-icon">
                                 <i class="fa fa-map-marker" aria-hidden="true"></i>
                             </li>
@@ -157,52 +160,49 @@
                             <li class='route-tool-share places-icon'>
                                 <i class="fa fa-share-square-o " aria-hidden="true"></i>
                             </li>
-                            <li class="route-tool-return-routes places-icon">
-                                <i class="fa fa-chevron-left" aria-hidden="true"></i>
-                            </li>
                         </ul>
 
-                            <ul class="places-list sortable">
-                                
-                                <!-- Place Example -->
-                                <li class="place">
-                                    <div class="place-index">1</div>
-                                    <div class="place-name">Australia - New South Wales - Upper Dartbrook</div>
-                                </li>
-                                <!-- Place Example -->
+                        <ul id="places-list" class="sortable">
+                            
+                            <!-- Place Example -->
+                            <li class="place">
+                                <div class="place-index">1</div>
+                                <div class="place-name">Australia - New South Wales - Upper Dartbrook</div>
+                            </li>
+                            <!-- Place Example -->
 
-                                <!-- Place Example -->
-                                <li class="place">
-                                    <div class="place-index">2</div>
-                                    <div class="place-name">Australia - Victoria - Golden Beach</div>
-                                </li>
-                                <!-- Place Example -->
+                            <!-- Place Example -->
+                            <li class="place">
+                                <div class="place-index">2</div>
+                                <div class="place-name">Australia - Victoria - Golden Beach</div>
+                            </li>
+                            <!-- Place Example -->
 
-                                <!-- Place Example -->
-                                <li class="place">
-                                    <div class="place-index">3</div>
-                                    <div class="place-name">Australia - Victoria - Golden Beach</div>
-                                </li>
-                                <!-- Place Example -->
+                            <!-- Place Example -->
+                            <li class="place">
+                                <div class="place-index">3</div>
+                                <div class="place-name">Australia - Victoria - Golden Beach</div>
+                            </li>
+                            <!-- Place Example -->
 
-                                <!-- Place Example -->
-                                <li class="place">
-                                    <div class="place-index">4</div>
-                                    <div class="place-name">Australia - Victoria - Golden Beach</div>
-                                </li>
-                                <!-- Place Example -->
-                                
-                                <li title="选择一个地点" id="add-place-wrapper">
-                                    <i class="fa fa-plus" aria-hidden="true"></i>
-                                    <div id="add-place-text">add a new place</div>
-                                </li>
+                            <!-- Place Example -->
+                            <li class="place">
+                                <div class="place-index">4</div>
+                                <div class="place-name">Australia - Victoria - Golden Beach</div>
+                            </li>
+                            <!-- Place Example -->
+                            
+                            <li title="选择一个地点" id="add-place-wrapper" class="sortable-border-top" data-markerid="-1">
+                                <i class="fa fa-plus" aria-hidden="true"></i>
+                                <div id="add-place-text">add a new place</div>
+                            </li>
 
-                            </ul>
+                        </ul>
 
-                        </div>
                     </div>
                 </div>
             </div>
+        </div>
 
     </div>
 </div>

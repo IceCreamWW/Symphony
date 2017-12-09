@@ -1,8 +1,8 @@
 var center_coordinate = {lat: -34.397, lng: 150.644};
 var poly;
-var extMap;
+var mExtMap;
 
-var mOptions = {
+var mSettings = {
     center: center_coordinate,
     zoom: 5,
     zoomControl: false,
@@ -31,44 +31,45 @@ var lineSetting = {
 }
 
 
-var mcOptions = {
+var mcSettings = {
     imagePath: 'http://localhost:8000/static/img/m'
 }
 
 function initMap(){
 
-    extMap = new ExtMap({
+    mExtMap = new ExtMap({
         mapId: 'map',
         hiddenMapId: 'hidden-map',
-        lineSymbol: lineSetting,
-        mapDisplayOptions: mOptions,
-        clusterOptions: mcOptions
+        lineSymbolSettings: lineSetting,
+        mapDisplaySettings: mSettings,
+        clusterSettings: mcSettings
     });
 
 
-
-    // var mapInfoDiv = document.getElementById("map-info-div");
-    // var routesDiv = document.getElementById("routes-div");
-    // extMap.geoMap.controls[google.maps.ControlPosition.RIGHT_TOP].push(mapInfoDiv);
-    // extMap.geoMap.controls[google.maps.ControlPosition.LEFT_TOP].push(routesDiv);
-    extMap.addControl($('#map-info-div'), 'RIGHT_TOP')
-    extMap.addControl($('#routes-div'), 'LEFT_TOP')
-    extMap.initMarkersFrom('init_marks',function () {
-        extMap.addMarkerEvent('click', function(){
-            if (extMap.geoMarkers.curMarker == this) {
-                this.setAnimation(this.animation ? null : google.maps.Animation.BOUNCE);
-            }
-            else{
-                if (extMap.geoMarkers.curMarker) {
-                    extMap.geoMarkers.curMarker.setAnimation(null);
-                }
-                extMap.geoMarkers.curMarker = this;
-                this.setAnimation(google.maps.Animation.BOUNCE)
-            }
-            
-        })    
+    mExtMap.addControl($('#map-info-div'), 'RIGHT_TOP')
+    mExtMap.addControl($('#routes-div'), 'LEFT_TOP')
+    mExtMap.initMarkersFrom('init_marks',function () {
+        mExtMap.addMarkerEvent('click', function(event){
+            $('#add-place-wrapper').trigger('marker-click',[this.id]);
+        })
     });
-    extMap.setMapStyle('http://localhost:8000/static/json/night_map_style.json/')
+
+    mExtMap.setMapStyle('http://localhost:8000/static/json/night_map_style.json/')
+
+    $('#map').on('marker-click', function(event, curMarkerId) {
+        var preMarker = mExtMap.geoMarkers.curMarker;
+        var curMarker = mExtMap.geoMarkers.getMarkerById(curMarkerId);
+        if (preMarker == curMarker) return;
+
+        var curRoute = mExtMap.routes.getCurRoute();
+        mExtMap.geoCluster.animateMarker_ = curMarker;
+        preMarker && preMarker.setAnimation(null)
+        preMarker && (!curRoute || !curRoute.hasMarker(preMarker.id)) && mExtMap.geoCluster.addMarker(preMarker);
+                
+        mExtMap.geoCluster.removeMarker(curMarker);
+        mExtMap.geoMarkers.curMarker = curMarker;
+        curMarker.setAnimation(google.maps.Animation.BOUNCE);
+    });
 }
 
 
