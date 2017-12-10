@@ -235,7 +235,7 @@ Route.prototype = {
 
     },
     delete: function (callback) {
-        $.getJSON('delete_route', {"id": this.id}, callback);
+        $.post('delete_route', {"id": this.id}, callback);
     },
     loadRoute: function (id) {
         var self = this;
@@ -321,23 +321,23 @@ Routes.prototype = {
         }.bind(self));
     },
 
-    deleteRoute: function (id) {
+    removeRoute: function (id) {
         id = id || this.curRouteId;
         this.routes.get(id).delete();
-        this.routes.delete(id);
 
-        if (this.browseOrder[-1] === id) {
+        if (this.browseOrder[this.browseOrder.length - 1] === id) {
             this.browseOrder.length -= 1;
-            this.getCurRoute().hide();
             if (this.browseOrder.length !== 0) {
-                this.showRoute(this.browseOrder[-1]);
+                this.showRoute(this.browseOrder[this.browseOrder.length - 1]);
             }else{
-                this.geoCluster.update(this.geoMarkers.asArray());
+                this.getCurRoute().hide();
+                this.curRouteId = -1;
+                this.extMap.geoCluster.update(this.extMap.geoMarkers.asArray());
             }
         } else {
-            this.browseOrder.splice(this.indexOf(id), 1);
+            this.browseOrder.splice(this.browseOrder.indexOf(id), 1);
         }
-
+        this.routes.delete(id);
     },
     getRouteById: function (routeId){
         return this.routes.get(routeId)

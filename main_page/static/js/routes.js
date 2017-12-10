@@ -46,9 +46,13 @@ $(function() {
 							$placesList.trigger('refresh');
 						});
 
+
+						 // Edit Icon
 						$('#routes-slides').addRightArrow(newRouteElement.find('.route-edit-icon .fa'));
+
+						// 
 						newRouteElement.find('.route-delete-icon .fa').click(function(event) {
-							mExtMap.routes.removeRoute(route.id);
+							$routesList.trigger('remove-route', [newRouteElement]);
 							return false;
 						});
 						/* 添加元素UI */
@@ -62,10 +66,18 @@ $(function() {
 				})
 			},
 			'remove-route': function(event, routeElement){
-
+				var route = mExtMap.routes.getRouteById(routeElement.data('route-id'));
+				mExtMap.routes.removeRoute(route.id);
+				routeElement.hide(400, function() {
+					routeElement.remove();
+					$routesList.trigger('refresh-layout');
+					$('#map').trigger('marker-click', [mExtMap.geoMarkers.curMarker.id])
+				});
+				return false;
 			},
 			'refresh-layout': function(event){
-
+				$routeslistPS.update();
+				return false;
 			},
 		}
 	);

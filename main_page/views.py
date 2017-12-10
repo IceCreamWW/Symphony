@@ -28,6 +28,13 @@ def save_route(request):
             route.save()
             return JsonResponse({"id": route.id})
 
+@csrf_exempt
+def delete_route(request):
+    if request.is_ajax():
+        route_id = request.POST['id'];
+        Route.objects.get(id=route_id).delete();
+        return JsonResponse({"success": True})
+
 def get_marker_plots(request):
     if request.method == "GET":
         id = request.GET['id']
@@ -60,6 +67,10 @@ def search_movie(request):
 
 def get_random(a, b):
     return a + (b - a) * random()
+
+
+    
+
 
 
 # For test, return all marker lat and lng in table site
