@@ -238,8 +238,11 @@ li.place:first-child{
 	/*margin-top: 0;*/
 }
 li.place::after{
-	background:#18629D;
-	border-radius:6px;
+	background: #18629D;
+	border-radius: 6px;
+}
+li.place.active::after{
+	background: green;
 }
 
 .place-index{

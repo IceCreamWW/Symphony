@@ -19,7 +19,6 @@ $(function() {
 					$routeslistPS && $routeslistPS.update();
 					break;
 				case 1:
-					$placesList.trigger('refresh');
 					break;
 			}
 		}
@@ -50,7 +49,7 @@ $(function() {
 						 // Edit Icon
 						$('#routes-slides').addRightArrow(newRouteElement.find('.route-edit-icon .fa'));
 
-						// 
+						// Delete Icon
 						newRouteElement.find('.route-delete-icon .fa').click(function(event) {
 							$routesList.trigger('remove-route', [newRouteElement]);
 							return false;
@@ -86,6 +85,16 @@ $(function() {
 	$('#create-route-wrapper').click(function(event) {
 		$routesList.trigger('add-route');
 	});
+
+
+	/* Places Tools */
+	$('.route-tool-delete .fa').click(function(event) {
+		$placesList.trigger('remove-place', [mExtMap.geoMarkers.curMarker.id])
+	});
+
+
+
+
 
 	/*Places Events*/
 
@@ -145,6 +154,7 @@ $(function() {
 				}else{
 					$('#add-place-wrapper').addClass('active');
 				}
+				hasMarker ? $('.route-tool-delete').show() : $('.route-tool-delete').hide()
 			},
 			'add-place': function(event, markerId) {
 				var marker = mExtMap.geoMarkers.getMarkerById(markerId);
@@ -168,9 +178,9 @@ $(function() {
 				return false;
 			},
 			'remove-place': function(event, markerId){
-				var toRemove = $('.place[data-marker-id]="' + markerId + '"');
+				var toRemove = $('.place.active');
 				if(toRemove){
-					mExtMap.routes.getCurRoute().removeMarker();
+					mExtMap.routes.getCurRoute().removeMarker(markerId);
 					toRemove.hide(400, function() {
 						toRemove.remove();
 						$placesList.trigger('refresh-layout');
@@ -254,12 +264,6 @@ function createRrouteElement(options){
 	</div>\
 	" 
 	return $(routeHTML);
-	var routeDiv = $(routehtml).data({
-		"route-id": options.id
-	});
-	routeDiv.find(".route-name").text(options.name);
-	updateRouteEvents(routeDiv);
-	return routeDiv;
 }
 
 function createPlaceElement(){
