@@ -6,21 +6,24 @@ $(function() {
 	var stylesheet = $('style[name=impostor_size]')[0].sheet;
     var rule = stylesheet.rules ? stylesheet.rules[0].style : stylesheet.cssRules[0].style;
 
+    var ROUTES_SLIDE = 0;
+    var PLACES_SLIDE = 1;
+
 	// For Test Use
 	$('#routes-slides').addRightArrow($('.route-edit-icon .fa'))
-	$('#routes-slides').addLeftArrow($('.route-tool-return-routes .fa'))
+	$('#routes-slides').addLeftArrow($('.places-tool-return-routes .fa'))
 	// --
 
 	$('#routes-slides').mslider({
-		initSlide: 0,
+		initSlide: ROUTES_SLIDE,
 		handler: function(target){
 			switch(target){
-				case 0:
+				case ROUTES_SLIDE:
 					$routesList.trigger('update-thumbnail');
 					$routeslistPS && $routeslistPS.update();
 					$routesList.sortable('refresh')
 					break;
-				case 1:
+				case PLACES_SLIDE:
 					break;
 			}
 		}
@@ -85,6 +88,7 @@ $(function() {
 							$routesList.sortable('refresh');
 						});
 						newRouteElement.trigger('click');
+
 						return false;
 					}
 				})
@@ -97,7 +101,7 @@ $(function() {
 					$routeslistPS && $routeslistPS.update();
 					$routesList.sortable('refresh');
 					// $routesList.trigger('refresh-layout');
-					$('#map').trigger('marker-click', [mExtMap.geoMarkers.curMarker.id])
+					$('#map').trigger('marker-click', [mExtMap.geoMarkers.curMarker.id]);
 				});
 				return false;
 			},
@@ -115,7 +119,18 @@ $(function() {
 		$routesList.trigger('add-route');
 	});
 
-
+	/* Undo and Redo */
+	$(document).keydown(function(e){
+		if($('#routes-slides').getActiveSlideIndex() != PLACES_SLIDE){
+			return true;
+		}
+		if( e.which === 90 && e.ctrlKey && !e.shiftKey ){
+			$placesList.trigger('undo');
+		} 
+		if( e.which === 90 && e.ctrlKey && e.shiftKey ){
+			$placesList.trigger('redo');
+    	}
+}); 
 
 	/* Input */
 	$('.route-name-editable-wrapper').click(function(event) {
@@ -138,10 +153,15 @@ $(function() {
 	});
 
 	/* Places Tools */
-	$('.route-tool-delete .fa').click(function(event) {
+	$('.places-tool-delete .fa').click(function(event) {
 		$placesList.trigger('remove-place', [mExtMap.geoMarkers.curMarker.id])
 	});
-
+	$('.places-tool-undo .fa').click(function(event) {
+		$placesList.trigger('undo');
+	});
+	$('.places-tool-redo .fa').click(function(event) {
+		$placesList.trigger('redo');
+	});
 
 	/*Places Events*/
 
@@ -168,12 +188,12 @@ $(function() {
 	    	var tragetPosition = ui.placeholder.index("#places-list li:not(.ui-sortable-helper)");
 	    	var markerId = ui.item.data('marker-id');
 	    	mExtMap.routes.getCurRoute().changeMarkerToPosition(markerId ,tragetPosition);
-	    	$placesList.trigger('sort');
 	    },
 	    stop: function(ev, ui) {
 	        var next = ui.item.next();
 	        next.css({'-moz-transition':'none', '-webkit-transition':'none', 'transition':'none'});
 	        setTimeout(next.css.bind(next, {'transition':'border-top-width 70ms linear'}));
+	    	$placesList.trigger('sort');
 	    }
 	});
 
@@ -201,7 +221,7 @@ $(function() {
 				}else{
 					$('#add-place-wrapper').addClass('active');
 				}
-				hasMarker ? $('.route-tool-delete').show() : $('.route-tool-delete').hide()
+				hasMarker ? $('.places-tool-delete').addClass('active') : $('.places-tool-delete').removeClass('active');
 			},
 			'add-place': function(event, markerId) {
 				var marker = mExtMap.geoMarkers.getMarkerById(markerId);
@@ -218,8 +238,16 @@ $(function() {
 				mExtMap.routes.getCurRoute().addMarker(marker.id);
 				/* 添加元素UI */
 				newPlaceElement.insertBefore("#add-place-wrapper").show(400, function() {
-					$placesList.trigger('refresh-layout');
+					$placeslistPS.update();
+					$placesList.sortable("refresh");
 				});
+
+				mExtMap.routes.getCurRoute().canUndo() ? 
+				$('.places-tool-undo').addClass('active') : $('.places-tool-undo').removeClass('active');
+				
+				mExtMap.routes.getCurRoute().canRedo() ? 
+				$('.places-tool-redo').addClass('active') : $('.places-tool-redo').removeClass('active');
+				
 				/* 触发事件 */
 				$('#add-place-wrapper').trigger('marker-click',[marker.id]);
 				return false;
@@ -230,19 +258,59 @@ $(function() {
 					mExtMap.routes.getCurRoute().removeMarker(markerId);
 					toRemove.hide(400, function() {
 						toRemove.remove();
-						$placesList.trigger('refresh-layout');
 					});
+					mExtMap.routes.getCurRoute().canUndo() ? 
+					$('.places-tool-undo').addClass('active') : $('.places-tool-undo').removeClass('active');
+					
+					mExtMap.routes.getCurRoute().canRedo() ? 
+					$('.places-tool-redo').addClass('active') : $('.places-tool-redo').removeClass('active');
 				}
 				return false;
 			},
-			'refresh': function(event){
-				var curRoute = mExtMap.routes.getCurRoute();
+			'undo': function(event){
+				if (!mExtMap.routes.getCurRoute().canUndo()) {
+					return false;
+				}
+				mExtMap.routes.getCurRoute().undo();
+				$placesList.trigger('refresh');
+			},
+			'redo': function(event){
+				if(!mExtMap.routes.getCurRoute().canRedo()){
+					return false;
+				}
+				mExtMap.routes.getCurRoute().redo();
+				$placesList.trigger('refresh');
+			},
+			'sort': function(event){
+				var shouldCommit = false;
+				$('ul#places-list li.place').each(function(index, el) {
+					if ($(el).find('.place-index').text() != index + 1) {
+						shouldCommit = true;
+						$(el).find('.place-index').text(index + 1);
+					}
+				});
+				if (shouldCommit) {
+					// mExtMap.routes.getCurRoute().commitChange();
+					mExtMap.routes.getCurRoute().forceCommit();
+				}
+				// else{
+				// 	mExtMap.routes.getCurRoute().cancelChange();
+				// }
+				mExtMap.routes.getCurRoute().canUndo() ? 
+				$('.places-tool-undo').addClass('active') : $('.places-tool-undo').removeClass('active');
+				
+				mExtMap.routes.getCurRoute().canRedo() ? 
+				$('.places-tool-redo').addClass('active') : $('.places-tool-redo').removeClass('active');
+			},
+			'refresh': function(event, forceRefresh){
+				forceRefresh = forceRefresh || false
 
+				var curRoute = mExtMap.routes.getCurRoute();
 				var oldRouteId = $placesList.data('route-id');
 				var newRouteId = curRoute ? curRoute.id : -1;
 
 				// 不需要更新
-				if(newRouteId == oldRouteId){
+				if(newRouteId == oldRouteId && !forceRefresh){
 					return false;
 				}
 				$placesList.children('li.place').remove();
@@ -267,16 +335,19 @@ $(function() {
 				$placesList.children('li.place').click(function(event) {
 					$('#add-place-wrapper').trigger('marker-click',[$(this).data('marker-id')]);
 				});
-				$placeslistPS && $placeslistPS.update();
-				$placesList.sortable("refresh");
-				mExtMap.geoMarkers.curMarker && $placesList.trigger('marker-click', [mExtMap.geoMarkers.curMarker.id]);
-				return false;
-			},
-			'refresh-layout': function(event){
+
+				mExtMap.routes.getCurRoute().canUndo() ? 
+				$('.places-tool-undo').addClass('active') : $('.places-tool-undo').removeClass('active');
+				
+				mExtMap.routes.getCurRoute().canRedo() ? 
+				$('.places-tool-redo').addClass('active') : $('.places-tool-redo').removeClass('active');
+				
 				$placeslistPS.update();
 				$placesList.sortable("refresh");
+				mExtMap.geoMarkers.curMarker && $placesList.trigger('marker-click', [mExtMap.geoMarkers.curMarker.id]);
+				
 				return false;
-			}
+			},
 		}
 	);
 });
