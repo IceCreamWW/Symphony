@@ -1,0 +1,116 @@
+\input{head}
+\title{\textbf{在MySQL数据库中由经纬度计算最近的点}}
+\author{}
+\date{}
+\begin{document}
+\maketitle
+\section{问题背景}
+给定点集$S=\{(x,y)\mid x\in[-90, 90], y\in[-180,
+180]\}$，其中每一个点$(x, y)\in
+S$都表示三维球面上的一个点，并且$x$表示纬度，$y$表示经度。假设$S$存储在MySQL数据库sites中，并
+且sites的列为latitude，longitude，以及route\_id，其中$\text{route\_id}\in\{0,1,2,\dots\}$，且$S$中每
+个元素都有不同的route\_id。现有点$a=(x_0,y_0)\;(x_0\in[-90,90],y_0\in[-180,180])$，往求解在球面距离
+下$S$中距离$a$最短的点$b\in R$。
+
+\section{距离的计算}
+对于三维球面坐标系下已知经度纬度时在球面上的距离的计算，我们有如下定理。
+
+\begin{thm}[三维球体表面的距离]
+  设两个点$s_1,s_2$在半径为$R$的三维球体表面，并且$s_1$的纬度为$\phi_1$，$s_2$的纬度
+  为$\phi_2$，$s_1,s_2$的纬度差为$\Delta\phi$，经度差为$\Delta\lambda$，则$s_1,s_2$间的距离$d$为：
+\begin{displaymath}
+  d=\mathrm{haversin}(\frac{d}{R})=\mathrm{haversin}(\Delta\phi)+\cos(\phi_1)\cos(\phi_2)\mathrm{haversin}(\Delta\lambda)
+\end{displaymath}
+其中，$\mathrm{haversion}(\theta)=\frac{\mathrm{versin}(\theta)}{2}=\sin^2(\frac{\theta}{2})$，
+$\mathrm{versin}(\theta)=1-\cos(\theta)=2\sin^2(\frac{\theta}{2})$。
+\end{thm}
+
+在MySQL数据库中，若第一个点的纬度为\texttt{orig.latitude}，经度为\texttt{orig.longitude}，第二个点的
+纬度为\texttt{dest.latitude}，经度为\texttt{dest.longitude}，则可用如下命令计算两个点之间在球表面的距
+离：
+
+\begin{quote}
+  \texttt{3956 * 2 * ASIN(SQRT(\\
+    POWER(SIN((orig.latitude - dest.latitude) * pi() / 180 / 2), 2)\\
+    + COS(orig.latitude * pi() / 180) * COS(dest.latitude * pi() / 180)\\
+    * POWER(SIN((orig.longitude - dest.longitude) * pi() / 180 / 2), 2)))\\
+    as distance}
+\end{quote}
+
+\section{计算最近点的MySQL语句}
+首先，根据上一节中距离的计算公式，我们可以直接得到一个直接的命令来求解最近的点：
+
+\begin{quote}
+  \texttt{SELECT *, 3956 * 2 * ASIN(SQRT(\\
+    POWER(SIN((@orig\_latitude - dest.latitude) * pi() / 180 / 2), 2)\\
+    + COS(@orig\_latitude * pi() / 180) * COS(dest.latitude * pi() / 180)\\
+    * POWER(SIN((@orig\_longitude - dest.longitude) * pi() / 180 / 2), 2)))\\
+    as distance\\
+    FROM sites dest\\
+    ORDER BY distance limit 1;}
+\end{quote}
+其中，\texttt{@orig\_latitude}，\texttt{@orig\_longitude}的值分别为点$a$的纬度与经度值。
+
+以上命令在数据量较小时有较好的表现，但是当数据量增多时，则查询速度明显较慢。因此，在数据量较大时，我
+们需要采取一些方法提高计算的性能。
+
+一个可行的改进即为限定搜索的区域，即划定一个边长为$2d\;\mathrm{km}$的区域，仅在此区域内计算距离进行搜
+索。首先，需要计算这个正方形区域主对角线两个顶点的经纬度。我们知道，$1\;\mathrm{latitude}$对应的距离
+约为$111\;\mathrm{km}$，$1\;\mathrm{longitude}$对应的距离约
+为$111\times\cos(\mathrm{latitude})\;\mathrm{km}$。因此，我们有计算正方形两个顶点的经纬度的MySQL命令：
+\begin{quote}
+  \texttt{SET @lon1 = @orig\_longitude - @d / ABS(COS(RADIANS(@orig\_latitude)) * 111);\\
+  SET @lon2 = @orig\_longitude + @d / ABS(COS(RADIANS(@orig\_latitide)) * 111);\\
+  SET @lat1 = @orig\_latitude - (@d / 111);\\
+  SET @lat2 = @orig\_latitide + (@d / 111);}
+\end{quote}
+
+由此，可将查询最近点的MySQL命令改写为：
+
+\begin{quote}
+  \texttt{SELECT *, 3956 * 2 * ASIN(SQRT(\\
+    POWER(SIN((@orig\_latitude - dest.latitude) * pi() / 180 / 2), 2)\\
+    + COS(@orig\_latitude * pi() / 180) * COS(dest.latitude * pi() / 180)\\
+    * POWER(SIN((@orig\_longitude - dest.longitude) * pi() / 180 / 2), 2)))\\
+    as distance\\
+    FROM sites dest\\
+    WHERE dest.longitude BETWEEN @lon1 AND @lon2\\
+    AND dest.lantitude BETWEEN @lan1 AND @lan2\\
+    ORDER BY distance limit 1;}
+\end{quote}
+
+由实验可知，该查询语句能够大大提高查询速度。最后，还可将上述过程利用MySQL中的存储过程(Storage
+Procedure)加以实现，以进一步提高查询的速度。该存储过程的定义命令如下：
+
+\begin{quote}
+  \texttt{CREATE PROCEDURE snn(IN lat, IN lon)\\
+    BEGIN\\
+    DECLARE lon1 FLOAT; DECLARE lon2 FLOAT;\\
+    DECLARE lat1 FLOAT; DECLARE lat2 FLOAT;\\
+    --calculate longitude and latitude of rectangle\\
+    set dist = 100;\\
+    set lon1 = lon - dist / ABS(COS(REDIANS(lat)) * 111);\\
+    set lon2 = lon + dist / ABS(COS(REDIANS(lat)) * 111);\\
+    set lat1 = lat - (dist / 111);\\
+    set lat2 = lat + (disy / 111);\\
+    --run query\\
+    SELECT *, 3956 * 2 * ASIN(SQRT(\\
+    POWER(SIN((@orig\_latitude - dest.latitude) * pi() / 180 / 2), 2)\\
+    + COS(@orig\_latitude * pi() / 180) * COS(dest.latitude * pi() / 180)\\
+    * POWER(SIN((@orig\_longitude - dest.longitude) * pi() / 180 / 2), 2)))\\
+    as distance\\
+    FROM sites dest\\
+    WHERE dest.longitude BETWEEN lon1 AND lon2\\
+    AND dest.lantitude BETWEEN lan1 AND lan2\\
+    ORDER BY distance limit 1;\\
+    END} 
+\end{quote}
+
+由此，我们只需通过命令\texttt{CALL snn(@orig\_latitude, @orig\_longitude)}即可较为高效的查询距离$a$最
+近的点$b\in S$。
+\end{document}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: t
+%%% End:
