@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.14159265-2.6-0.99998 (MiKTeX 2.9.6350 64-bit) (preloaded format=xelatex 2017.6.2)  11 DEC 2017 00:10
+This is XeTeX, Version 3.14159265-2.6-0.99998 (MiKTeX 2.9.6350 64-bit) (preloaded format=xelatex 2017.6.2)  11 DEC 2017 00:50
 entering extended mode
 **\input main.tex
 (main.tex (head.tex ("C:\Program Files\MiKTeX 2.9\tex\latex\base\article.cls"
@@ -1220,19 +1220,19 @@ File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 *************************************************
 [1
 
-] [2]
+] [2] [3]
 
 Package caption Warning: Unused \captionsetup[figure] on input line 22.
 See the caption package documentation for explanation.
 
-[3] (main.aux) ) 
+[4] (main.aux) ) 
 Here is how much of TeX's memory you used:
- 20748 strings out of 427830
- 405304 string characters out of 3152387
+ 20768 strings out of 427830
+ 406432 string characters out of 3152387
  463207 words of memory out of 3000000
- 24575 multiletter control sequences out of 15000+200000
+ 24595 multiletter control sequences out of 15000+200000
  537789 words of font info for 77 fonts, out of 3000000 for 9000
  1328 hyphenation exceptions out of 8191
  48i,4n,62p,10451b,248s stack positions out of 5000i,500n,10000p,200000b,50000s
 
-Output written on main.pdf (3 pages).
+Output written on main.pdf (4 pages).
