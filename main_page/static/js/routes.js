@@ -193,7 +193,7 @@ $(function() {
 	        var next = ui.item.next();
 	        next.css({'-moz-transition':'none', '-webkit-transition':'none', 'transition':'none'});
 	        setTimeout(next.css.bind(next, {'transition':'border-top-width 70ms linear'}));
-	    	$placesList.trigger('sort');
+	    	$placesList.trigger('sort-list');
 	    }
 	});
 
@@ -281,7 +281,7 @@ $(function() {
 				mExtMap.routes.getCurRoute().redo();
 				$placesList.trigger('refresh');
 			},
-			'sort': function(event){
+			'sort-list': function(event){
 				var shouldCommit = false;
 				$('ul#places-list li.place').each(function(index, el) {
 					if ($(el).find('.place-index').text() != index + 1) {
@@ -290,12 +290,11 @@ $(function() {
 					}
 				});
 				if (shouldCommit) {
-					// mExtMap.routes.getCurRoute().commitChange();
-					mExtMap.routes.getCurRoute().forceCommit();
+					mExtMap.routes.getCurRoute().commitChange();
+					// mExtMap.routes.getCurRoute().forceCommit();
+				}else{
+					mExtMap.routes.getCurRoute().cancelChange();
 				}
-				// else{
-				// 	mExtMap.routes.getCurRoute().cancelChange();
-				// }
 				mExtMap.routes.getCurRoute().canUndo() ? 
 				$('.places-tool-undo').addClass('active') : $('.places-tool-undo').removeClass('active');
 				
