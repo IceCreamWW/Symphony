@@ -238,6 +238,9 @@ Route.prototype = {
             this.routeStates[this.curRouteStateIndex].updateRouteline();
         }
     },
+    clearStateQueue: function(){
+        this.latestIndex = this.curRouteStateIndex;
+    },
     forceCommit: function(){
         var newState = $.extend(true, {}, this.routeStates[this.curRouteStateIndex]);
         newState.markers = new Map(this.routeStates[this.curRouteStateIndex].markers);
