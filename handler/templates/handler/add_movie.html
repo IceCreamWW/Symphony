@@ -30,11 +30,11 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="#">Admin</a>
+            <a class="navbar-brand" href="#">管理员界面</a>
         </div>
         <div id="navbar" class="navbar-collapse collapse">
             <ul class="nav navbar-nav navbar-right">
-                <li><a href="#">Help</a></li>
+                <li><a href="#">帮助</a></li>
             </ul>
         </div>
     </div>
@@ -44,8 +44,8 @@
     <div class="row">
         <div class="col-sm-3 col-md-2 sidebar">
             <ul class="nav nav-sidebar">
-                <li ><a href="index">Movie List</a></li>
-                <li class="active"><a href="movie_add">Add Movie</a></li>
+                <li ><a href="index">电影列表</a></li>
+                <li class="active"><a href="movie_add">添加电影</a></li>
             </ul>
         </div>
         <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
@@ -53,27 +53,27 @@
             <form class="form-horizontal" action="add_movie" method="post">
                 {% csrf_token %}
                 <div class="form-group">
-                    <label for="inputName" class="col-sm-2 control-label">Name</label>
+                    <label for="inputName" class="col-sm-2 control-label">电影名</label>
                     <div class="col-sm-10">
                         <input type="text" class="form-control" id="inputName" name="name" placeholder="电影名">
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="inputDescription" class="col-sm-2 control-label">Description</label>
+                    <label for="inputDescription" class="col-sm-2 control-label">电影描述</label>
                     <div class="col-sm-10">
                         <input type="text" class="form-control" id="inputDescription" name="description"
                                placeholder="描述">
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="inputVideo" class="col-sm-2 control-label">Video</label>
+                    <label for="inputVideo" class="col-sm-2 control-label">视频链接</label>
                     <div class="col-sm-10">
-                        <input type="text" class="form-control" id="inputVideo" name="video" placeholder="连接">
+                        <input type="text" class="form-control" id="inputVideo" name="video" placeholder="链接">
                     </div>
                 </div>
                 <div class="form-group">
                     <div class="col-sm-offset-2 col-sm-10">
-                        <button type="submit" class="btn btn-default">Add</button>
+                        <button type="submit" class="btn btn-default">添加</button>
                     </div>
                 </div>
             </form>

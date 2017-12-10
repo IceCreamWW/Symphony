@@ -155,6 +155,7 @@ function Route(options) {
     this.curRouteStateIndex = 0;
     this.earliestIndex = 0;
 
+    this.hasCommit = true;
     this.routeStates[0] = new RouteState($.extend({route : this}, settings));
     this.routeStates[0].savedClusterMarkers = this.extMap.geoMarkers.asArray();
 }
@@ -227,16 +228,20 @@ Route.prototype = {
         this.changeState(this.curRouteStateIndex + 1, newState);
     },
     changeMarkerToPosition: function(markerId, targetPosition, commit){
-        if (commit) {
+        if (this.hasCommit) {
             var newState = $.extend(true, {}, this.routeStates[this.curRouteStateIndex]);
             newState.markers = new Map(this.routeStates[this.curRouteStateIndex].markers);
-            newState.changeMarkerToPosition(markerId, commit);
+            newState.changeMarkerToPosition(markerId, targetPosition);
             newState.updateRouteline();
-            this.changeState(this.curRouteStateIndex + 1, true, newState);
+            this.changeState(this.curRouteStateIndex + 1, newState);
+            this.hasCommit = false;
         }else {
             this.routeStates[this.curRouteStateIndex].changeMarkerToPosition(markerId, targetPosition);
             this.routeStates[this.curRouteStateIndex].updateRouteline();
         }
+    },
+    clearStateQueue: function(){
+        this.latestIndex = this.curRouteStateIndex;
     },
     forceCommit: function(){
         var newState = $.extend(true, {}, this.routeStates[this.curRouteStateIndex]);
