@@ -167,6 +167,12 @@ Route.prototype = {
     hasMarker: function(markerId) {
         return this.routeStates[this.curRouteStateIndex].getMarkerById(markerId) != undefined;
     },
+    canUndo: function(){
+        return this.curRouteStateIndex !== this.earliestIndex; 
+    },
+    canRedo: function(){
+        return this.curRouteStateIndex !== this.latestIndex; 
+    },
     undo: function () {
         if (this.curRouteStateIndex !== this.earliestIndex) {
             this.changeState(this.getBufferIndex(this.curRouteStateIndex - 1));
@@ -175,7 +181,6 @@ Route.prototype = {
     redo: function () {
         if (this.latestIndex !== this.curRouteStateIndex) {
             this.changeState(this.getBufferIndex(this.curRouteStateIndex + 1));
-            this.latestIndex = this.curRouteStateIndex;
         }
     },
     show: function () {
@@ -204,23 +209,27 @@ Route.prototype = {
 
     addMarker: function (id) {
         var newState = $.extend(true, {}, this.routeStates[this.curRouteStateIndex]);
+        newState.markers = new Map(this.routeStates[this.curRouteStateIndex].markers);
         newState.addMarker(id);
         this.changeState(this.curRouteStateIndex + 1, newState);
     },
     removeMarker: function (id) {
         var newState = $.extend(true, {}, this.routeStates[this.curRouteStateIndex]);
+        newState.markers = new Map(this.routeStates[this.curRouteStateIndex].markers);
         if(newState.removeMarker(id)){
             this.changeState(this.curRouteStateIndex + 1, newState);
         }
     },
     exchangeMarker: function (id1, id2) {
         var newState = $.extend(true, {}, this.routeStates[this.curRouteStateIndex]);
+        newState.markers = new Map(this.routeStates[this.curRouteStateIndex].markers);
         newState.exchangeMarker(id1, id2);
         this.changeState(this.curRouteStateIndex + 1, newState);
     },
     changeMarkerToPosition: function(markerId, targetPosition, commit){
         if (commit) {
             var newState = $.extend(true, {}, this.routeStates[this.curRouteStateIndex]);
+            newState.markers = new Map(this.routeStates[this.curRouteStateIndex].markers);
             newState.changeMarkerToPosition(markerId, commit);
             newState.updateRouteline();
             this.changeState(this.curRouteStateIndex + 1, true, newState);
@@ -228,6 +237,11 @@ Route.prototype = {
             this.routeStates[this.curRouteStateIndex].changeMarkerToPosition(markerId, targetPosition);
             this.routeStates[this.curRouteStateIndex].updateRouteline();
         }
+    },
+    forceCommit: function(){
+        var newState = $.extend(true, {}, this.routeStates[this.curRouteStateIndex]);
+        newState.markers = new Map(this.routeStates[this.curRouteStateIndex].markers);
+        this.changeState(this.curRouteStateIndex + 1, newState);
     },
     save: function (callback) {
         this.routeStates[this.curRouteStateIndex].save(this.isNew, callback);
