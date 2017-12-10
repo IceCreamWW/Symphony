@@ -39,12 +39,33 @@
     background: rgba(0,0,0,0.7);
     overflow: hidden;
 }
+
 #routes-list .route:first-child{
 	margin-top: 1%;
 }
 #routes-list .route:last-child{
 	margin-bottom: 1%;
 }
+
+/* Check Icon To Show Current Route*/
+.checked-icon{
+	visibility: hidden;
+	position: absolute;
+	transform: scale(0.75);
+	z-index: 100;
+	right: 0;
+	top: 0;
+}
+.route.active .checked-icon{
+	visibility: visible;
+}
+.checked-icon .fa-circle{
+	color: rgba(0,0,0,0.8);
+}
+.checked-icon .fa-check{
+	color: green;
+}
+
 .route-name-wrapper{
 	height: 40%;
 	width: 100%;
@@ -57,6 +78,7 @@
     color: white;
     vertical-align: middle;
     text-align: center;
+    cursor: pointer;
 }
 hr {
     width: 70%;
@@ -109,14 +131,14 @@ img.route-thumbnail{
 	opacity: 1;
 	color: red;
 }
-.fa{
+.route-icon .fa, .places-icon .fa{
 	color: white;
 	opacity: 0.7;
 	font-size: 2.3vw;
 	cursor: pointer;
 	transition: color 0.2s;
 }
-.fa:hover {
+.route-icon .fa:hover {
   position: relative;
 }
 
@@ -166,7 +188,6 @@ ul.places-tools-list li:first-child{
     opacity: 0.5;
     cursor: default;
 }
-
 #add-place-wrapper.active{
 	color: green;
 	opacity: 1;
@@ -233,7 +254,7 @@ li.place::after{
 
 /* Smooth Sortable */
 ul.sortable li{
-	transition: border-top-width 0.1s ease-in
+	transition: border-top-width 70ms linear;
 }
 
 ul.sortable li{

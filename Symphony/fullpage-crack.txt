@@ -1,3 +1,0 @@
-1、在ln函数里，t.domain = alva..
-2、在window[20][19][18] 设置为true
-3、检查所有return true 和短路'与'操作的合法性

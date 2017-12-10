@@ -90,10 +90,11 @@ RouteState.prototype.updateRouteline = function () {
         this.routeLine.setMap(null);
     }
     this.routeLine = new google.maps.Polyline(this.route.extMap.settings.lineSymbolSettings);
+    this.routeLine.setMap(this.route.extMap.geoMap);    
 
     var path = this.routeLine.getPath();
-    this.order.forEach(function (id) {
-        path.push(self.getMarkerById(id).position);
+    this.order.forEach(function (markerId) {
+        path.push(self.getMarkerById(markerId).position);
     })
 },
 
@@ -103,6 +104,10 @@ RouteState.prototype.exchangeMarker = function (id1, id2) {
     this.order[index1] = id2;
     this.order[index2] = id1;
 };
+RouteState.prototype.changeMarkerToPosition = function(markerId, targetPosition){
+    var targetId = this.order[targetPosition]
+    this.exchangeMarker(markerId, targetId);
+}
 
 RouteState.prototype.addMarker = function (markerId, nodraw) {
     nodraw = nodraw || false
@@ -113,14 +118,18 @@ RouteState.prototype.addMarker = function (markerId, nodraw) {
 };
 
 RouteState.prototype.removeMarker = function (id) {
-    this.markers.delete(id);
-    this.order.splice(this.order.indexOf(id), 1);
-    this.route.extMap.geoCluster.addMarker(this.route.extMap.geoMarkers.getMarkerById(id))
+    if(!this.markers.delete(id)){
+        return false;
+    }else{
+        this.order.splice(this.order.indexOf(id), 1);
+        this.route.extMap.geoCluster.addMarker(this.route.extMap.geoMarkers.getMarkerById(id))
+        return true;
+    }
 };
 RouteState.prototype.asMarkerArray = function () {
     var self = this;
     return this.order.map(function (markerId) {
-        return self.getMarkerById(id);
+        return self.getMarkerById(markerId);
     })
 }
 
@@ -193,18 +202,24 @@ Route.prototype = {
     },
     removeMarker: function (id) {
         var newState = $.extend(true, {}, this.routeStates[this.curRouteStateIndex]);
-        newState.removeMarker(id);
-        this.changeState(this.curRouteStateIndex + 1, true, newState);
+        if(newState.removeMarker(id)){
+            this.changeState(this.curRouteStateIndex + 1, newState);
+        }
     },
-    exchangeMarker: function (id1, id2, commit) {
+    exchangeMarker: function (id1, id2) {
+        var newState = $.extend(true, {}, this.routeStates[this.curRouteStateIndex]);
+        newState.exchangeMarker(id1, id2);
+        this.changeState(this.curRouteStateIndex + 1, newState);
+    },
+    changeMarkerToPosition: function(markerId, targetPosition, commit){
         if (commit) {
             var newState = $.extend(true, {}, this.routeStates[this.curRouteStateIndex]);
-            newState.exchangeMarker(id1, id2);
-        }
-        else {
-            this.routeStates[curRouteStateIndex].exchangeMarker(id1, id2);
-            this.routeStates[curRouteStateIndex].updateRouteline();
+            newState.changeMarkerToPosition(markerId, commit);
+            newState.updateRouteline();
             this.changeState(this.curRouteStateIndex + 1, true, newState);
+        }else {
+            this.routeStates[this.curRouteStateIndex].changeMarkerToPosition(markerId, targetPosition);
+            this.routeStates[this.curRouteStateIndex].updateRouteline();
         }
     },
     save: function (callback) {
