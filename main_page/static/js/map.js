@@ -64,6 +64,9 @@ function initMap(){
     $('#map').on('marker-click', function(event, curMarkerId) {
         var preMarker = mExtMap.geoMarkers.curMarker;
         var curMarker = mExtMap.geoMarkers.getMarkerById(curMarkerId);
+        mExtMap.geoCluster.removeMarker(curMarker);
+        curMarker.setAnimation(google.maps.Animation.BOUNCE);
+
         if (preMarker == curMarker) return;
 
         var curRoute = mExtMap.routes.getCurRoute();
@@ -71,9 +74,7 @@ function initMap(){
         preMarker && preMarker.setAnimation(null)
         preMarker && (!curRoute || !curRoute.hasMarker(preMarker.id)) && mExtMap.geoCluster.addMarker(preMarker);
                 
-        mExtMap.geoCluster.removeMarker(curMarker);
         mExtMap.geoMarkers.curMarker = curMarker;
-        curMarker.setAnimation(google.maps.Animation.BOUNCE);
     });
 }
 

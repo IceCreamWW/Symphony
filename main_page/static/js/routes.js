@@ -1,6 +1,6 @@
 $(function() {
 	var $placesList = $('ul#places-list');
-	// var $routesList = $('ul#places-list');
+	var $routesList = $('ul#routes-list');
 	var $routeslistPS = new PerfectScrollbar('#routes-list');
 	var $placeslistPS = new PerfectScrollbar('#places-list');
 	var stylesheet = $('style[name=impostor_size]')[0].sheet;
@@ -25,9 +25,59 @@ $(function() {
 		}
 	});
 
-	
 
-	$('.sortable').sortable({
+	$routesList.on(
+		{
+			'add-route': function(event){
+				var newRouteElement = createRrouteElement();
+
+				mExtMap.routes.createRoute({
+					callback: function(route){
+
+						/*补全HTML */
+						newRouteElement.data('route-id', route.id);
+						newRouteElement.find('.route-name').text(route.name);
+
+						/* 补全事件 */
+						newRouteElement.click(function(event) {
+							$(this).addClass('active').siblings('.route').removeClass('active');
+							mExtMap.routes.showRoute($(this).data('route-id'));
+							mExtMap.geoMarkers.curMarker && $('#map').trigger('marker-click', [mExtMap.geoMarkers.curMarker.id]);
+							$placesList.trigger('refresh');
+						});
+
+						$('#routes-slides').addRightArrow(newRouteElement.find('.route-edit-icon .fa'));
+						newRouteElement.find('.route-delete-icon .fa').click(function(event) {
+							mExtMap.routes.removeRoute(route.id);
+							return false;
+						});
+						/* 添加元素UI */
+						newRouteElement.prependTo($('#routes-list')).show(400, function(){
+							// Refresh SlideBar
+							$routeslistPS.update();
+						});
+						newRouteElement.trigger('click');
+						return false;
+					}
+				})
+			},
+			'remove-route': function(event, routeElement){
+
+			},
+			'refresh-layout': function(event){
+
+			},
+		}
+	);
+
+
+	$('#create-route-wrapper').click(function(event) {
+		$routesList.trigger('add-route');
+	});
+
+	/*Places Events*/
+
+	$placesList.sortable({
 	    placeholder: 'marker',
 	    items: 'li.place',
 	    containment: 'parent',
@@ -39,9 +89,9 @@ $(function() {
 	        var next = ui.item.nextAll('li:not(.marker)').first();
 	        next.css({'-moz-transition':'none', '-webkit-transition':'none', 'transition':'none'});
 	        /* 
-        	开始拖拽后占位符长度应为 (fisrt-element ? 0 : margin-bottom +) margin-bottom +  outerHeight() 
-          	由于prev-element具有margin-bottom, 只需要margin-bottom + outerHeight(true)
-           	这恰好是一个格子的高度（因为这里的list-item不具有margin-top）
+	    	开始拖拽后占位符长度应为 (fisrt-element ? 0 : margin-bottom +) margin-bottom +  outerHeight() 
+	      	由于prev-element具有margin-bottom, 只需要margin-bottom + outerHeight(true)
+	       	这恰好是一个格子的高度（因为这里的list-item不具有margin-top）
 	        */
 	        setPadding(rule, ui.helper.outerHeight(true));
 	        setTimeout(next.css.bind(next, {'transition':'border-top-width 70ms linear'}));
@@ -59,38 +109,13 @@ $(function() {
 	    }
 	});
 
-
-	$('.route').click(function(event) {
-		$(this).addClass('active').siblings('.route').removeClass('active');
-		mExtMap.routes.showRoute($(this).data('route-id'));
-	});
-
-	$('#create-route-wrapper').click(function(event) {
-		mExtMap.routes.createRoute({
-			callback: function(route){
-				var routeDiv = createRrouteDiv({
-					id: route.id,
-					name: route.name
-				});
-				routeDiv.prependTo($('#routes-list')).show(400, function(){
-					// Refresh SlideBar
-					$routeslistPS.update();
-				})
-			}
-		})
-	});
-
-
-
-	/*Places Events*/
-
 	$('#add-place-wrapper').on('click', function(event) {
 		if($(this).hasClass('active')){
 			$placesList.trigger('add-place', [mExtMap.geoMarkers.curMarker.id])
 		}
 	});
 
-	
+
 	$placesList.on(
 		{
 			'marker-click': function(event, markerId) {
@@ -174,6 +199,7 @@ $(function() {
 				});
 				$placeslistPS && $placeslistPS.update();
 				$placesList.sortable("refresh");
+				mExtMap.geoMarkers.curMarker && $placesList.trigger('marker-click', [mExtMap.geoMarkers.curMarker.id]);
 				return false;
 			},
 			'refresh-layout': function(event){
@@ -185,19 +211,8 @@ $(function() {
 	);
 });
 
-function createPlaceElement(){
-	var placeHTML =
-	"\
-	<li class='place' style='display:none'>\
-        <div class='place-index'></div>\
-        <div class='place-name'></div>\
-    </li>\
-    "
-    return $(placeHTML);
-}
-
-function createRrouteDiv(options){
-	var routehtml =
+function createRrouteElement(options){
+	var routeHTML =
 	"\
 	<div class='route' style='display:none'>\
 		<img class='route-thumbnail' src='http://localhost:8000/static/img/default_thumbnail.jpg'>\
@@ -226,6 +241,7 @@ function createRrouteDiv(options){
 		</div>\
 	</div>\
 	" 
+	return $(routeHTML);
 	var routeDiv = $(routehtml).data({
 		"route-id": options.id
 	});
@@ -233,9 +249,18 @@ function createRrouteDiv(options){
 	updateRouteEvents(routeDiv);
 	return routeDiv;
 }
-function updateRouteEvents(routeDiv){
-	$('#routes-slides').addRightArrow(routeDiv.find('.route-edit-icon .fa'));
+
+function createPlaceElement(){
+	var placeHTML =
+	"\
+	<li class='place' style='display:none'>\
+        <div class='place-index'></div>\
+        <div class='place-name'></div>\
+    </li>\
+    "
+    return $(placeHTML);
 }
+
 function setPadding(rule, atHeight) {
     rule.cssText = 'border-top-width: '+ atHeight+'px'; 
 };

@@ -495,11 +495,12 @@ MarkerClusterer.prototype.removeMarker_ = function(marker) {
 MarkerClusterer.prototype.removeMarker = function(marker, opt_nodraw) {
   var removed = this.removeMarker_(marker);
 
+  // FIXED
+  marker.setMap(this.map_)
+  
   if (!opt_nodraw && removed) {
     this.resetViewport();
     this.redraw();
-    // FIXED
-    marker.setMap(this.map_)
     return true;
   } else {
    return false;
@@ -523,14 +524,14 @@ MarkerClusterer.prototype.removeMarkers = function(markers, opt_nodraw) {
     removed = removed || r;
   }
 
+  // FIX
+  for (var i = 0, marker; marker = markers[i]; i++) {
+      marker.setMap(this.map_)
+  }
+
   if (!opt_nodraw && removed) {
     this.resetViewport();
     this.redraw();
-
-    // FIX
-    for (var i = 0, marker; marker = markers[i]; i++) {
-      marker.setMap(this.map_)
-    }
     return true;
   }
 };

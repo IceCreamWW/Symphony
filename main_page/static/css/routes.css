@@ -3,13 +3,15 @@
 	width: 20%;
 	background-color: rgba(44,44,44,0.5);
 }
-#routes-list{
+ul#routes-list{
+	list-style: none;
 	height: 100%;	
 	width: 100%;
 	position: relative; /*For the scroll bar*/
 }
 #routes-slides{
 	position: absolute;
+	overflow: hidden;
 	height: 80%;
 	width: 100%;
 	bottom: 0;

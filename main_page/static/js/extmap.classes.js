@@ -75,16 +75,18 @@ RouteState.prototype.save = function (isNew, callback) {
 }
 RouteState.prototype.hide = function () {
     this.savedClusterMarkers = this.route.extMap.geoCluster.markers_.slice()
+    this.route.extMap.geoCluster.update(this.route.extMap.geoMarkers.asArray());
     this.routeLine && this.routeLine.setMap(null);
 }
 
 RouteState.prototype.show = function () {
-    this.savedClusterMarkers && this.route.extMap.geoMarkers.update(this.savedClusterMarkers)
+
+    this.route.extMap.geoCluster.removeMarkers(this.asMarkerArray());
+    this.savedClusterMarkers && this.route.extMap.geoCluster.update(this.savedClusterMarkers)
     this.routeLine && this.routeLine.setMap(this.route.extMap.geoMap);
 }
 
 RouteState.prototype.updateRouteline = function () {
-    // FIX_ME
     var self = this;
     if (this.routeLine) {
         this.routeLine.setMap(null);
@@ -94,7 +96,9 @@ RouteState.prototype.updateRouteline = function () {
 
     var path = this.routeLine.getPath();
     this.order.forEach(function (markerId) {
-        path.push(self.getMarkerById(markerId).position);
+        var marker = self.getMarkerById(markerId);
+        marker.setMap(self.extMap.geoMap);
+        path.push(marker.position);
     })
 },
 
@@ -150,7 +154,9 @@ function Route(options) {
     this.latestIndex = 0;
     this.curRouteStateIndex = 0;
     this.earliestIndex = 0;
+
     this.routeStates[0] = new RouteState($.extend({route : this}, settings));
+    this.routeStates[0].savedClusterMarkers = this.extMap.geoMarkers.asArray();
 }
 
 Route.prototype = {
@@ -173,11 +179,11 @@ Route.prototype = {
         }
     },
     show: function () {
-        this.savedClusterMarkers && this.geoCluster.update(this.savedClusterMarkers);
+        // this.savedClusterMarkers && this.geoCluster.update(this.savedClusterMarkers);
         this.routeStates[this.curRouteStateIndex].show();
     },
     hide: function () {
-        this.savedClusterMarkers = this.extMap.geoCluster.markers_.slice()
+        // this.savedClusterMarkers = this.extMap.geoCluster.markers_.slice()
         this.routeStates[this.curRouteStateIndex].hide();
     },
     changeState: function (targetIndex, newState) {
@@ -190,6 +196,7 @@ Route.prototype = {
             if (this.latestIndex === this.earliestIndex) {
                 this.earliestIndex = this.getBufferIndex(this.earliestIndex + 1);
             }
+            this.routeStates[targetIndex].savedClusterMarkers = undefined;
             this.routeStates[targetIndex].updateRouteline();
         }
         this.routeStates[targetIndex].show();
@@ -310,7 +317,6 @@ Routes.prototype = {
         route.save(function (json) {
             this.routes.set(json["id"], route);
             route.id = json["id"];
-            this.showRoute(json["id"]);
             options.callback(route);
         }.bind(self));
     },

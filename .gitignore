@@ -1,2 +1,6 @@
 *.pyc
-.idea/*
+modules.xml
+workspace.xml
+vcs.xml
+misc.xml
+*.iml
