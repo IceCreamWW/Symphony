@@ -45,7 +45,7 @@ $\mathrm{versin}(\theta)=1-\cos(\theta)=2\sin^2(\frac{\theta}{2})$。
     POWER(SIN((@orig\_latitude - dest.latitude) * pi() / 180 / 2), 2)\\
     + COS(@orig\_latitude * pi() / 180) * COS(dest.latitude * pi() / 180)\\
     * POWER(SIN((@orig\_longitude - dest.longitude) * pi() / 180 / 2), 2)))\\
-    as distance\\
+    AS distance\\
     FROM sites dest\\
     ORDER BY distance limit 1;}
 \end{quote}
@@ -72,10 +72,10 @@ $\mathrm{versin}(\theta)=1-\cos(\theta)=2\sin^2(\frac{\theta}{2})$。
     POWER(SIN((@orig\_latitude - dest.latitude) * pi() / 180 / 2), 2)\\
     + COS(@orig\_latitude * pi() / 180) * COS(dest.latitude * pi() / 180)\\
     * POWER(SIN((@orig\_longitude - dest.longitude) * pi() / 180 / 2), 2)))\\
-    as distance\\
+    AS distance\\
     FROM sites dest\\
     WHERE dest.longitude BETWEEN @lon1 AND @lon2\\
-    AND dest.lantitude BETWEEN @lan1 AND @lan2\\
+    AND dest.lantitude BETWEEN @lat1 AND @lat2\\
     ORDER BY distance limit 1;}
 \end{quote}
 
@@ -83,31 +83,31 @@ $\mathrm{versin}(\theta)=1-\cos(\theta)=2\sin^2(\frac{\theta}{2})$。
 Procedure)加以实现，以进一步提高查询的速度。该存储过程的定义命令如下：
 
 \begin{quote}
-  \texttt{CREATE PROCEDURE snn(IN lat, IN lon)\\
+  \texttt{DELIMITER \$\$\\
+    CREATE PROCEDURE find\_nearest\_point(IN lat DOUBLE, IN lon DOUBLE)\\
     BEGIN\\
-    DECLARE lon1 FLOAT; DECLARE lon2 FLOAT;\\
-    DECLARE lat1 FLOAT; DECLARE lat2 FLOAT;\\
-    --calculate longitude and latitude of rectangle\\
+    DECLARE lon1 DOUBLE; DECLARE lon2 DOUBLE;\\
+    DECLARE lat1 DOUBLE; DECLARE lat2 DOUBLE;\\
+    DECLARE dist DOUBLE;\\
     set dist = 100;\\
-    set lon1 = lon - dist / ABS(COS(REDIANS(lat)) * 111);\\
-    set lon2 = lon + dist / ABS(COS(REDIANS(lat)) * 111);\\
+    set lon1 = lon - dist / ABS(COS(RADIANS(lat)) * 111);\\
+    set lon2 = lon + dist / ABS(COS(RADIANS(lat)) * 111);\\
     set lat1 = lat - (dist / 111);\\
-    set lat2 = lat + (disy / 111);\\
-    --run query\\
+    set lat2 = lat + (dist / 111);\\
     SELECT *, 3956 * 2 * ASIN(SQRT(\\
-    POWER(SIN((@orig\_latitude - dest.latitude) * pi() / 180 / 2), 2)\\
-    + COS(@orig\_latitude * pi() / 180) * COS(dest.latitude * pi() / 180)\\
-    * POWER(SIN((@orig\_longitude - dest.longitude) * pi() / 180 / 2), 2)))\\
-    as distance\\
+    POWER(SIN((lat - dest.latitude) * pi() / 180 / 2), 2)\\
+    + COS(lat * pi() / 180) * COS(dest.latitude * pi() / 180)\\
+    * POWER(SIN((lon - dest.longitude) * pi() / 180 / 2), 2)))\\
+    AS distance\\
     FROM sites dest\\
     WHERE dest.longitude BETWEEN lon1 AND lon2\\
-    AND dest.lantitude BETWEEN lan1 AND lan2\\
+    AND dest.lantitude BETWEEN lat1 AND lat2\\
     ORDER BY distance limit 1;\\
-    END} 
+    END \$\$} 
 \end{quote}
 
-由此，我们只需通过命令\texttt{CALL snn(@orig\_latitude, @orig\_longitude)}即可较为高效的查询距离$a$最
-近的点$b\in S$。
+由此，我们只需通过命令\texttt{CALL find\_nearest\_point(@orig\_latitude, @orig\_longitude);}即可较为
+高效的查询距离$a$最近的点$b\in S$。
 \end{document}
 
 %%% Local Variables:
