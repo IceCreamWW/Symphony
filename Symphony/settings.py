@@ -32,6 +32,7 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     'administrator.apps.AdministratorConfig',
+    'handler.apps.HandlerConfig',
     'tempprofile.apps.TempprofileConfig',
     'registration.apps.RegistrationConfig',
     'main_page.apps.MainMapConfig',

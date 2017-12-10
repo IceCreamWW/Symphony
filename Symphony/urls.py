@@ -22,4 +22,5 @@ urlpatterns = [
     url(r'^registration/',include('registration.urls')),
     url(r'^tempprofile/', include('tempprofile.urls')),
     url(r'^administrator/', include('administrator.urls')),
+    url(r'^handler/', include('handler.urls'))
 ]
