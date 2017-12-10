@@ -42,7 +42,12 @@ function initMap(){
         hiddenMapId: 'hidden-map',
         lineSymbolSettings: lineSetting,
         mapDisplaySettings: mSettings,
-        clusterSettings: mcSettings
+        clusterSettings: mcSettings,
+        routes: {
+            show: function () {
+                
+            }, 
+        }
     });
 
 

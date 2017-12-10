@@ -1,22 +1,31 @@
-//For Test Use
-var $routeslistPS;
-var $placeslistPS;
-
 $(function() {
+	var $placesList = $('ul#places-list');
+	// var $routesList = $('ul#places-list');
+	var $routeslistPS = new PerfectScrollbar('#routes-list');
+	var $placeslistPS = new PerfectScrollbar('#places-list');
+	var stylesheet = $('style[name=impostor_size]')[0].sheet;
+    var rule = stylesheet.rules ? stylesheet.rules[0].style : stylesheet.cssRules[0].style;
+
 	// For Test Use
 	$('#routes-slides').addRightArrow($('.route-edit-icon .fa'))
 	$('#routes-slides').addLeftArrow($('.route-tool-return-routes .fa'))
 	// --
 
 	$('#routes-slides').mslider({
-		initSlide: 1,
-		done: function(target){
-				$routeslistPS && target==0 && $routeslistPS.update();
+		initSlide: 0,
+		handler: function(target){
+			switch(target){
+				case 0:
+					$routeslistPS && $routeslistPS.update();
+					break;
+				case 1:
+					$placesList.trigger('refresh');
+					break;
 			}
+		}
 	});
 
-	var stylesheet = $('style[name=impostor_size]')[0].sheet;
-    var rule = stylesheet.rules ? stylesheet.rules[0].style : stylesheet.cssRules[0].style;
+	
 
 	$('.sortable').sortable({
 	    placeholder: 'marker',
@@ -35,20 +44,26 @@ $(function() {
            	这恰好是一个格子的高度（因为这里的list-item不具有margin-top）
 	        */
 	        setPadding(rule, ui.helper.outerHeight(true));
-	        setTimeout(next.css.bind(next, {'transition':'border-top-width 0.1s ease-in'}));
+	        setTimeout(next.css.bind(next, {'transition':'border-top-width 70ms linear'}));
 	    },
-	    change: function(){
-	    	var fixme = 1;
+	    change: function(ev, ui){
+	    	var tragetPosition = ui.placeholder.index("#places-list li:not(.ui-sortable-helper)");
+	    	var markerId = ui.item.data('marker-id');
+	    	mExtMap.routes.getCurRoute().changeMarkerToPosition(markerId ,tragetPosition);
+	    	$placesList.trigger('sort');
 	    },
 	    stop: function(ev, ui) {
 	        var next = ui.item.next();
 	        next.css({'-moz-transition':'none', '-webkit-transition':'none', 'transition':'none'});
-	        setTimeout(next.css.bind(next, {'transition':'border-top-width 0.1s ease-in'}));
+	        setTimeout(next.css.bind(next, {'transition':'border-top-width 70ms linear'}));
 	    }
 	});
 
-	$routeslistPS = new PerfectScrollbar('#routes-list');
-	$placeslistPS = new PerfectScrollbar('#places-list');
+
+	$('.route').click(function(event) {
+		$(this).addClass('active').siblings('.route').removeClass('active');
+		mExtMap.routes.showRoute($(this).data('route-id'));
+	});
 
 	$('#create-route-wrapper').click(function(event) {
 		mExtMap.routes.createRoute({
@@ -68,21 +83,20 @@ $(function() {
 
 
 	/*Places Events*/
-	var $placesList = $('ul#places-list')
 
 	$('#add-place-wrapper').on('click', function(event) {
 		if($(this).hasClass('active')){
-			$placesList.trigger('place-add', [mExtMap.geoMarkers.curMarker])
+			$placesList.trigger('add-place', [mExtMap.geoMarkers.curMarker.id])
 		}
 	});
 
 	
 	$placesList.on(
 		{
-			'marker-click': function(event, markerid) {
+			'marker-click': function(event, markerId) {
 				var hasMarker = false;
 				$(this).children('li.place').each(function(index, element) {
-					if($(element).data('markerid') == markerid){
+					if($(element).data('marker-id') == markerId){
 						$(element).addClass('active');
 						hasMarker = true;
 					}else{
@@ -95,49 +109,80 @@ $(function() {
 					$('#add-place-wrapper').addClass('active');
 				}
 			},
-			'place-add': function(event, marker) {
+			'add-place': function(event, markerId) {
+				var marker = mExtMap.geoMarkers.getMarkerById(markerId);
 				var newPlaceElement = createPlaceElement();
 				/* 补全元素属性和html */
-				newPlaceElement.data('markerid', marker.id);
+				newPlaceElement.data('marker-id', marker.id);
 				newPlaceElement.find('.place-index').text($placesList.children('li.place').length + 1);
 				newPlaceElement.find('.place-name').text(marker.name);
 				/* 补全元素事件 */
 				newPlaceElement.click(function(event) {
-					$('#add-place-wrapper').trigger('marker-click',[$(this).data('markerid')]);
+					$('#add-place-wrapper').trigger('marker-click',[$(this).data('marker-id')]);
 				});
 				/* 执行逻辑 */
 				mExtMap.routes.getCurRoute().addMarker(marker.id);
 				/* 添加元素UI */
 				newPlaceElement.insertBefore("#add-place-wrapper").show(400, function() {
-					$placesList.sortable("refresh")
-					$placeslistPS.update();
+					$placesList.trigger('refresh-layout');
 				});
 				/* 触发事件 */
 				$('#add-place-wrapper').trigger('marker-click',[marker.id]);
+				return false;
+			},
+			'remove-place': function(event, markerId){
+				var toRemove = $('.place[data-marker-id]="' + markerId + '"');
+				if(toRemove){
+					mExtMap.routes.getCurRoute().removeMarker();
+					toRemove.hide(400, function() {
+						toRemove.remove();
+						$placesList.trigger('refresh-layout');
+					});
+				}
+				return false;
 			},
 			'refresh': function(event){
+				var curRoute = mExtMap.routes.getCurRoute();
+
+				var oldRouteId = $placesList.data('route-id');
+				var newRouteId = curRoute ? curRoute.id : -1;
+
+				// 不需要更新
+				if(newRouteId == oldRouteId){
+					return false;
+				}
 				$placesList.children('li.place').remove();
+
+				// 更新但没有路线
+				if(newRouteId == -1){
+					$placeslistPS && $placeslistPS.update();
+					$placesList.sortable("refresh")
+					return false;
+				}
+
 				mExtMap.routes.getCurRoute().getMarkerArray().forEach( function (marker, index) {
 					var newPlaceElement = createPlaceElement().css('display', 'block');
 					/* 补全元素属性和html */
-					newPlaceElement.data('markerid', marker.id);
+					newPlaceElement.data('marker-id', marker.id);
 					newPlaceElement.find('.place-index').text(index + 1);
 					newPlaceElement.find('.place-name').text(marker.name);
 					newPlaceElement.insertBefore("#add-place-wrapper");
 				});
 				/* 补全事件 */
 				$placesList.children('li.place').click(function(event) {
-					$('#add-place-wrapper').trigger('marker-click',[$(this).data('markerid')]);
+					$('#add-place-wrapper').trigger('marker-click',[$(this).data('marker-id')]);
 				});
-				$placesList.sortable("refresh")
-				$placeslistPS.update();
+				$placeslistPS && $placeslistPS.update();
+				$placesList.sortable("refresh");
+				return false;
 			},
 			'refresh-layout': function(event){
 				$placeslistPS.update();
-				$placesList.sortable("refresh")
+				$placesList.sortable("refresh");
+				return false;
 			}
-		});
-
+		}
+	);
 });
 
 function createPlaceElement(){
@@ -152,10 +197,14 @@ function createPlaceElement(){
 }
 
 function createRrouteDiv(options){
-	var routehtml = 
+	var routehtml =
 	"\
 	<div class='route' style='display:none'>\
 		<img class='route-thumbnail' src='http://localhost:8000/static/img/default_thumbnail.jpg'>\
+		<span class='fa-stack fa-2x checked-icon'>\
+	        <i class='fa fa-circle fa-stack-2x'></i>\
+	        <i class='fa fa-check fa-stack-1x'></i>\
+	    </span>\
 		<div class='route-control'>\
 			<div class='route-name-wrapper'>\
 				<div class='route-name'></div>\
@@ -177,7 +226,7 @@ function createRrouteDiv(options){
 		</div>\
 	</div>\
 	" 
-	var routeDiv = $(routehtml).attr({
+	var routeDiv = $(routehtml).data({
 		"route-id": options.id
 	});
 	routeDiv.find(".route-name").text(options.name);
