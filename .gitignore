@@ -4,3 +4,4 @@ workspace.xml
 vcs.xml
 misc.xml
 *.iml
+*/migrations/*

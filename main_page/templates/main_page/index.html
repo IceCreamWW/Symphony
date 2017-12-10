@@ -111,7 +111,7 @@
 
                     <div class="m-slide">
 
-                        <ul id="routes-list" class="routes-list">
+                        <ul id="routes-list" class="routes-list sortable">
 
                         <!-- ROUTE EXAMPLE -->
                             <li class='route'>
@@ -141,10 +141,10 @@
                                 </div>
                             </li>
                         <!-- ROUTE EXAMPLE -->
-                            <div id="create-route-wrapper">
+                            <li id="create-route-wrapper">
                                 <i class="fa fa-plus" aria-hidden="true"></i>
                                 <div id="create-route-text">create a new route</div>
-                            </div>
+                            </li>
                         </ul>
                     </div>
 
@@ -166,15 +166,18 @@
                                 <i class="fa fa-trash-o " aria-hidden="true"></i>
                             </li>
                         </ul>
-
-                        <ul id="places-list" class="sortable">
-
-                            <li title="选择一个地点" id="add-place-wrapper" class="sortable-border-top" data-markerid="-1">
-                                <i class="fa fa-plus" aria-hidden="true"></i>
-                                <div id="add-place-text">add a new place</div>
-                            </li>
-
-                        </ul>
+                        
+                        <div class="places-content">
+                            <div class="route-name-editable-wrapper">
+                                <input type="text" class="route-name-editable">
+                            </div>
+                            <ul id="places-list" class="sortable">
+                                <li title="选择一个地点" id="add-place-wrapper" class="sortable-border-top" data-markerid="-1">
+                                    <i class="fa fa-plus" aria-hidden="true"></i>
+                                    <div id="add-place-text">add a new place</div>
+                                </li>
+                            </ul>
+                        </div>
 
                     </div>
                 </div>

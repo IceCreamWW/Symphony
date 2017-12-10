@@ -3,6 +3,7 @@
 	width: 20%;
 	background-color: rgba(44,44,44,0.5);
 }
+
 ul#routes-list{
 	list-style: none;
 	height: 100%;	
@@ -18,12 +19,15 @@ ul#routes-list{
 }
 #create-route-wrapper{
     position: relative;
-    border-style: dashed;
-    border-color: green;
     padding: 5%;
     margin: 5%;
+    margin-right: 7%; 
     cursor: pointer;
     text-align: center;
+}
+#create-route-wrapper::after{
+	border-style: dashed;
+    border-color: green;
 }
 #create-route-wrapper .fa{
 	color: green;
@@ -36,10 +40,13 @@ ul#routes-list{
 }
 .route{
     padding: 2%;
-    margin: 5%;
+    margin: 0 5% 8% 5%;
+
     position: relative;
-    background: rgba(0,0,0,0.7);
     overflow: hidden;
+}
+.route::after{
+    background: rgba(0,0,0,0.7);
 }
 
 #routes-list .route:first-child{
@@ -218,13 +225,39 @@ ul.places-tools-list li:first-child{
 }
 
 
-/* Places List*/
-ul#places-list{
+/* Places List */
+.places-content{
 	width: 80%;
+	height: 100%;
+	float: left;
+}
+.route-name-editable-wrapper.editable{
+	border: none;
+	padding-bottom: 3%;
+	width: 80%; 
+}
+.route-name-editable-wrapper.editable{
+	border-bottom: 2px solid white;
+}
+.route-name-editable-wrapper input {
+    color: white;
+    width: 100%;
+    background: transparent;
+    border: none;
+    outline: none;
+    font-size: 1.5vw;
+    letter-spacing: 0.2vw;
+    pointer-events: none;
+}
+.route-name-editable-wrapper.editable input{
+	pointer-events: auto;
+}
+
+ul#places-list{
+	width: 100%;
 	height: 100%;
 	list-style: none;
 	position: relative;
-	float: left;
 }
 
 li.place{
@@ -258,7 +291,11 @@ li.place.active::after{
 }
 
 /* Smooth Sortable */
-ul.sortable li{
+ul#routes-list.sortable li{
+	transition: border-top-width 150ms linear;
+}
+
+ul#places-list.sortable li{
 	transition: border-top-width 70ms linear;
 }
 

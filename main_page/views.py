@@ -31,9 +31,19 @@ def save_route(request):
 @csrf_exempt
 def delete_route(request):
     if request.is_ajax():
-        route_id = request.POST['id'];
-        Route.objects.get(id=route_id).delete();
+        route_id = request.POST['id']
+        Route.objects.get(id=route_id).delete()
         return JsonResponse({"success": True})
+
+@csrf_exempt
+def modify_route_name(request):
+    if request.is_ajax():
+        route_id = request.POST['id']
+        new_name = request.POST['name']
+        route = Route.objects.get(id=route_id)
+        route.name = new_name
+        route.save()
+        return JsonResponse({"name": new_name})
 
 def get_marker_plots(request):
     if request.method == "GET":

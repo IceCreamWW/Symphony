@@ -4,7 +4,7 @@ class Site(models.Model):
     id = models.AutoField(primary_key=True)
     lat = models.FloatField()
     lng = models.FloatField()
-    name = models.CharField(max_length=20)
+    name = models.CharField(max_length=100)
 
 class Route(models.Model):
     id = models.AutoField(primary_key=True)

@@ -16,12 +16,36 @@ $(function() {
 		handler: function(target){
 			switch(target){
 				case 0:
+					$routesList.trigger('update-thumbnail');
 					$routeslistPS && $routeslistPS.update();
+					$routesList.sortable('refresh')
 					break;
 				case 1:
 					break;
 			}
 		}
+	});
+
+
+	$routesList.sortable({
+	    placeholder: 'marker',
+	    items: 'li.route',
+	    containment: 'parent',
+	    axis: "y",
+	    cursor: "default",
+	    opacity: 0.5,
+	    tolerance: "pointer",
+	    start: function(ev, ui) {
+	        var next = ui.item.nextAll('li:not(.marker)').first();
+	        next.css({'-moz-transition':'none', '-webkit-transition':'none', 'transition':'none'});
+	        setPadding(rule, ui.helper.outerHeight(true));
+	        setTimeout(next.css.bind(next, {'transition':'border-top-width 150ms linear'}));
+	    },
+	    stop: function(ev, ui) {
+	        var next = ui.item.next();
+	        next.css({'-moz-transition':'none', '-webkit-transition':'none', 'transition':'none'});
+	        setTimeout(next.css.bind(next, {'transition':'border-top-width 150ms linear'}));
+	    }
 	});
 
 
@@ -57,7 +81,8 @@ $(function() {
 						/* 添加元素UI */
 						newRouteElement.prependTo($('#routes-list')).show(400, function(){
 							// Refresh SlideBar
-							$routeslistPS.update();
+							$routeslistPS && $routeslistPS.update();
+							$routesList.sortable('refresh');
 						});
 						newRouteElement.trigger('click');
 						return false;
@@ -69,13 +94,17 @@ $(function() {
 				mExtMap.routes.removeRoute(route.id);
 				routeElement.hide(400, function() {
 					routeElement.remove();
-					$routesList.trigger('refresh-layout');
+					$routeslistPS && $routeslistPS.update();
+					$routesList.sortable('refresh');
+					// $routesList.trigger('refresh-layout');
 					$('#map').trigger('marker-click', [mExtMap.geoMarkers.curMarker.id])
 				});
 				return false;
 			},
-			'refresh-layout': function(event){
-				$routeslistPS.update();
+			'update-thumbnail': function(event){
+				mExtMap.toImageSrc('png', function(src){
+					$routesList.children('.route.active').find('img').attr('src', src);
+				});
 				return false;
 			},
 		}
@@ -87,13 +116,31 @@ $(function() {
 	});
 
 
+
+	/* Input */
+	$('.route-name-editable-wrapper').click(function(event) {
+		$(this).addClass('editable');
+		$(this).children('input').select();
+	});
+	$('.route-name-editable-wrapper input').keypress(function(e) {
+	    if(e.which == 13) {
+	        $(this).trigger('blur');
+	    }
+	});
+	$('.route-name-editable-wrapper input').blur(function(event) {
+		var newName = $(this).val();
+		$.post('modify_route_name', {id: mExtMap.routes.getCurRoute().id, name: newName}, function(data) {
+			mExtMap.routes.getCurRoute().name = data['name'];
+			$routesList.children('.active').find('.route-name').text(data['name']);
+		});
+
+		$(this).parent().removeClass('editable');
+	});
+
 	/* Places Tools */
 	$('.route-tool-delete .fa').click(function(event) {
 		$placesList.trigger('remove-place', [mExtMap.geoMarkers.curMarker.id])
 	});
-
-
-
 
 
 	/*Places Events*/
@@ -199,6 +246,7 @@ $(function() {
 					return false;
 				}
 				$placesList.children('li.place').remove();
+				$placesList.children('input').val('');
 
 				// 更新但没有路线
 				if(newRouteId == -1){
@@ -206,7 +254,7 @@ $(function() {
 					$placesList.sortable("refresh")
 					return false;
 				}
-
+				$('.places-content input').val(mExtMap.routes.getCurRoute().name)
 				mExtMap.routes.getCurRoute().getMarkerArray().forEach( function (marker, index) {
 					var newPlaceElement = createPlaceElement().css('display', 'block');
 					/* 补全元素属性和html */
@@ -236,7 +284,7 @@ $(function() {
 function createRrouteElement(options){
 	var routeHTML =
 	"\
-	<div class='route' style='display:none'>\
+	<li class='route' style='display:none'>\
 		<img class='route-thumbnail' src='http://localhost:8000/static/img/default_thumbnail.jpg'>\
 		<span class='fa-stack fa-2x checked-icon'>\
 	        <i class='fa fa-circle fa-stack-2x'></i>\
@@ -261,7 +309,7 @@ function createRrouteElement(options){
 				</div>\
 			</div>\
 		</div>\
-	</div>\
+	</li>\
 	" 
 	return $(routeHTML);
 }

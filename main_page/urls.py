@@ -8,4 +8,5 @@ urlpatterns = [
 	url(r'search_movie', views.search_movie, name="search-movie"),
 	url(r'save_route', views.save_route, name="save_route"),
 	url(r'delete_route', views.delete_route, name="delete_route"),
+	url(r'modify_route_name', views.modify_route_name, name="modify_route_name"),
 ]
