@@ -25,14 +25,15 @@
     {% load static %}
     <link rel="stylesheet" type="text/css" href="{% static "css/jquery.fullPage.css" %}">
     <link rel="stylesheet" type="text/css" href="{% static "css/custome.fullPage.css" %}">
-    <link rel="stylesheet" type="text/css" href="{% static "css/movie_div.css" %}">
     <link rel="stylesheet" type="text/css" href="{% static "css/main_page.common.css" %}">
     <link rel="stylesheet" type="text/css" href="{% static "css/font-awesome/css/font-awesome.min.css" %}">
     <link rel="stylesheet" type="text/css" href="{% static "css/routes.css" %}">
+    <link rel="stylesheet" type="text/css" href="{% static "css/movies.css" %}">
+    <link rel="stylesheet" type="text/css" href="{% static "css/movie-plots.css" %}">
     <link rel="stylesheet" type="text/css" href="{% static "css/plots.css" %}">
     <link rel="stylesheet" type="text/css" href="{% static "css/perfect-scrollbar.css" %}">
+    <link rel="stylesheet" type="text/css" href="{% static "css/map.common.css" %}">
     <link rel="stylesheet" type="text/css" href="{% static "css/common/jquery-ui.min.css" %}">
-
 
 
     <script src="{% static "js/jquery.min.js" %}"></script>
@@ -50,13 +51,15 @@
     <script src="{% static "js/markerclusterer.js" %}"></script>
     <script src="{% static "js/extmap.classes.js" %}"></script>
     <script src="{% static "js/routes.js" %}"></script>
+    <script src="{% static "js/movie-plots.js" %}"></script>
     <script src="{% static "js/plots.js" %}"></script>
+    <script src="{% static "js/movies.js" %}"></script>
 
     <script src="{% static "js/map.js" %}"></script>
     <script src="{% static "js/jquery.mslider.js" %}"></script>
     <script src="{% static "js/maprightdiv.js" %}"></script>
 
-    <script src="https://maps.google.cn/maps/api/js?key=AIzaSyC5VIhPswBk-7iluvp6GGrmoL2nvNxoDek&libraries=places&language=zh-CN&callback=initMap"
+    <script src="https://maps.google.cn/maps/api/js?key=AIzaSyC5VIhPswBk-7iluvp6GGrmoL2nvNxoDek&libraries=places&callback=initMap"
             async defer></script>
 
 </head>
@@ -66,14 +69,38 @@
     <div class="section">
         <div class="slide" data-anchor="slide1">
             <div id="map"></div>
+            <input id="pac-input" type="text" placeholder="Search Box">
 
             <!-- Routes Div -->
             <div id='routes-div'>
-                <div id="routes-tools-list"></div>
+                <div class="routes-menu-wrapper">
+                    <ul id="routes-menu">
+                         <li></li>   
+                         <li></li>   
+                         <li></li>   
+                         <li></li>   
+                    </ul>
+                </div>
+
                 <div id="routes-slides">
                     
-                    <div class="user-info">
-                        {# to be implemented #}
+                    <div class="m-slide movie-plots-div">
+                        <ul id="movie-plots-list">
+
+                        </ul>
+                    </div>
+
+                    <div class="m-slide movies-div">
+                        <div class="search-movie-wrapper">
+                            <form id="search-movie-form">
+                                <input type="text" name="movie" placeholder="请输入电影/电视剧">
+                            </form>
+                        </div>
+                        <div id="movies-list">
+                              <div class="no-movie" style="display:none">
+                                  没有搜索到相关电影
+                              </div>
+                        </div>
                     </div>
 
                     <div class="m-slide">
@@ -130,7 +157,7 @@
                                 <i class="fa fa-share-alt" aria-hidden="true"></i>
                             </li>
                             <li class='places-tool-undo places-icon icon-need-activate'>
-                                <i class="fa fa-share fa-flip-horizontal" aria-hidden="true"></i>
+                                <i class="fa fa-reply" aria-hidden="true"></i>
                             </li>
                             <li class='places-tool-redo places-icon icon-need-activate'>
                                 <i class="fa fa-share" aria-hidden="true"></i>

@@ -1,10 +1,11 @@
-var center_coordinate = {lat: -34.397, lng: 150.644};
+var center_coordinate = {lat: 37.75771992816863, lng: -122.43760000000003};
+
 var poly;
 var mExtMap;
 
 var mSettings = {
     center: center_coordinate,
-    zoom: 5,
+    zoom: 12,
     zoomControl: false,
     streetViewControl: false,
     fullscreenControl: false,
@@ -46,14 +47,44 @@ function initMap(){
     });
 
 
-    mExtMap.addControl($('#routes-div'), 'LEFT_TOP')
+
+    var searchBox = new google.maps.places.SearchBox(document.getElementById('pac-input'));
+    mExtMap.geoMap.addListener('bounds_changed', function() {
+      searchBox.setBounds(mExtMap.geoMap.getBounds());
+    });
+    searchBox.addListener('places_changed', function() {
+          var places = searchBox.getPlaces();
+          if (places.length == 0) {
+            return;
+          }
+          var bounds = new google.maps.LatLngBounds();
+          places.forEach(function(place) {
+            if (!place.geometry) {
+              console.log("Returned place contains no geometry");
+              return;
+            }
+            if (place.geometry.viewport) {
+              // Only geocodes have viewport.
+              bounds.union(place.geometry.viewport);
+            } else {
+              bounds.extend(place.geometry.location);
+            }
+          });
+          mExtMap.geoMap.fitBounds(bounds);
+        });
+
+
+
+    mExtMap.addControl($('#pac-input'), 'RIGHT_TOP');
+    mExtMap.addControl($('#routes-div'), 'LEFT_TOP');
+
     mExtMap.initMarkersFrom('init_marks',function () {
         mExtMap.addMarkerEvent('click', function(event){
             $('#add-place-wrapper').trigger('marker-click',[this.id, true]);
         })
     });
 
-    mExtMap.setMapStyle('http://localhost:8000/static/json/night_map_style.json/')
+    mExtMap.setMapStyle('http://127.0.0.1:8000/static/json/night_map_style.json/')
 
     $('#map').on('marker-click', function(event, curMarkerId) {
         var preMarker = mExtMap.geoMarkers.curMarker;
@@ -70,67 +101,5 @@ function initMap(){
                 
         mExtMap.geoMarkers.curMarker = curMarker;
     });
-}
-
-
-
-
-function load_map(map_style_json) {
-    
-    map = new google.maps.Map(document.getElementById('map'), {
-        // center: center_coordinate,
-        // zoom: 5,
-        // zoomControl: false,
-        // streetViewControl: false,
-        // fullscreenControl: false,
-        // mapTypeControl: false,
-        // gestureHandling: 'cooperative',
-        mapTypeControlOptions: {
-            mapTypeIds: ['roadmap', 'map_night']
-        }
-    });
-
-    // Define a symbol using SVG path notation, with an opacity of 1.
-        // var lineSymbol = {
-        //   path: 'M 0,-1 0,1',
-        //   strokeOpacity: 1,
-        //   scale: 4
-        // };
-
-    poly = new google.maps.Polyline({
-          strokeColor: '#FFFF33',
-          strokeOpacity: 0,
-          icons: [{
-            icon: lineSymbol,
-            offset: '0',
-            repeat: '20px'
-          }],
-          strokeWeight: 3,
-          map: map
-        });
-
-
-
-    
-
-    map.mapTypes.set('map_night', styledMapType);
-    map.setMapTypeId('map_night');
-    var map_right_div = $('#map_right_info_div');
-    
-    var add_marker_btn = $('#add_marker_btn');
-    var route_tools = $('#route-tools-div');
-    var add_route_btn = $('#add_route_btn');
-
-
-    // map_right_div.index = 1;
-
-    map.controls[google.maps.ControlPosition.RIGHT_TOP].push(map_right_div[0])
-    map.controls[google.maps.ControlPosition.LEFT_TOP].push(route_tools[0])
-    map.controls[google.maps.ControlPosition.LEFT_TOP].push(add_marker_btn[0])
-
-    $.getJSON('init_marks', null, function (json, textStatus) {
-        init_marks(json);
-    });
-
 }
 

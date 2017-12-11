@@ -9,4 +9,5 @@ urlpatterns = [
 	url(r'save_route', views.save_route, name="save_route"),
 	url(r'delete_route', views.delete_route, name="delete_route"),
 	url(r'modify_route_name', views.modify_route_name, name="modify_route_name"),
+	url(r'get_movie_plots', views.get_movie_plots, name="get_movie_plots"),
 ]

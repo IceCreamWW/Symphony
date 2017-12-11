@@ -6,16 +6,16 @@ $(function() {
 	var stylesheet = $('style[name=impostor_size]')[0].sheet;
     var rule = stylesheet.rules ? stylesheet.rules[0].style : stylesheet.cssRules[0].style;
 
-    var ROUTES_SLIDE = 0;
-    var PLACES_SLIDE = 1;
+    var ROUTES_SLIDE = 2;
+    var PLACES_SLIDE = 3;
 
 	// For Test Use
-	$('#routes-slides').addRightArrow($('.route-edit-icon .fa'))
 	$('#routes-slides').addLeftArrow($('.places-tool-return-routes .fa'))
 	// --
 
 	$('#routes-slides').mslider({
 		initSlide: ROUTES_SLIDE,
+		menu: "#routes-menu",
 		handler: function(target){
 			switch(target){
 				case ROUTES_SLIDE:
@@ -63,6 +63,7 @@ $(function() {
 						/*补全HTML */
 						newRouteElement.data('route-id', route.id);
 						newRouteElement.find('.route-name').text(route.name);
+						newRouteElement.find('a').attr('href', genSNShref(route.name, 'http://localhost:8000/static/img/default_thumbnail.jpg'));
 
 						/* 补全事件 */
 						newRouteElement.click(function(event) {
@@ -367,7 +368,9 @@ function createRrouteElement(options){
 			<div class='route-icons-list'>\
 				<div class='route-icons-wrapper'>\
 					<div class='route-share-icon route-icon'>\
-                        <i class='fa fa-share-square-o' aria-hidden='true'></i>\
+						<a>\
+                        	<i class='fa fa-share-alt' aria-hidden='true'></i>\
+                    	</a>\
                     </div>\
 					<div class='route-delete-icon route-icon'>\
 						<i class='fa fa-trash-o' aria-hidden='true'></i>\
@@ -397,3 +400,24 @@ function createPlaceElement(){
 function setPadding(rule, atHeight) {
     rule.cssText = 'border-top-width: '+ atHeight+'px'; 
 };
+
+function genSNShref(title, datasrc){
+    var p = {
+        url: "http://symphony.yuhong-zhong.com", /*要分享的网站的URL*/
+        desc: '', /*分享理由(风格应模拟用户对话),支持多分享语随机展现（使用|分隔）*/
+        title: title, /*分享标题(可选)*/
+        summary: '来自Symphony', /*分享摘要(可选)*/
+        pics: datasrc, /*分享图片(可选)*/
+        flash: '', /*视频地址(可选)*/
+        site: 'site', /*分享来源(可选) 如：QQ分享*/
+        style: '100',
+        width: 32,
+        height: 32
+    };
+    var s = [];
+    for (var i in p) {
+        s.push(i + '=' + encodeURIComponent(p[i] || ''));
+    }
+    return "http://connect.qq.com/widget/shareqq/index.html?" + s.join('&');
+    // document.write(['<a class="qcShareQQDiv" href="http://connect.qq.com/widget/shareqq/index.html?', s.join('&'), '"target="_blank">分享给QQ好友</a>'].join(''));
+}
