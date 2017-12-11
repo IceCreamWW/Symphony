@@ -1,0 +1,11 @@
+ul#movie-plots-list {
+    list-style: none;
+}
+li.movie-plot {
+    margin: 5%;
+    margin-top: 0;
+    padding: 5%;
+    border: 2px solid;
+    background: rgba(255,255,255,0.3);
+    font-size: 14px;
+}

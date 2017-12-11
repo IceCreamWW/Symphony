@@ -60,38 +60,32 @@ def get_marker_plots(request):
             {"img": plot.img, "movie_name": plot.movie.name, "keyword": plot.keyword, "description": plot.description}
             for plot in plots]
         }
-
-        # context = {
-        #     "plots": plots,
-        # }
-        # html = render_to_string('main_page/plots_overview.html', context)
-        # plots_info = {
-        #     "html" : html,
-        #     "site": cur_site.name
-        # }
         return JsonResponse(context, safe=False)
 
-@csrf_exempt
+def get_movie_plots(request):
+    if request.is_ajax():
+        movie_id = request.GET["id"]
+        cur_movie = Movie.objects.get(id=movie_id)
+        plot_set = Plot.objects.filter(movie=cur_movie)
+        result_list = list()
+        for plot in plot_set:
+            cur_plot_dict = dict()
+            cur_plot_dict["keyword"] = plot.keyword
+            cur_plot_dict["description"] = plot.description
+            cur_plot_dict["img"] = plot.img
+            cur_plot_dict["site_id"] = plot.site.id
+            result_list.append(cur_plot_dict)
+        return JsonResponse(result_list, safe=False)
+
 def search_movie(request):
-    if request.method == "GET":
+    if request.is_ajax():
         movie_name = request.GET['movie']
         movies = Movie.objects.filter(name__icontains=movie_name)
-        context = {
-            "movies" : movies,
-        }
-        html = render_to_string('main_page/movies_overview.html', context)
-        movies_info = {
-            "html" : html,
-        }
-        return JsonResponse(movies_info, safe=False)
-
+        context = [{'name': movie.name, 'img': movie.video, 'description': movie.description, 'id': movie.id} for movie in movies]
+        return JsonResponse(context, safe=False)
 
 def get_random(a, b):
     return a + (b - a) * random()
-
-
-    
-
 
 
 # For test, return all marker lat and lng in table site

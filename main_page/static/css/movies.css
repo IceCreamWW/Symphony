@@ -1,0 +1,53 @@
+.search-movie-wrapper input[type="text"] {
+    background: transparent;
+    border: 2px solid;
+    padding: 5px 10px;
+    width: 80%;
+    outline: none;
+    border-radius: 7px;
+    font-size: 17px;
+}
+.search-movie-wrapper {
+    text-align: center;
+    height: 10%;
+}
+
+
+div#movies-list {
+    height: 90%;
+    position: relative;
+}
+.movies-div{
+	height: 100%;
+}
+.movie {
+    border: 2px solid;
+    margin: 5%;
+    margin-top: 0;
+    padding: 5%;
+    height: 30%;
+   	overflow: hidden;
+}
+img.movie-img {
+    height: 100%;
+    cursor: pointer;
+}
+.movie-intro {
+    width: 50%;
+    height: 100%;
+    float: right;
+    display: inline;
+    overflow: hidden;
+    word-break: break-all;
+}
+h2.movie-name {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+.no-movie {
+    color: white;
+    font-size: 1.7vw;
+    letter-spacing: 2px;
+    text-align: center;
+}

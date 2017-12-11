@@ -28,8 +28,9 @@
 			transition	: 	settings.transition,
 		});
 		$slider.children('.m-slide').css({
-			width 	: 	100 / self.getSlideCnt() + '%',
-			float	: 	'left',
+			"min-height": 	'1px',
+			"width" 	: 	100 / self.getSlideCnt() + '%',
+			"float"		: 	'left',
 		});
 		$slider.children('.m-slide').first().addClass('m-slide-active')
 
