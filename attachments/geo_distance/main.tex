@@ -1,6 +1,6 @@
 \input{head}
 \title{\textbf{在MySQL数据库中由经纬度计算最近的点}}
-\author{}
+\author{Yuhong Zhong\\[-0.5em]\scriptsize Symphony}
 \date{}
 \begin{document}
 \maketitle
@@ -31,10 +31,10 @@ $\mathrm{versin}(\theta)=1-\cos(\theta)=2\sin^2(\frac{\theta}{2})$。
 
 \begin{quote}
   \texttt{3956 * 2 * ASIN(SQRT(\\
-    POWER(SIN((orig.latitude - dest.latitude) * pi() / 180 / 2), 2)\\
-    + COS(orig.latitude * pi() / 180) * COS(dest.latitude * pi() / 180)\\
-    * POWER(SIN((orig.longitude - dest.longitude) * pi() / 180 / 2), 2)))\\
-    as distance}
+    POWER(SIN((orig.latitude - dest.latitude) * PI() / 180 / 2), 2)\\
+    + COS(orig.latitude * PI() / 180) * COS(dest.latitude * PI() / 180)\\
+    * POWER(SIN((orig.longitude - dest.longitude) * PI() / 180 / 2), 2)))\\
+    AS distance}
 \end{quote}
 
 \section{计算最近点的MySQL语句}
@@ -42,12 +42,12 @@ $\mathrm{versin}(\theta)=1-\cos(\theta)=2\sin^2(\frac{\theta}{2})$。
 
 \begin{quote}
   \texttt{SELECT *, 3956 * 2 * ASIN(SQRT(\\
-    POWER(SIN((@orig\_latitude - dest.latitude) * pi() / 180 / 2), 2)\\
-    + COS(@orig\_latitude * pi() / 180) * COS(dest.latitude * pi() / 180)\\
-    * POWER(SIN((@orig\_longitude - dest.longitude) * pi() / 180 / 2), 2)))\\
+    POWER(SIN((@orig\_latitude - dest.latitude) * PI() / 180 / 2), 2)\\
+    + COS(@orig\_latitude * PI() / 180) * COS(dest.latitude * PI() / 180)\\
+    * POWER(SIN((@orig\_longitude - dest.longitude) * PI() / 180 / 2), 2)))\\
     AS distance\\
     FROM sites dest\\
-    ORDER BY distance limit 1;}
+    ORDER BY distance LIMIT 1;}
 \end{quote}
 其中，\texttt{@orig\_latitude}，\texttt{@orig\_longitude}的值分别为点$a$的纬度与经度值。
 
@@ -69,14 +69,14 @@ $\mathrm{versin}(\theta)=1-\cos(\theta)=2\sin^2(\frac{\theta}{2})$。
 
 \begin{quote}
   \texttt{SELECT *, 3956 * 2 * ASIN(SQRT(\\
-    POWER(SIN((@orig\_latitude - dest.latitude) * pi() / 180 / 2), 2)\\
-    + COS(@orig\_latitude * pi() / 180) * COS(dest.latitude * pi() / 180)\\
-    * POWER(SIN((@orig\_longitude - dest.longitude) * pi() / 180 / 2), 2)))\\
+    POWER(SIN((@orig\_latitude - dest.latitude) * PI() / 180 / 2), 2)\\
+    + COS(@orig\_latitude * PI() / 180) * COS(dest.latitude * PI() / 180)\\
+    * POWER(SIN((@orig\_longitude - dest.longitude) * PI() / 180 / 2), 2)))\\
     AS distance\\
     FROM sites dest\\
     WHERE dest.longitude BETWEEN @lon1 AND @lon2\\
     AND dest.lantitude BETWEEN @lat1 AND @lat2\\
-    ORDER BY distance limit 1;}
+    ORDER BY distance LIMIT 1;}
 \end{quote}
 
 由实验可知，该查询语句能够大大提高查询速度。最后，还可将上述过程利用MySQL中的存储过程(Storage
@@ -89,27 +89,31 @@ Procedure)加以实现，以进一步提高查询的速度。该存储过程的�
     DECLARE lon1 DOUBLE; DECLARE lon2 DOUBLE;\\
     DECLARE lat1 DOUBLE; DECLARE lat2 DOUBLE;\\
     DECLARE dist DOUBLE;\\
-    set dist = 100;\\
-    set lon1 = lon - dist / ABS(COS(RADIANS(lat)) * 111);\\
-    set lon2 = lon + dist / ABS(COS(RADIANS(lat)) * 111);\\
-    set lat1 = lat - (dist / 111);\\
-    set lat2 = lat + (dist / 111);\\
+    SET dist = 100;\\
+    SET lon1 = lon - dist / ABS(COS(RADIANS(lat)) * 111);\\
+    SET lon2 = lon + dist / ABS(COS(RADIANS(lat)) * 111);\\
+    SET lat1 = lat - (dist / 111);\\
+    SET lat2 = lat + (dist / 111);\\
     SELECT *, 3956 * 2 * ASIN(SQRT(\\
-    POWER(SIN((lat - dest.latitude) * pi() / 180 / 2), 2)\\
-    + COS(lat * pi() / 180) * COS(dest.latitude * pi() / 180)\\
-    * POWER(SIN((lon - dest.longitude) * pi() / 180 / 2), 2)))\\
+    POWER(SIN((lat - dest.latitude) * PI() / 180 / 2), 2)\\
+    + COS(lat * PI() / 180) * COS(dest.latitude * PI() / 180)\\
+    * POWER(SIN((lon - dest.longitude) * PI() / 180 / 2), 2)))\\
     AS distance\\
     FROM sites dest\\
     WHERE dest.longitude BETWEEN lon1 AND lon2\\
     AND dest.lantitude BETWEEN lat1 AND lat2\\
-    ORDER BY distance limit 1;\\
+    ORDER BY distance LIMIT 1;\\
     END \$\$} 
 \end{quote}
 
 由此，我们只需通过命令\texttt{CALL find\_nearest\_point(@orig\_latitude, @orig\_longitude);}即可较为
 高效的查询距离$a$最近的点$b\in S$。
 
-\section{附录}
+\begin{thebibliography}{99}
+\bibitem[1]{geo} Alexander Rubin: Geo (proximity) Search with MySQL
+\end{thebibliography}
+
+\section*{附录}
 附录中将给出在“跟着电影去旅行”应用中创建寻找最近点的MySQL存储过程的命令，以及在Django中调用该存储
 过程的命令。
 
@@ -122,20 +126,20 @@ Procedure)加以实现，以进一步提高查询的速度。该存储过程的�
     DECLARE lon1 DOUBLE; DECLARE lon2 DOUBLE;\\
     DECLARE lat1 DOUBLE; DECLARE lat2 DOUBLE;\\
     DECLARE dist DOUBLE;\\
-    set dist = 100;\\
-    set lon1 = lon - dist / ABS(COS(RADIANS(lat)) * 111);\\
-    set lon2 = lon + dist / ABS(COS(RADIANS(lat)) * 111);\\
-    set lat1 = lat - (dist / 111);\\
-    set lat2 = lat + (dist / 111);\\
+    SET dist = 100;\\
+    SET lon1 = lon - dist / ABS(COS(RADIANS(lat)) * 111);\\
+    SET lon2 = lon + dist / ABS(COS(RADIANS(lat)) * 111);\\
+    SET lat1 = lat - (dist / 111);\\
+    SET lat2 = lat + (dist / 111);\\
     SELECT *, 3956 * 2 * ASIN(SQRT(\\
-    POWER(SIN((lat - dest.lat) * pi() / 180 / 2), 2)\\
-    + Cos(lat * pi() / 180) * COS(dest.lat * pi() / 180)\\
-    * POWER(SIN((lon - dest.lng) * pi() / 180 / 2), 2)))\\
+    POWER(SIN((lat - dest.lat) * PI() / 180 / 2), 2)\\
+    + COS(lat * PI() / 180) * COS(dest.lat * PI() / 180)\\
+    * POWER(SIN((lon - dest.lng) * PI() / 180 / 2), 2)))\\
     AS distance\\
     FROM main\_page\_site dest\\
     WHERE dest.lng BETWEEN lon1 AND lon2\\
     AND dest.lat BETWEEN lat1 AND lat2\\
-    ORDER BY distance limit 1;\\
+    ORDER BY distance LIMIT 1;\\
     END \$\$} 
 \end{quote}
 
