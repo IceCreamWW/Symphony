@@ -43,19 +43,13 @@ function initMap(){
         lineSymbolSettings: lineSetting,
         mapDisplaySettings: mSettings,
         clusterSettings: mcSettings,
-        routes: {
-            show: function () {
-                
-            }, 
-        }
     });
 
 
-    mExtMap.addControl($('#map-info-div'), 'RIGHT_TOP')
     mExtMap.addControl($('#routes-div'), 'LEFT_TOP')
     mExtMap.initMarkersFrom('init_marks',function () {
         mExtMap.addMarkerEvent('click', function(event){
-            $('#add-place-wrapper').trigger('marker-click',[this.id]);
+            $('#add-place-wrapper').trigger('marker-click',[this.id, true]);
         })
     });
 
@@ -117,9 +111,7 @@ function load_map(map_style_json) {
 
 
 
-    google.maps.event.addListenerOnce(map, 'idle', function(){
-        $('.map-custom-control').css('display','block');
-    });
+    
 
     map.mapTypes.set('map_night', styledMapType);
     map.setMapTypeId('map_night');

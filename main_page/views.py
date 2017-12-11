@@ -46,19 +46,30 @@ def modify_route_name(request):
         return JsonResponse({"name": new_name})
 
 def get_marker_plots(request):
-    if request.method == "GET":
+    if request.is_ajax():
         id = request.GET['id']
+        id = 1
         cur_site = Site.objects.get(id=id)
-        plots = Plot.objects.filter(site__id=1).values('keyword', 'movie__name', 'img')
+        plots = Plot.objects.filter(site__id=1)
+
         context = {
-            "plots": plots,
+            "site": {
+                "name": cur_site.name
+            },
+            "plots": [
+            {"img": plot.img, "movie_name": plot.movie.name, "keyword": plot.keyword, "description": plot.description}
+            for plot in plots]
         }
-        html = render_to_string('main_page/plots_overview.html', context)
-        plots_info = {
-            "html" : html,
-            "site": cur_site.name
-        }
-        return JsonResponse(plots_info, safe=False)
+
+        # context = {
+        #     "plots": plots,
+        # }
+        # html = render_to_string('main_page/plots_overview.html', context)
+        # plots_info = {
+        #     "html" : html,
+        #     "site": cur_site.name
+        # }
+        return JsonResponse(context, safe=False)
 
 @csrf_exempt
 def search_movie(request):
