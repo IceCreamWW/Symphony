@@ -17,9 +17,9 @@ S$都表示三维球面上的一个点，并且$x$表示纬度，$y$表示经度
 
 \begin{thm}[三维球体表面的距离]
   设两个点$s_1,s_2$在半径为$R$的三维球体表面，并且$s_1$的纬度为$\phi_1$，$s_2$的纬度
-  为$\phi_2$，$s_1,s_2$的纬度差为$\Delta\phi$，经度差为$\Delta\lambda$，则$s_1,s_2$间的距离$d$为：
+  为$\phi_2$，$s_1,s_2$的纬度差为$\Delta\phi$，经度差为$\Delta\lambda$，则$s_1,s_2$间的距离$d$满足：
 \begin{displaymath}
-  d=\mathrm{haversin}(\frac{d}{R})=\mathrm{haversin}(\Delta\phi)+\cos(\phi_1)\cos(\phi_2)\mathrm{haversin}(\Delta\lambda)
+  \mathrm{haversin}(\frac{d}{R})=\mathrm{haversin}(\Delta\phi)+\cos(\phi_1)\cos(\phi_2)\mathrm{haversin}(\Delta\lambda)
 \end{displaymath}
 其中，$\mathrm{haversion}(\theta)=\frac{\mathrm{versin}(\theta)}{2}=\sin^2(\frac{\theta}{2})$，
 $\mathrm{versin}(\theta)=1-\cos(\theta)=2\sin^2(\frac{\theta}{2})$。
