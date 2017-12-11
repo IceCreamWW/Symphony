@@ -25,11 +25,11 @@
     {% load static %}
     <link rel="stylesheet" type="text/css" href="{% static "css/jquery.fullPage.css" %}">
     <link rel="stylesheet" type="text/css" href="{% static "css/custome.fullPage.css" %}">
-    <link rel="stylesheet" type="text/css" href="{% static "css/map_right_div.css" %}">
     <link rel="stylesheet" type="text/css" href="{% static "css/movie_div.css" %}">
     <link rel="stylesheet" type="text/css" href="{% static "css/main_page.common.css" %}">
     <link rel="stylesheet" type="text/css" href="{% static "css/font-awesome/css/font-awesome.min.css" %}">
     <link rel="stylesheet" type="text/css" href="{% static "css/routes.css" %}">
+    <link rel="stylesheet" type="text/css" href="{% static "css/plots.css" %}">
     <link rel="stylesheet" type="text/css" href="{% static "css/perfect-scrollbar.css" %}">
     <link rel="stylesheet" type="text/css" href="{% static "css/common/jquery-ui.min.css" %}">
 
@@ -50,6 +50,8 @@
     <script src="{% static "js/markerclusterer.js" %}"></script>
     <script src="{% static "js/extmap.classes.js" %}"></script>
     <script src="{% static "js/routes.js" %}"></script>
+    <script src="{% static "js/plots.js" %}"></script>
+
     <script src="{% static "js/map.js" %}"></script>
     <script src="{% static "js/jquery.mslider.js" %}"></script>
     <script src="{% static "js/maprightdiv.js" %}"></script>
@@ -64,41 +66,6 @@
     <div class="section">
         <div class="slide" data-anchor="slide1">
             <div id="map"></div>
-            <div id="hidden-map" hidden="true"></div>
-            
-            <div id="map-info-div" class="map-custom-control">
-                <div id="title-div">
-                    <div class="icon"><div class="arrow map-arrow-left"></div></div>
-                    <div class="icon"><div class="arrow map-arrow-right"></div></div>
-                </div>
-
-                
-
-                <div id="map-info-slides">
-
-                    <div class="m-slide" >
-                    	<form id="id-search-movie-form">
-	                        <input type="text" name="movie" id="id-search-movie-input">
-	                        <input type="submit" id="id-search-movie-submit" value="Search">
-                        </form>
-                        <div class="movies-info">
-                            <h1></h1>
-                        </div>
-                        <div id="movies-content"></div>
-                    </div>
-
-
-                    <div class="m-slide" >
-                        <div class="plots-info">
-                            <h1></h1>
-                        </div>
-                        <div id="plots-content"></div>
-                    </div>
-
-                    <div class="m-slide"></div>
-                </div>
-
-            </div>
 
             <!-- Routes Div -->
             <div id='routes-div'>

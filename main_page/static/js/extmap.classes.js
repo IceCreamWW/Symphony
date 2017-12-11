@@ -388,6 +388,7 @@ function ExtMap(options) {
     );
     this.geoMarkers = new Markers();
     this.geoCluster = new MarkerClusterer(this.geoMap, null, this.settings.clusterSettings);
+    this.geoInfoWindow = new google.maps.InfoWindow();
     this.placeService = new google.maps.places.PlacesService(this.geoMap);
 
 
@@ -453,6 +454,7 @@ ExtMap.prototype = {
     },
     toCanvas: function (callback) {
         html2canvas(document.getElementById(this.settings.mapId), {
+            timeout: 5000,
             useCORS: true,
             onrendered: function (canvas) {
                 callback($(canvas));
@@ -460,10 +462,28 @@ ExtMap.prototype = {
         });
     },
     toImageSrc: function (picFormat, callback) {
+
+        //get transform value
+        var transform=$(".gm-style>div:first>div").css("transform")
+        var comp=transform.split(",") //split up the transform matrix
+        var mapleft=parseFloat(comp[4]) //get left value
+        var maptop=parseFloat(comp[5])  //get top value
+        $(".gm-style>div:first>div").css({ //get the map container. not sure if stable
+          "transform":"none",
+          "left":mapleft,
+          "top":maptop,
+        })
+
         html2canvas(document.getElementById(this.settings.mapId), {
+            timeout: 5000,
             useCORS: true,
             onrendered: function (canvas) {
                 callback(canvas.toDataURL('image/' + picFormat));
+                $(".gm-style>div:first>div").css({
+                  left:0,
+                  top:0,
+                  "transform":transform
+                })
             }
         });
     }
