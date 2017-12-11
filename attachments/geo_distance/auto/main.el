@@ -2,6 +2,8 @@
  "main"
  (lambda ()
    (TeX-run-style-hooks
-    "head"))
+    "head")
+   (LaTeX-add-bibitems
+    "geo"))
  :latex)
 

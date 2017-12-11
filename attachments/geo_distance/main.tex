@@ -1,6 +1,6 @@
 \input{head}
 \title{\textbf{在MySQL数据库中由经纬度计算最近的点}}
-\author{}
+\author{Yuhong Zhong\\[-0.5em]\scriptsize Symphony}
 \date{}
 \begin{document}
 \maketitle
@@ -17,9 +17,9 @@ S$都表示三维球面上的一个点，并且$x$表示纬度，$y$表示经度
 
 \begin{thm}[三维球体表面的距离]
   设两个点$s_1,s_2$在半径为$R$的三维球体表面，并且$s_1$的纬度为$\phi_1$，$s_2$的纬度
-  为$\phi_2$，$s_1,s_2$的纬度差为$\Delta\phi$，经度差为$\Delta\lambda$，则$s_1,s_2$间的距离$d$为：
+  为$\phi_2$，$s_1,s_2$的纬度差为$\Delta\phi$，经度差为$\Delta\lambda$，则$s_1,s_2$间的距离$d$满足：
 \begin{displaymath}
-  d=\mathrm{haversin}(\frac{d}{R})=\mathrm{haversin}(\Delta\phi)+\cos(\phi_1)\cos(\phi_2)\mathrm{haversin}(\Delta\lambda)
+  \mathrm{haversin}(\frac{d}{R})=\mathrm{haversin}(\Delta\phi)+\cos(\phi_1)\cos(\phi_2)\mathrm{haversin}(\Delta\lambda)
 \end{displaymath}
 其中，$\mathrm{haversion}(\theta)=\frac{\mathrm{versin}(\theta)}{2}=\sin^2(\frac{\theta}{2})$，
 $\mathrm{versin}(\theta)=1-\cos(\theta)=2\sin^2(\frac{\theta}{2})$。
@@ -31,10 +31,10 @@ $\mathrm{versin}(\theta)=1-\cos(\theta)=2\sin^2(\frac{\theta}{2})$。
 
 \begin{quote}
   \texttt{3956 * 2 * ASIN(SQRT(\\
-    POWER(SIN((orig.latitude - dest.latitude) * pi() / 180 / 2), 2)\\
-    + COS(orig.latitude * pi() / 180) * COS(dest.latitude * pi() / 180)\\
-    * POWER(SIN((orig.longitude - dest.longitude) * pi() / 180 / 2), 2)))\\
-    as distance}
+    POWER(SIN((orig.latitude - dest.latitude) * PI() / 180 / 2), 2)\\
+    + COS(orig.latitude * PI() / 180) * COS(dest.latitude * PI() / 180)\\
+    * POWER(SIN((orig.longitude - dest.longitude) * PI() / 180 / 2), 2)))\\
+    AS distance}
 \end{quote}
 
 \section{计算最近点的MySQL语句}
@@ -42,12 +42,12 @@ $\mathrm{versin}(\theta)=1-\cos(\theta)=2\sin^2(\frac{\theta}{2})$。
 
 \begin{quote}
   \texttt{SELECT *, 3956 * 2 * ASIN(SQRT(\\
-    POWER(SIN((@orig\_latitude - dest.latitude) * pi() / 180 / 2), 2)\\
-    + COS(@orig\_latitude * pi() / 180) * COS(dest.latitude * pi() / 180)\\
-    * POWER(SIN((@orig\_longitude - dest.longitude) * pi() / 180 / 2), 2)))\\
-    as distance\\
+    POWER(SIN((@orig\_latitude - dest.latitude) * PI() / 180 / 2), 2)\\
+    + COS(@orig\_latitude * PI() / 180) * COS(dest.latitude * PI() / 180)\\
+    * POWER(SIN((@orig\_longitude - dest.longitude) * PI() / 180 / 2), 2)))\\
+    AS distance\\
     FROM sites dest\\
-    ORDER BY distance limit 1;}
+    ORDER BY distance LIMIT 1;}
 \end{quote}
 其中，\texttt{@orig\_latitude}，\texttt{@orig\_longitude}的值分别为点$a$的纬度与经度值。
 
@@ -69,45 +69,89 @@ $\mathrm{versin}(\theta)=1-\cos(\theta)=2\sin^2(\frac{\theta}{2})$。
 
 \begin{quote}
   \texttt{SELECT *, 3956 * 2 * ASIN(SQRT(\\
-    POWER(SIN((@orig\_latitude - dest.latitude) * pi() / 180 / 2), 2)\\
-    + COS(@orig\_latitude * pi() / 180) * COS(dest.latitude * pi() / 180)\\
-    * POWER(SIN((@orig\_longitude - dest.longitude) * pi() / 180 / 2), 2)))\\
-    as distance\\
+    POWER(SIN((@orig\_latitude - dest.latitude) * PI() / 180 / 2), 2)\\
+    + COS(@orig\_latitude * PI() / 180) * COS(dest.latitude * PI() / 180)\\
+    * POWER(SIN((@orig\_longitude - dest.longitude) * PI() / 180 / 2), 2)))\\
+    AS distance\\
     FROM sites dest\\
     WHERE dest.longitude BETWEEN @lon1 AND @lon2\\
-    AND dest.lantitude BETWEEN @lan1 AND @lan2\\
-    ORDER BY distance limit 1;}
+    AND dest.lantitude BETWEEN @lat1 AND @lat2\\
+    ORDER BY distance LIMIT 1;}
 \end{quote}
 
 由实验可知，该查询语句能够大大提高查询速度。最后，还可将上述过程利用MySQL中的存储过程(Storage
 Procedure)加以实现，以进一步提高查询的速度。该存储过程的定义命令如下：
 
 \begin{quote}
-  \texttt{CREATE PROCEDURE snn(IN lat, IN lon)\\
+  \texttt{DELIMITER \$\$\\
+    CREATE PROCEDURE find\_nearest\_point(IN lat DOUBLE, IN lon DOUBLE)\\
     BEGIN\\
-    DECLARE lon1 FLOAT; DECLARE lon2 FLOAT;\\
-    DECLARE lat1 FLOAT; DECLARE lat2 FLOAT;\\
-    --calculate longitude and latitude of rectangle\\
-    set dist = 100;\\
-    set lon1 = lon - dist / ABS(COS(REDIANS(lat)) * 111);\\
-    set lon2 = lon + dist / ABS(COS(REDIANS(lat)) * 111);\\
-    set lat1 = lat - (dist / 111);\\
-    set lat2 = lat + (disy / 111);\\
-    --run query\\
+    DECLARE lon1 DOUBLE; DECLARE lon2 DOUBLE;\\
+    DECLARE lat1 DOUBLE; DECLARE lat2 DOUBLE;\\
+    DECLARE dist DOUBLE;\\
+    SET dist = 100;\\
+    SET lon1 = lon - dist / ABS(COS(RADIANS(lat)) * 111);\\
+    SET lon2 = lon + dist / ABS(COS(RADIANS(lat)) * 111);\\
+    SET lat1 = lat - (dist / 111);\\
+    SET lat2 = lat + (dist / 111);\\
     SELECT *, 3956 * 2 * ASIN(SQRT(\\
-    POWER(SIN((@orig\_latitude - dest.latitude) * pi() / 180 / 2), 2)\\
-    + COS(@orig\_latitude * pi() / 180) * COS(dest.latitude * pi() / 180)\\
-    * POWER(SIN((@orig\_longitude - dest.longitude) * pi() / 180 / 2), 2)))\\
-    as distance\\
+    POWER(SIN((lat - dest.latitude) * PI() / 180 / 2), 2)\\
+    + COS(lat * PI() / 180) * COS(dest.latitude * PI() / 180)\\
+    * POWER(SIN((lon - dest.longitude) * PI() / 180 / 2), 2)))\\
+    AS distance\\
     FROM sites dest\\
     WHERE dest.longitude BETWEEN lon1 AND lon2\\
-    AND dest.lantitude BETWEEN lan1 AND lan2\\
-    ORDER BY distance limit 1;\\
-    END} 
+    AND dest.lantitude BETWEEN lat1 AND lat2\\
+    ORDER BY distance LIMIT 1;\\
+    END \$\$} 
 \end{quote}
 
-由此，我们只需通过命令\texttt{CALL snn(@orig\_latitude, @orig\_longitude)}即可较为高效的查询距离$a$最
-近的点$b\in S$。
+由此，我们只需通过命令\texttt{CALL find\_nearest\_point(@orig\_latitude, @orig\_longitude);}即可较为
+高效的查询距离$a$最近的点$b\in S$。
+
+\begin{thebibliography}{99}
+\bibitem[1]{geo} Alexander Rubin: Geo (proximity) Search with MySQL
+\end{thebibliography}
+
+\section*{附录}
+附录中将给出在“跟着电影去旅行”应用中创建寻找最近点的MySQL存储过程的命令，以及在Django中调用该存储
+过程的命令。
+
+创建存储过程的MySQL命令为：
+\begin{quote}
+  \texttt{USE symphony;\\
+    DELIMITER \$\$\\
+    CREATE PROCEDURE find\_nearest\_point(IN lat DOUBLE, IN lon DOUBLE)\\
+    BEGIN\\
+    DECLARE lon1 DOUBLE; DECLARE lon2 DOUBLE;\\
+    DECLARE lat1 DOUBLE; DECLARE lat2 DOUBLE;\\
+    DECLARE dist DOUBLE;\\
+    SET dist = 100;\\
+    SET lon1 = lon - dist / ABS(COS(RADIANS(lat)) * 111);\\
+    SET lon2 = lon + dist / ABS(COS(RADIANS(lat)) * 111);\\
+    SET lat1 = lat - (dist / 111);\\
+    SET lat2 = lat + (dist / 111);\\
+    SELECT *, 3956 * 2 * ASIN(SQRT(\\
+    POWER(SIN((lat - dest.lat) * PI() / 180 / 2), 2)\\
+    + COS(lat * PI() / 180) * COS(dest.lat * PI() / 180)\\
+    * POWER(SIN((lon - dest.lng) * PI() / 180 / 2), 2)))\\
+    AS distance\\
+    FROM main\_page\_site dest\\
+    WHERE dest.lng BETWEEN lon1 AND lon2\\
+    AND dest.lat BETWEEN lat1 AND lat2\\
+    ORDER BY distance LIMIT 1;\\
+    END \$\$} 
+\end{quote}
+
+在Django中调用存储过程的Python命令为：
+\begin{quote}
+  \texttt{from django.db import connection\\
+    cur = connection.cursor()\\
+    cur.callproc('find\_nearest\_point', [str(lat), str(lng)])\\
+    results = cur.fetchall()\\
+    cur.close()\\
+    result\_id = results[0][0]}
+\end{quote}
 \end{document}
 
 %%% Local Variables:

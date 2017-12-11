@@ -31,7 +31,6 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-    'administrator.apps.AdministratorConfig',
     'handler.apps.HandlerConfig',
     'tempprofile.apps.TempprofileConfig',
     'registration.apps.RegistrationConfig',
