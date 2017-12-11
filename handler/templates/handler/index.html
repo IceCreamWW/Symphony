@@ -9,7 +9,7 @@
     <meta name="author" content="">
     <link rel="icon" href="../../favicon.ico">
 
-    <title>Dashboard Template for Bootstrap</title>
+    <title>管理员界面 电影列表</title>
 
     <!-- Bootstrap core CSS -->
     {% load static %}
@@ -60,10 +60,10 @@
                 <table class="table table-striped">
                     <thead>
                     <tr>
-                        <th>电影编号</th>
-                        <th>电影名</th>
-                        <th>电影描述</th>
-                        <th>视频链接</th>
+                        <th style="width: 80px">电影编号</th>
+                        <th style="width: 180px">电影名</th>
+                        <th style="width: 300px">电影描述</th>
+                        <th style="width: 120px">视频链接</th>
                         <th></th>
                     </tr>
                     </thead>
@@ -75,7 +75,7 @@
                             <td>{{ movie.name }}</td>
                             <td>{{ movie.description }}</td>
                             <td>{{ movie.video }}</td>
-                            <td><a href="update_movie?id={{ movie.id }}">修改</a> / <a href="delete_movie?id={{ movie.id }}">删除</a></td>
+                            <td style="width: 90px"><a href="update_movie?id={{ movie.id }}">修改</a> / <a href="delete_movie?id={{ movie.id }}">删除</a></td>
                         </tr>
                     {% endfor %}
 
