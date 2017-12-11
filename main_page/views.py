@@ -17,8 +17,8 @@ def film_map(request):
 
 
 def init_marks(request):
-    # return JsonResponse(get_random_marks(), safe=False)
-    return JsonResponse(generate_random_marks(), safe=False)
+    return JsonResponse(get_init_markers(), safe=False)
+    # return JsonResponse(generate_random_marks(), safe=False)
 
 @csrf_exempt
 def save_route(request):
@@ -48,16 +48,15 @@ def modify_route_name(request):
 def get_marker_plots(request):
     if request.is_ajax():
         id = request.GET['id']
-        id = 1
         cur_site = Site.objects.get(id=id)
-        plots = Plot.objects.filter(site__id=1)
+        plots = Plot.objects.filter(site__id=id)
 
         context = {
             "site": {
                 "name": cur_site.name
             },
             "plots": [
-            {"img": plot.img, "movie_name": plot.movie.name, "keyword": plot.keyword, "description": plot.description}
+            {"img": plot.movie.video, "movie_name": plot.movie.name, "keyword": plot.keyword, "description": plot.description}
             for plot in plots]
         }
         return JsonResponse(context, safe=False)
@@ -202,7 +201,7 @@ Australia - Victoria - Miepoll
 
 # For Real Usage
 def get_init_markers():
-    site_set = Site.objects.values('id', 'lat', 'lng')
-    marks = [{"latlng": {"lat": site['lat'], "lng": site['lng']}, "name": "test"} for site in site_set]
-
+    site_set = Site.objects.all()
+    markers = [{"latlng": {"lat": site.lat, "lng": site.lng}, "name": site.name, "id":site.id} for site in site_set]
+    return markers
 

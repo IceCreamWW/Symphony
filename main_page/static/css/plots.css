@@ -7,22 +7,22 @@
 }
 
 .plot img{
-	height: 100px;
+    max-width: 25% !important;
 	float: left;
 }
 .plot-intro{
 	color: white;
     padding-left: 3%;
     float: left;
-    width: 55%;
-    height: 100px;
+    width: 70%;
+    height: 120px;
 }
 .plot-movie-name{
     font-size: 20px;
     font-weight: bolder;
 }
 .plot-description{
-    height: 60px;
+    height: 100px;
     word-break: break-all;
     font-size: 14px;
     margin-top: 5px;

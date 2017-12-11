@@ -32,6 +32,7 @@
     <link rel="stylesheet" type="text/css" href="{% static "css/movie-plots.css" %}">
     <link rel="stylesheet" type="text/css" href="{% static "css/plots.css" %}">
     <link rel="stylesheet" type="text/css" href="{% static "css/perfect-scrollbar.css" %}">
+    <link rel="stylesheet" type="text/css" href="{% static "css/map.common.css" %}">
     <link rel="stylesheet" type="text/css" href="{% static "css/common/jquery-ui.min.css" %}">
 
 
@@ -58,7 +59,7 @@
     <script src="{% static "js/jquery.mslider.js" %}"></script>
     <script src="{% static "js/maprightdiv.js" %}"></script>
 
-    <script src="https://maps.google.cn/maps/api/js?key=AIzaSyC5VIhPswBk-7iluvp6GGrmoL2nvNxoDek&libraries=places&language=zh-CN&callback=initMap"
+    <script src="https://maps.google.cn/maps/api/js?key=AIzaSyC5VIhPswBk-7iluvp6GGrmoL2nvNxoDek&libraries=places&callback=initMap"
             async defer></script>
 
 </head>
@@ -68,6 +69,7 @@
     <div class="section">
         <div class="slide" data-anchor="slide1">
             <div id="map"></div>
+            <input id="pac-input" type="text" placeholder="Search Box">
 
             <!-- Routes Div -->
             <div id='routes-div'>

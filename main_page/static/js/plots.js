@@ -1,7 +1,7 @@
 $(function() {
 	$('#map').on('marker-click', function(event, curMarkerId, realClick) {
+		mExtMap.geoInfoWindow.close()
 		if (!realClick) {
-			mExtMap.geoInfoWindow.close();
 			return false;
 		}
 		$.getJSON('get_marker_plots', {id: curMarkerId}, function(json, textStatus) {
@@ -12,7 +12,7 @@ $(function() {
 			$plotsList = plotsWrapper.find('.plots-list');
 			json['plots'].forEach(function(plot){
 				var plotElement = createPlotElement();
-				plotElement.find('.plot-img').attr('src', '/static/img/' + plot['img']);
+				plotElement.find('.plot-img').attr('src', '/static/' + plot['img']);
 				plotElement.find('.plot-movie-name').text(plot['movie_name']);
 				plotElement.find('.plot-description').text(plot['description']);
 				$plotsList.append(plotElement);
