@@ -27,6 +27,9 @@ $(function() {
 			$('.plots-content').css('overflow-x',"hidden !important")
 			$('.gm-style-iw').prev('div').children().last().addClass('info-window');
         	$('.gm-style-iw').prev('div').children().attr('data-html2canvas-ignore', 'true');
+
+        	var $s = new PerfectScrollbar($('.gm-style-iw').children().first());
+        	
         	$('.plots-content').attr('data-html2canvas-ignore', 'true');
 
 			$('.gm-style-iw').next('div').addClass('close-icon');

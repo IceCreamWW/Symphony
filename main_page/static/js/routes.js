@@ -63,7 +63,7 @@ $(function() {
 						/*补全HTML */
 						newRouteElement.data('route-id', route.id);
 						newRouteElement.find('.route-name').text(route.name);
-						newRouteElement.find('a').attr('href', genSNShref(route.name, 'http://localhost:8000/static/img/default_thumbnail.jpg'));
+						newRouteElement.find('a').attr('href', genSNShref(route.name, 'http://47.95.211.130:8000/static/img/default_thumbnail.jpg'));
 
 						/* 补全事件 */
 						newRouteElement.click(function(event) {
@@ -355,7 +355,7 @@ function createRrouteElement(options){
 	var routeHTML =
 	"\
 	<li class='route' style='display:none'>\
-		<img class='route-thumbnail' src='http://localhost:8000/static/img/default_thumbnail.jpg'>\
+		<img class='route-thumbnail' src='http://47.95.211.130:8000/static/img/default_thumbnail.jpg'>\
 		<span class='fa-stack fa-2x checked-icon'>\
 	        <i class='fa fa-circle fa-stack-2x'></i>\
 	        <i class='fa fa-check fa-stack-1x'></i>\

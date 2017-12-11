@@ -33,7 +33,7 @@ var lineSetting = {
 
 
 var mcSettings = {
-    imagePath: 'http://localhost:8000/static/img/m'
+    imagePath: 'http://47.95.211.130:8000/static/img/m'
 }
 
 function initMap(){
@@ -84,7 +84,7 @@ function initMap(){
         })
     });
 
-    mExtMap.setMapStyle('http://127.0.0.1:8000/static/json/night_map_style.json/')
+    mExtMap.setMapStyle('http://47.95.211.130:8000/static/json/night_map_style.json/')
 
     $('#map').on('marker-click', function(event, curMarkerId) {
         var preMarker = mExtMap.geoMarkers.curMarker;
