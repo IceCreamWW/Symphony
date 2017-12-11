@@ -7,6 +7,7 @@ django.setup()
 from main_page import models
 import csv
 import pickle
+import urllib.parse
 
 data_file = open("./attachments/data.csv", "r")
 csv_reader = csv.reader(data_file)
@@ -68,6 +69,9 @@ for index, line in enumerate(data_list):
             cur_site.save()
     else:
         cur_site = site_search_set[0]
+        cur_site.name = site_name
+        if setting["save_to_database"]:
+            cur_site.save()
     movie_search_set = models.Movie.objects.filter(name=movie_name)
     if len(movie_search_set) == 0:
         cur_movie = models.Movie(name=movie_name, description=movie_description[movie_name],
@@ -76,9 +80,18 @@ for index, line in enumerate(data_list):
             cur_movie.save()
     else:
         cur_movie = movie_search_set[0]
+        cur_movie.video = movie_video[movie_name]
+        cur_movie.description=movie_description[movie_name]
+        if setting["save_to_database"]:
+            cur_movie.save()
     plot_search_set = models.Plot.objects.filter(description=plot_description, site=cur_site, movie=cur_movie, img="")
     if len(plot_search_set) == 0:
         cur_plot = models.Plot(keyword="", description=plot_description, site=cur_site, movie=cur_movie, img="")
+        if setting["save_to_database"]:
+            cur_plot.save()
+    else:
+        cur_plot = plot_search_set[0]
+        cur_plot.description = plot_description
         if setting["save_to_database"]:
             cur_plot.save()
     print("Progress:{}".format((index + 1) / len(data_list)))

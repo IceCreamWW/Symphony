@@ -13,6 +13,11 @@ def search_url_generator(movie_name):
     movie_name_encode = urllib.parse.quote_plus(movie_name)
     url = "http://www.imdb.com/find?ref_=nv_sr_fn&q={}&s=all".format(movie_name_encode)
     return url
+    
+def name_parse(name):
+    for delimiter in ["/", "\\", ":", "*", "?", "<", ">", "|", "\"", " "]:
+        name = name.replace(delimiter, "_")
+    return name
 
 
 description_dict = dict()
@@ -39,11 +44,11 @@ for index, movie_name in enumerate(movie_name_list):
         video_type = video_src[video_src.rfind("."):]
         video_respond = requests.get(video_src)
         video_bytes = video_respond.content
-        video_file = open("../main_page/static/movie.video/{0}{1}".format(urllib.parse.quote_plus(movie_name),
+        video_file = open("../main_page/static/movie.video/{0}{1}".format(name_parse(movie_name),
                                                                           video_type), "wb")
         video_file.write(video_bytes)
         video_file.close()
-        video = "movie.video/{0}{1}".format(urllib.parse.quote_plus(movie_name), video_type)
+        video = "movie.video/{0}{1}".format(name_parse(movie_name), video_type)
     else:
         video = ""
     description_dict[movie_name] = description
