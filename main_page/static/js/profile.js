@@ -195,3 +195,10 @@ $(function () {
         check_route_empty();
     })
 });
+
+// 改名同步
+$(function () {
+    $('#profile_route_ul').on("change-name", function (event, routeId, newName) {
+        $("#profile_route_ul").find("[route_id=" + routeId + "]").parent().find(".profile_route_name").text(newName);
+    })
+})

@@ -400,6 +400,9 @@ Routes.prototype = {
         return this.getRouteById(this.curRouteId);
     },
     loadRoute: function(id, callback){
+        if(this.routes.has(id)){
+            return false;
+        }
         var self = this;
         $.getJSON("load_route", {"id":id}, function(routeJson){
             var route = new Route({
