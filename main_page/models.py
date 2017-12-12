@@ -11,7 +11,7 @@ class Route(models.Model):
     id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=50)
     date = models.DateTimeField()
-    creator = models.ForeignKey(MyUser, related_name="route_create")
+    creator = models.ForeignKey(MyUser, related_name="route_create", on_delete=models.CASCADE)
     sites = models.ManyToManyField(
         Site,
         through="SiteInRoute",

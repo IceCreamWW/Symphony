@@ -63,7 +63,7 @@ class MyUser(AbstractBaseUser):
         return self.is_admin
 
 class UserProfile(models.Model):
-    user = models.OneToOneField(MyUser)
+    user = models.OneToOneField(MyUser, on_delete=models.CASCADE)
     head_img = models.CharField(max_length=255)
     user_follow = models.ManyToManyField(MyUser, related_name='follow_set')
     intro = models.TextField(default="TA 还没有添加任何介绍")
