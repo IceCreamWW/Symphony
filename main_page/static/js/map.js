@@ -1,6 +1,5 @@
 var center_coordinate = {lat: 37.75771992816863, lng: -122.43760000000003};
 
-var poly;
 var mExtMap;
 
 var mSettings = {
@@ -33,7 +32,7 @@ var lineSetting = {
 
 
 var mcSettings = {
-    imagePath: 'http://127.0.0.1:8000/static/img/m'
+    imagePath: '../static/img/m'
 }
 
 function initMap(){
@@ -84,7 +83,7 @@ function initMap(){
         })
     });
 
-    mExtMap.setMapStyle('http://127.0.0.1:8000/static/json/night_map_style.json/')
+    mExtMap.setMapStyle('../static/json/night_map_style.json/')
 
     $('#map').on('marker-click', function(event, curMarkerId) {
         var preMarker = mExtMap.geoMarkers.curMarker;

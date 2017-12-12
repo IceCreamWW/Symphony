@@ -19,16 +19,22 @@ $(function() {
 
 				json.forEach(function(movie){
 					var movieElement = createMovieElement();
-					movieElement.find('img.movie-img').attr({
-						src: '/static/' + movie['img'],
-					}); 
+
+					if(movie['img'].length == 0){
+						movieElement.find('img.movie-img').attr('src', '/static/movie.video/null.jpg');
+					}else{
+						movieElement.find('img.movie-img').attr('src', '/static/' + movie['img']);
+					}
 					movieElement.find('.movie-name').text(movie['name']);
 					movieElement.find('.movie-name').attr('title',movie['name']);
 
 					movieElement.find('.movie-description').text(movie['description']);
 					movieElement.data('movie-id', movie['id']);
 
-					$('#routes-slides').addLeftArrow(movieElement);
+					movieElement.find('img').on('error', function () {
+						$(this).attr("src", "../static/movie.video/null.jpg");
+                    })
+					$('#routes-slides').addLeftArrow(movieElement.find('img'));
 					movieElement.find('img').click(function(event) {
 						$('#movie-plots-list').trigger('show-plots', movie['id']);
 					});

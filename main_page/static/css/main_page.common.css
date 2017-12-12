@@ -144,3 +144,11 @@ input:-webkit-autofill {
 #fullpage{
     transition: opacity 0.2s;
 }
+#screenshot-input{
+    background: transparent;
+    border: none;
+    color: transparent;
+    pointer-events: none;
+    z-index: -1;
+    position: fixed;
+}

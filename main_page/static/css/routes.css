@@ -7,12 +7,12 @@
 /* routes-slides-menu */
 .routes-menu-wrapper {
     position: relative;
-    height: 20%;
+    height: 10%;
     width: 100%;
 }
 ul#routes-menu{
     list-style: none;
-    height: 20%;
+    height: 10%;
     display: block;
     position: absolute;
     width: 100%;
@@ -20,16 +20,26 @@ ul#routes-menu{
     bottom: 0;
     margin: auto;
 }
-ul#routes-menu li{
-    border: 2px solid white;
-    border-radius: 50%;
+ul#routes-menu li {
+    position: relative;
+    border-left: 30px solid transparent;
+    border-right: 30px solid transparent;
     background-color: transparent;
     float: left;
-    padding-bottom: 10%;
-    width: 10%;
-    margin: 0 19%;
+    padding-bottom: 6%;
+    width: 6%;
+    margin: 0 10%;
 }
-ul#routes-menu li.m-menu-active{
+#routes-menu li::after{
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	content: "";
+	display: block;
+	border: 2px solid white;
+	border-radius: 50%;
+}
+ul#routes-menu li.m-menu-active::after{
 	background-color: white;
 }
 
@@ -42,9 +52,9 @@ ul#routes-list{
 #routes-slides{
 	position: absolute;
 	overflow: hidden;
-	height: 80%;
 	width: 100%;
 	bottom: 0;
+	transition: height 0.5s;
 }
 #create-route-wrapper{
     position: relative;
@@ -364,6 +374,42 @@ ul.sortable li::after {
 	opacity: 0;
 }
 
+
+
+
+
+
 a{
 	text-decoration: none;
+}
+
+.mouth-wrapper {
+    height: 0%;
+    position: relative;
+    text-align: center;
+    overflow: hidden;
+    border-top: none;
+	transition: height 0.5s;
+}
+.mouth-wrapper.active{
+	height: 5%;
+}
+.mouth-wrapper.active + div{
+	height: 85%;
+}
+.mouth-wrapper + div{
+	height: 90%;
+}
+
+.mouth {
+    position: absolute;
+    width: 40%;
+    height: 180%;
+    top: 0;
+    left: 0;
+    right: 0;
+    margin: auto;
+    background: white;
+    border-radius: 50%;
+    transform: translateY(-50%);
 }

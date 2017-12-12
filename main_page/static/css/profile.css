@@ -141,7 +141,7 @@ div.profile_content_body li {
     height: 28%;
     margin: 1% 3% 2% 1%;
     border-radius: 5px;
-    /* box-shadow: 0.5px 0.5px 10px #797979; */
+    cursor: pointer;
     background: rgba(255,255,255,0.1);
 }
 

@@ -121,7 +121,7 @@
 {% if route_id %}
     <input type="hidden" data-value="{{ route_id }}" id="shared-route-id">
 {% endif %}
-<input type="text" id="screenshot-input" value="" style="display: none">
+<input type="text" id="screenshot-input" value="" >
 
 <!--input type="text" id="map_search" name=""-->
 <div id="global-right-arrow" class="global-arrow" style="display: none"></div>
@@ -148,6 +148,9 @@
                     <li></li>
                     <li style="display:none"></li>
                 </ul>
+            </div>
+            <div class="mouth-wrapper">
+                <div class="mouth"></div>
             </div>
 
             <div id="routes-slides">
@@ -178,7 +181,7 @@
                         <!-- ROUTE EXAMPLE -->
                         <li class='route example'>
                             <img class='route-thumbnail'
-                                 src="http://localhost:8000/static/img/default_thumbnail.jpg">
+                                 src="../static/img/default_thumbnail.jpg">
                             <span class='fa-stack fa-2x checked-icon'>
                                     <i class="fa fa-circle fa-stack-2x"></i>
                                     <i class='fa fa-check fa-stack-1x'></i>
@@ -216,8 +219,8 @@
                         <li class="places-tool-return-routes places-icon">
                             <i class="fa fa-chevron-left" aria-hidden="true"></i>
                         </li>
-                        <li class="places-tool-current-marker places-icon">
-                            <i class="fa fa-map-marker" aria-hidden="true"></i>
+                        <li class="places-tool-eagle-eye places-icon">
+                            <i class="fa fa-eye" aria-hidden="true"></i>
                         </li>
                         <li class="places-tool-screenshot places-icon" onclick="screenShot()">
                             <i class="fa fa-picture-o" aria-hidden="true"></i>
@@ -457,7 +460,13 @@
         });
         $('#fullpage').addRightArrow(".welcome-button");
         $(".welcome-button").click(function () {
+            setTimeout(function () {
+                $('.mouth-wrapper').addClass('active');
+            }, 2000);
             $("#routes-list").trigger('load-routes')
+            setTimeout(function () {
+                $('.mouth-wrapper').removeClass('active');
+            },4000);
         })
     });
 

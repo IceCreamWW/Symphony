@@ -445,11 +445,19 @@ $(function() {
 
 });
 
+$(function(){
+   $('.places-tool-eagle-eye .fa').click(function () {
+        mExtMap.fitBounds();
+    })
+})
+
+
+
 function createRrouteElement(options){
 	var routeHTML =
 	"\
 	<li class='route' style='display:none'>\
-		<img class='route-thumbnail' src='http://localhost:8000/static/img/default_thumbnail.jpg'>\
+		<img class='route-thumbnail' src='../static/img/default_thumbnail.jpg'>\
 		<span class='fa-stack fa-2x checked-icon'>\
 	        <i class='fa fa-circle fa-stack-2x'></i>\
 	        <i class='fa fa-check fa-stack-1x'></i>\

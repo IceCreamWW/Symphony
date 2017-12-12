@@ -171,7 +171,7 @@ $(function () {
 
         $("#profile_route_ul").prepend(newEl);
         $("#profile_route_body_wrapper").show();
-        $(".profile_content_empty").hide();
+        $("#profile_content_empty_route").hide();
     })
 });
 

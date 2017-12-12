@@ -532,6 +532,19 @@ ExtMap.prototype = {
                 })
             }
         });
+    },
+    fitBounds: function (routeId) {
+        routeId = routeId || this.routes.getCurRoute().id;
+        if(!routeId){
+            return;
+        }
+        var route = this.routes.getRouteById(routeId);
+        var bounds = this.geoMap.getBounds();
+
+        route.getMarkerArray().forEach(function (marker) {
+            bounds.extend(marker.getPosition());
+        })
+        this.geoMap.fitBounds(bounds);
     }
 };
 

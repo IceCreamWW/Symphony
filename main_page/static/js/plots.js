@@ -12,9 +12,17 @@ $(function() {
 			$plotsList = plotsWrapper.find('.plots-list');
 			json['plots'].forEach(function(plot){
 				var plotElement = createPlotElement();
-				plotElement.find('.plot-img').attr('src', '/static/' + plot['img']);
+				if(plot['img'].length == 0){
+					plotElement.find('.plot-img').attr('src', '/static/movie.video/null.jpg');
+				}else{
+					plotElement.find('.plot-img').attr('src', '/static/' + plot['img']);
+				}
+
 				plotElement.find('.plot-movie-name').text(plot['movie_name']);
 				plotElement.find('.plot-description').text(plot['description']);
+				plotElement.find('img').on("error", function () {
+					$(this).attr("src", "../static/movie.video/null.jpg");
+            	})
 				$plotsList.append(plotElement);
 			});
 			outerWrapper.html(plotsWrapper);
@@ -24,6 +32,8 @@ $(function() {
 					maxWidth: 450,
 				});
 			mExtMap.geoInfoWindow.open(mExtMap.geoMap, marker);
+
+
 			$('.plots-content').css('overflow-x',"hidden !important")
 			$('.gm-style-iw').prev('div').children().last().addClass('info-window');
         	$('.gm-style-iw').prev('div').children().attr('data-html2canvas-ignore', 'true');
