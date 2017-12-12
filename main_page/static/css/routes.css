@@ -25,9 +25,9 @@ ul#routes-menu li{
     border-radius: 50%;
     background-color: transparent;
     float: left;
-    padding-bottom: 9%;
+    padding-bottom: 10%;
     width: 10%;
-    margin: 0 6%;
+    margin: 0 20%;
 }
 ul#routes-menu li.m-menu-active{
 	background-color: white;
