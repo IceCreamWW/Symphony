@@ -16,12 +16,15 @@ $(function() {
 	$('#routes-slides').mslider({
 		initSlide: ROUTES_SLIDE,
 		menu: "#routes-menu",
-		handler: function(target){
+		after: function(target){
 			switch(target){
 				case ROUTES_SLIDE:
-					$routesList.trigger('update-thumbnail');
+					if (!mExtMap.routes.getCurRoute()) {
+						break;
+					}
+					$routesList.trigger('commit', [$('.route.active')]);
 					$routeslistPS && $routeslistPS.update();
-					$routesList.sortable('refresh')
+					$routesList.sortable('refresh');
 					break;
 				case PLACES_SLIDE:
 					break;
@@ -94,6 +97,41 @@ $(function() {
 					}
 				})
 			},
+			'load-routes': function(event){
+				mExtMap.routes.loadRoutes(function(routes){
+					routes.forEach(function(route){
+						var newRouteElement = createRrouteElement();
+						/*补全HTML */
+						newRouteElement.data('route-id', route.id);
+						newRouteElement.find('.route-name').text(route.name);
+						newRouteElement.find('a').attr('href', genSNShref(route.name, 'http://localhost:8000/static/img/default_thumbnail.jpg'));
+
+						/* 补全事件 */
+						newRouteElement.click(function(event) {
+							$(this).addClass('active').siblings('.route').removeClass('active');
+							mExtMap.routes.showRoute($(this).data('route-id'));
+							mExtMap.geoMarkers.curMarker && $('#map').trigger('marker-click', [mExtMap.geoMarkers.curMarker.id]);
+							$placesList.trigger('refresh');
+						});
+
+						 // Edit Icon
+						$('#routes-slides').addRightArrow(newRouteElement.find('.route-edit-icon .fa'));
+
+						// Delete Icon
+						newRouteElement.find('.route-delete-icon .fa').click(function(event) {
+							$routesList.trigger('remove-route', [newRouteElement]);
+							return false;
+						});
+						/* 添加元素UI */
+						newRouteElement.prependTo($('#routes-list')).show(function(){
+							// Refresh SlideBar
+							$routeslistPS && $routeslistPS.update();
+							$routesList.sortable('refresh');
+						});
+					})
+					$placesList.children().first().click();
+				})
+			},
 			'remove-route': function(event, routeElement){
 				var route = mExtMap.routes.getRouteById(routeElement.data('route-id'));
 				mExtMap.routes.removeRoute(route.id);
@@ -102,13 +140,14 @@ $(function() {
 					$routeslistPS && $routeslistPS.update();
 					$routesList.sortable('refresh');
 					// $routesList.trigger('refresh-layout');
-					$('#map').trigger('marker-click', [mExtMap.geoMarkers.curMarker.id]);
+					mExtMap.geoMarkers.curMarker && $('#map').trigger('marker-click', [mExtMap.geoMarkers.curMarker.id]);
 				});
 				return false;
 			},
-			'update-thumbnail': function(event){
+			'commit': function(event, routeElement){
 				mExtMap.toImageSrc('png', function(src){
-					$routesList.children('.route.active').find('img').attr('src', src);
+					routeElement.find('img').attr('src', src);
+					mExtMap.routes.getRouteById(routeElement.data('route-id')).save();
 				});
 				return false;
 			},
@@ -349,6 +388,10 @@ $(function() {
 			},
 		}
 	);
+	setTimeout(function(){
+		$routesList.trigger('load-routes')
+	},2000);
+    
 });
 
 function createRrouteElement(options){

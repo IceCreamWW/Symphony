@@ -1,4 +1,5 @@
 from django.db import models
+from registration.models import MyUser
 
 class Site(models.Model):
     id = models.AutoField(primary_key=True)
@@ -10,15 +11,16 @@ class Route(models.Model):
     id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=50)
     date = models.DateTimeField()
+    creator = models.ForeignKey(MyUser, related_name="route_create")
     sites = models.ManyToManyField(
         Site,
         through="SiteInRoute",
-        through_fields=('route_id', 'site_id'),
+        through_fields=('route', 'site'),
     )
 
 class SiteInRoute(models.Model):
-    site_id = models.ForeignKey(Site, on_delete=models.CASCADE)
-    route_id = models.ForeignKey(Route, on_delete=models.CASCADE)
+    site = models.ForeignKey(Site, on_delete=models.CASCADE)
+    route = models.ForeignKey(Route, on_delete=models.CASCADE)
     site_index = models.IntegerField()
 
 

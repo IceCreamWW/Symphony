@@ -5,6 +5,7 @@ from django.contrib.auth import login
 from django.contrib.auth import get_user_model
 from django.views.decorators.csrf import csrf_exempt
 
+from .models import *
 from .forms import *
 
 
@@ -29,6 +30,8 @@ def msignup(request):
         if signup_form.is_valid():
             user = User.objects.create_user(email=signup_form.cleaned_data['email'],
                                             password=signup_form.cleaned_data['password'])
+            user_profile = UserProfile(user=user)
+            user_profile.save()
             login(request, user)
             return HttpResponseRedirect('/main_page/')
         else:

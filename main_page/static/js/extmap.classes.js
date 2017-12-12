@@ -67,10 +67,14 @@ RouteState.prototype = new Markers();
 RouteState.prototype.constructor = RouteState;
 RouteState.prototype.save = function (isNew, callback) {
     var self = this;
-    routeInfo = {"name": this.route.name};
-    routeInfo["isNew"] = isNew;
+    routeInfo = {
+        "name": this.route.name,
+        "isNew" : isNew,
+        "sites" : this.order.toString(),
+        "id": this.route.id
+    };
     $.getJSON('save_route', routeInfo, function(json, textStatus){
-        callback(json,textStatus);
+        callback && callback(json,textStatus);
     });
 }
 RouteState.prototype.hide = function () {
@@ -240,6 +244,9 @@ Route.prototype = {
             this.routeStates[this.curRouteStateIndex].updateRouteline();
         }
     },
+    clearUndoQueue: function(){
+        this.earliestIndex = this.curRouteStateIndex;
+    },
     clearStateQueue: function(){
         this.latestIndex = this.curRouteStateIndex;
     },
@@ -339,7 +346,27 @@ Routes.prototype = {
             options.callback(route);
         }.bind(self));
     },
-
+    loadRoutes: function(callback){
+        var self = this;
+        $.getJSON("load_routes",function(routesJsons){
+            routes = []
+            routesJsons.forEach(function(routeJson){
+                var route = new Route({
+                    extMap: self.extMap,
+                    isNew: false,
+                    name: routeJson['name'],
+                    id: routeJson['id']
+                });
+                routeJson['sites'].forEach(function(siteId){
+                    route.addMarker(siteId);
+                })
+                route.clearUndoQueue();
+                routes.push(route);
+                self.routes.set(route.id, route);
+            })
+            callback && callback(routes);
+        })
+    },
     removeRoute: function (id) {
         id = id || this.curRouteId;
         this.routes.get(id).delete();

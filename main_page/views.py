@@ -24,9 +24,30 @@ def init_marks(request):
 def save_route(request):
     if request.method == 'GET':
         if request.GET['isNew'] == 'true':
-            route = Route(name=request.GET['name'], date=timezone.now())
+            route = Route(name=request.GET['name'],creator=request.user, date=timezone.now())
             route.save()
             return JsonResponse({"id": route.id})
+        else:
+            route = Route.objects.get(id=request.GET['id'])
+            route.sites.clear()
+            site_ids = [int(site_id) for site_id in request.GET["sites"].split(',') if len(site_id) > 0]
+
+            for index, site_id in enumerate(site_ids):
+                site = Site.objects.get(id=site_id)
+                rela = SiteInRoute(site=site,route=route,site_index=index)
+                rela.save()
+            return JsonResponse({"id": route.id})
+
+
+def load_routes(request):
+    if request.is_ajax():
+        user = request.user
+        ret_json = []
+        routes = user.route_create.all()
+        for route in routes:
+            sites = [sir.site.id for sir in route.siteinroute_set.order_by('site_index')]
+            ret_json.append({"id": route.id, "name": route.name, "sites": sites})
+        return JsonResponse(ret_json, safe=False)
 
 @csrf_exempt
 def delete_route(request):

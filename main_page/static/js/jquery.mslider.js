@@ -9,7 +9,8 @@
 			leftArrow			: 	undefined,
 			rightArrow			:  	undefined,
 			menu 				: 	undefined,
-			handler				: 	undefined
+			before 				: 	undefined,
+			after				: 	undefined
 
 		}, options)
 
@@ -62,7 +63,7 @@
 			if (event.target != this) {
 				return;
 			}
-			settings.handler && settings.handler(self.getActiveSlideIndex());
+			settings.after && settings.after(self.getActiveSlideIndex());
 		});
 
 	}	
@@ -83,6 +84,9 @@
 	}
 
 	$.fn.moveToSlideNumber = function (target) {
+
+		// settings.before && settings.before(target);
+		
 		var slidesCnt = $(this).getSlideCnt();
 		target = (target + slidesCnt) % slidesCnt;
 		var translateX = -target * 100 / slidesCnt  + "%";
