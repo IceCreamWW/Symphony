@@ -64,6 +64,9 @@
 
 </head>
 <body>
+{% if route_id %}
+    <input type="hidden" data-value="{{ route_id }}" id="shared-route-id">
+{% endif %}
 <!--input type="text" id="map_search" name=""-->
 <div id="fullpage">
     <div class="section">

@@ -66,7 +66,7 @@ $(function() {
 						/*补全HTML */
 						newRouteElement.data('route-id', route.id);
 						newRouteElement.find('.route-name').text(route.name);
-						newRouteElement.find('a').attr('href', genSNShref(route.name, 'http://localhost:8000/static/img/default_thumbnail.jpg'));
+						newRouteElement.find('a').attr('href', genSNShref(route.name, route.id));
 
 						/* 补全事件 */
 						newRouteElement.click(function(event) {
@@ -97,6 +97,39 @@ $(function() {
 					}
 				})
 			},
+			'load-route': function(event, route_id){
+				mExtMap.routes.loadRoute(route_id ,function(route){
+					var newRouteElement = createRrouteElement();
+					/*补全HTML */
+					newRouteElement.data('route-id', route.id);
+					newRouteElement.find('.route-name').text(route.name);
+					newRouteElement.find('a').attr('href', genSNShref(route.name, route.id));
+
+					/* 补全事件 */
+					newRouteElement.click(function(event) {
+						$(this).addClass('active').siblings('.route').removeClass('active');
+						mExtMap.routes.showRoute($(this).data('route-id'));
+						mExtMap.geoMarkers.curMarker && $('#map').trigger('marker-click', [mExtMap.geoMarkers.curMarker.id]);
+						$placesList.trigger('refresh');
+					});
+
+					 // Edit Icon
+					newRouteElement.find('.route-edit-icon .fa').css('opacity', '0.2');;
+
+					// Delete Icon
+					newRouteElement.find('.route-delete-icon .fa').click(function(event) {
+						$routesList.trigger('remove-route', [newRouteElement, true]);
+						return false;
+					});
+					/* 添加元素UI */
+					newRouteElement.prependTo($('#routes-list')).show(function(){
+						// Refresh SlideBar
+						$routeslistPS && $routeslistPS.update();
+						$routesList.sortable('refresh');
+					});
+					newRouteElement.click();
+				})
+			},
 			'load-routes': function(event){
 				mExtMap.routes.loadRoutes(function(routes){
 					routes.forEach(function(route){
@@ -104,7 +137,7 @@ $(function() {
 						/*补全HTML */
 						newRouteElement.data('route-id', route.id);
 						newRouteElement.find('.route-name').text(route.name);
-						newRouteElement.find('a').attr('href', genSNShref(route.name, 'http://localhost:8000/static/img/default_thumbnail.jpg'));
+						newRouteElement.find('a').attr('href', genSNShref(route.name, route.id));
 
 						/* 补全事件 */
 						newRouteElement.click(function(event) {
@@ -129,12 +162,17 @@ $(function() {
 							$routesList.sortable('refresh');
 						});
 					})
-					$placesList.children().first().click();
+					if ($('#shared-route-id').length != 0) {
+						$routesList.trigger('load-route',[$('#shared-route-id').data('value')])
+					}
+					else{
+						$placesList.children().first().click();
+					}
 				})
 			},
-			'remove-route': function(event, routeElement){
+			'remove-route': function(event, routeElement, norm){
 				var route = mExtMap.routes.getRouteById(routeElement.data('route-id'));
-				mExtMap.routes.removeRoute(route.id);
+				mExtMap.routes.removeRoute(route.id, norm);
 				routeElement.hide(400, function() {
 					routeElement.remove();
 					$routeslistPS && $routeslistPS.update();
@@ -390,7 +428,8 @@ $(function() {
 	);
 	setTimeout(function(){
 		$routesList.trigger('load-routes')
-	},2000);
+		
+	},3000);
     
 });
 
@@ -444,13 +483,13 @@ function setPadding(rule, atHeight) {
     rule.cssText = 'border-top-width: '+ atHeight+'px'; 
 };
 
-function genSNShref(title, datasrc){
+function genSNShref(title, route_id){
     var p = {
-        url: "http://symphony.yuhong-zhong.com", /*要分享的网站的URL*/
+        url: "http://symphony.yuhong-zhong.com?route_id=" + route_id, /*要分享的网站的URL*/
         desc: '', /*分享理由(风格应模拟用户对话),支持多分享语随机展现（使用|分隔）*/
         title: title, /*分享标题(可选)*/
         summary: '来自Symphony', /*分享摘要(可选)*/
-        pics: datasrc, /*分享图片(可选)*/
+        pics: '', /*分享图片(可选)*/
         flash: '', /*视频地址(可选)*/
         site: 'site', /*分享来源(可选) 如：QQ分享*/
         style: '100',

@@ -13,6 +13,8 @@ import json
 # Create your views here.
 @login_required
 def film_map(request):
+    if 'route_id' in request.GET:
+        return render(request, "main_page/index.html",{"route_id": request.GET["route_id"]})
     return render(request, "main_page/index.html")
 
 
@@ -48,6 +50,14 @@ def load_routes(request):
             sites = [sir.site.id for sir in route.siteinroute_set.order_by('site_index')]
             ret_json.append({"id": route.id, "name": route.name, "sites": sites})
         return JsonResponse(ret_json, safe=False)
+
+def load_route(request):
+    if request.is_ajax():
+        route = Route.objects.get(id=request.GET['id'])
+        sites = [sir.site.id for sir in route.siteinroute_set.order_by('site_index')]
+        ret_json = {"id": route.id, "name": route.name, "sites": sites}
+        return JsonResponse(ret_json, safe=False)
+
 
 @csrf_exempt
 def delete_route(request):

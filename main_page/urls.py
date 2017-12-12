@@ -11,4 +11,5 @@ urlpatterns = [
 	url(r'modify_route_name', views.modify_route_name, name="modify_route_name"),
 	url(r'get_movie_plots', views.get_movie_plots, name="get_movie_plots"),
 	url(r'load_routes', views.load_routes, name="load_routes"),
+	url(r'load_route', views.load_route, name="load_route"),
 ]

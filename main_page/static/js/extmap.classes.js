@@ -367,9 +367,9 @@ Routes.prototype = {
             callback && callback(routes);
         })
     },
-    removeRoute: function (id) {
+    removeRoute: function (id, norm) {
         id = id || this.curRouteId;
-        this.routes.get(id).delete();
+        norm || this.routes.get(id).delete();
 
         if (this.browseOrder[this.browseOrder.length - 1] === id) {
             this.browseOrder.length -= 1;
@@ -391,12 +391,23 @@ Routes.prototype = {
     getCurRoute: function () {
         return this.getRouteById(this.curRouteId);
     },
-    loadRoute: function (id) {
-        var route = new Route({
-            extMap: this.extMap,
-        });
-        route.loadRoute(id);
-    }
+    loadRoute: function(id, callback){
+        var self = this;
+        $.getJSON("load_route", {"id":id}, function(routeJson){
+            var route = new Route({
+                extMap: self.extMap,
+                isNew: false,
+                name: routeJson['name'],
+                id: routeJson['id']
+            });
+            routeJson['sites'].forEach(function(siteId){
+                route.addMarker(siteId);
+            })
+            route.clearUndoQueue();
+            self.routes.set(route.id, route);
+            callback && callback(route);
+        })
+    },
 }
 
 
