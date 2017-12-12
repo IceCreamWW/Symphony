@@ -41,7 +41,7 @@ def film_map(request):
     context["label"] = user_profile_obj.label
     context["phone"] = user_profile_obj.phone
     if 'route_id' in request.GET:
-        context[route_id] = request.GET['route_id']
+        context['route_id'] = request.GET['route_id']
         return render(request, "main_page/index.html", context)
     return render(request, "main_page/index.html", context)
 

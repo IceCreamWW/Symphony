@@ -2,7 +2,9 @@
 	margin: 0;
 	padding: 0;
 }
-
+.m-slide{
+	height: 100%;
+}	
  /*Fix yellow background*/
 input:-webkit-autofill,
 input:-webkit-autofill:hover,

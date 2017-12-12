@@ -4,16 +4,18 @@ html.profile_html {
 
 div.profile_body_div {
     height: 100%;
+    width: 100%;
+    background: url('../img/b.png');
+    background-size: cover;
+    background-repeat: no-repeat;
 }
 
 div.profile_background_div {
-    background-image: url("../img/profile_background.jpg");
     background-position: center center;
     background-size: cover;
     background-repeat: no-repeat;
     height: 80%;
     position: relative;
-
 }
 
 body.profile_body {
@@ -317,15 +319,8 @@ ul.profile_detail_ul li {
     line-height: 400%;
 }
 
-div.profile_detail_name {
-    position: absolute;
-    font-weight: bold;
-    color: #9f9f9f;
-}
-
 div.profile_detail_value {
     position: absolute;
-    left: 17%;
 }
 
 hr.profile_table_head_hr {

@@ -6,7 +6,9 @@
     <meta charset="utf-8">
     <style name="impostor_size">
         ul.sortable .marker + li:not(.ui-sortable-helper),
-        ul.sortable .marker + .ui-sortable-helper + li{ border-top-width: 0px;}
+        ul.sortable .marker + .ui-sortable-helper + li {
+            border-top-width: 0px;
+        }
     </style>
     <style>
         /* Always set the map height explicitly to define the size of the div
@@ -14,6 +16,7 @@
         #map {
             height: 100%;
         }
+
         /* Optional: Makes the sample page fill the window. */
         html, body {
             height: 100%;
@@ -40,7 +43,6 @@
     <link rel="stylesheet" type="text/css" href="{% static 'css/profile.css' %}">
 
 
-
     <script src="{% static "js/jquery.min.js" %}"></script>
     <script src="{% static "js/jquery.easing.js" %}"></script>
     <script src="{% static "js/main.common.js" %}"></script>
@@ -49,7 +51,7 @@
 
     <script src="{% static "js/fullpage.continuousHorizontal.limited.min.js" %}"></script>
     <script src="{% static "js/jquery.fullpage.extensions.min.js" %}"></script>
-    
+
     <!-- Replace it with min -->
     <script src="{% static "js/common/jquery-ui.js" %}"></script>
 
@@ -110,8 +112,6 @@
             })
         });
     </script>
-    
-
 
 
     <script src="https://maps.google.cn/maps/api/js?key=AIzaSyC5VIhPswBk-7iluvp6GGrmoL2nvNxoDek&libraries=places&callback=initMap"
@@ -124,8 +124,7 @@
 {% endif %}
 <!--input type="text" id="map_search" name=""-->
 <div id="fullpage">
-    <div class="section">
-        <div class="slide" data-anchor="slide1">
+    <div class="section m-slide">
             <div id="map"></div>
             <input id="pac-input" type="text" placeholder="Search Box">
 
@@ -133,15 +132,15 @@
             <div id='routes-div'>
                 <div class="routes-menu-wrapper">
                     <ul id="routes-menu">
-                         <li style="display:none"></li>   
-                         <li></li>   
-                         <li></li>   
-                         <li style="display:none"></li>   
+                        <li style="display:none"></li>
+                        <li></li>
+                        <li></li>
+                        <li style="display:none"></li>
                     </ul>
                 </div>
 
                 <div id="routes-slides">
-                    
+
                     <div class="m-slide movie-plots-div">
                         <ul id="movie-plots-list">
 
@@ -155,9 +154,9 @@
                             </form>
                         </div>
                         <div id="movies-list">
-                              <div class="no-movie" style="display:none">
-                                  没有搜索到相关电影
-                              </div>
+                            <div class="no-movie" style="display:none">
+                                没有搜索到相关电影
+                            </div>
                         </div>
                     </div>
 
@@ -165,9 +164,10 @@
 
                         <ul id="routes-list" class="routes-list sortable">
 
-                        <!-- ROUTE EXAMPLE -->
+                            <!-- ROUTE EXAMPLE -->
                             <li class='route'>
-                                <img class='route-thumbnail' src="http://localhost:8000/static/img/default_thumbnail.jpg">
+                                <img class='route-thumbnail'
+                                     src="http://localhost:8000/static/img/default_thumbnail.jpg">
                                 <span class='fa-stack fa-2x checked-icon'>
                                     <i class="fa fa-circle fa-stack-2x"></i>
                                     <i class='fa fa-check fa-stack-1x'></i>
@@ -192,7 +192,7 @@
                                     </div>
                                 </div>
                             </li>
-                        <!-- ROUTE EXAMPLE -->
+                            <!-- ROUTE EXAMPLE -->
                             <li id="create-route-wrapper">
                                 <i class="fa fa-plus" aria-hidden="true"></i>
                                 <div id="create-route-text">create a new route</div>
@@ -220,17 +220,18 @@
                             <li class='places-tool-redo places-icon icon-need-activate'>
                                 <i class="fa fa-share" aria-hidden="true"></i>
                             </li>
-                             <li class='places-tool-delete places-icon icon-need-activate'>
+                            <li class='places-tool-delete places-icon icon-need-activate'>
                                 <i class="fa fa-trash-o " aria-hidden="true"></i>
                             </li>
                         </ul>
-                        
+
                         <div class="places-content">
                             <div class="route-name-editable-wrapper">
                                 <input type="text" class="route-name-editable">
                             </div>
                             <ul id="places-list" class="sortable">
-                                <li title="选择一个地点" id="add-place-wrapper" class="sortable-border-top" data-markerid="-1">
+                                <li title="选择一个地点" id="add-place-wrapper" class="sortable-border-top"
+                                    data-markerid="-1">
                                     <i class="fa fa-plus" aria-hidden="true"></i>
                                     <div id="add-place-text">add a new place</div>
                                 </li>
@@ -240,10 +241,9 @@
                     </div>
                 </div>
             </div>
-        </div>
-
     </div>
-    <div class="section">
+
+    <div class="slide m-slide" data-anchor="slide2">
         <div class="profile_body_div">
             <div class="profile_head">
                 <div class="profile_background_div"></div>
@@ -278,7 +278,9 @@
 
                 <div class="profile_content" id="profile_content_1">
                     <h2>我的关注</h2>
-                    <div class="profile_content_empty" style="display: none" id="profile_content_empty_user">无关注的用户</div>
+                    <div class="profile_content_empty" style="display: none" id="profile_content_empty_user">
+                        无关注的用户
+                    </div>
                     <div id="profile_follow_body_wrapper">
                         <div class="profile_content_body optiscroll" id="profile_content_body_1">
                             <ul id="profile_follow_ul">
@@ -291,8 +293,10 @@
                                         <div class="profile_follow_nickname">
                                             {{ user.nickname }}
                                         </div>
-                                        <div class="profile_user_follow" id="profile_switch_follow_{{ forloop.counter }}"
-                                             email="{{ user.email }}" li_id="profile_follow_li_{{ forloop.counter }}">
+                                        <div class="profile_user_follow"
+                                             id="profile_switch_follow_{{ forloop.counter }}"
+                                             email="{{ user.email }}"
+                                             li_id="profile_follow_li_{{ forloop.counter }}">
                                             取消关注
                                         </div>
                                     </li>
@@ -303,7 +307,9 @@
                 </div>
                 <div class="profile_content" id="profile_content_2" style="display: none">
                     <h2>我的路线</h2>
-                    <div class="profile_content_empty" style="display: none" id="profile_content_empty_route">无收藏的路线</div>
+                    <div class="profile_content_empty" style="display: none" id="profile_content_empty_route">
+                        无收藏的路线
+                    </div>
                     <div id="profile_route_body_wrapper">
                         <div class="profile_content_body optiscroll" id="profile_content_body_2">
                             <ul id="profile_route_ul">
@@ -312,8 +318,10 @@
                                         <div class="profile_route_name">{{ route.name }}</div>
                                         <div class="profile_route_date">创建时间：{{ route.date }}</div>
                                         <div class="profile_route_site">{{ route.site }}</div>
-                                        <div class="profile_route_follow" id="profile_switch_route_{{ forloop.counter }}"
-                                             route_id="{{ route.id }}" li_id="profile_route_li_{{ forloop.counter }}">
+                                        <div class="profile_route_follow"
+                                             id="profile_switch_route_{{ forloop.counter }}"
+                                             route_id="{{ route.id }}"
+                                             li_id="profile_route_li_{{ forloop.counter }}">
                                             取消收藏
                                         </div>
                                     </li>
@@ -379,25 +387,18 @@
                     <hr class="profile_table_head_hr"/>
                     <ul class="profile_password_ul">
                         <li>
-                            <div class="profile_detail_name">
-                                原密码
-                            </div>
                             <div class="profile_detail_value">
-                                <input type="password" placeholder="请输入原密码" class="profile_password" id="profile_ori_password"/>
+                                <input type="password" placeholder="请输入原密码" class="profile_password"
+                                       id="profile_ori_password"/>
                             </div>
                         </li>
                         <li>
-                            <div class="profile_detail_name">
-                                新密码
-                            </div>
                             <div class="profile_detail_value">
-                                <input type="password" placeholder="请输入新密码" class="profile_password" id="profile_new_password"/>
+                                <input type="password" placeholder="请输入新密码" class="profile_password"
+                                       id="profile_new_password"/>
                             </div>
                         </li>
                         <li>
-                            <div class="profile_detail_name">
-                                重复新密码
-                            </div>
                             <div class="profile_detail_value">
                                 <input type="password" placeholder="请再次输入新密码" class="profile_password"
                                        id="profile_new_password_again"/>
@@ -416,22 +417,27 @@
                 </div>
             </div>
         </div>
-
     </div>
 </div>
 
-
+<style type="text/css">
+    #fullpage {
+        height: 100%;
+        width: 100%;
+    }
+</style>
 <script type="text/javascript">
-    $(document).ready(function() {
-        $('#fullpage').fullpage({
-            continuousHorizontal: true,
-            continuousHorizontalKey: 'YWx2YXJvdHJpZ28uY29tX00zVVkyOXVkR2x1ZFc5MWMwaHZjbWw2YjI1MFlXdz12Nk0=',
-            slidesNavigation: true
-        });
+    $(document).ready(function () {
+        $('#fullpage').mslider();
+        // $('#fullpage').fullpage({
+        //     continuousHorizontal: true,
+        //     continuousHorizontalKey: 'YWx2YXJvdHJpZ28uY29tX00zVVkyOXVkR2x1ZFc5MWMwaHZjbWw2YjI1MFlXdz12Nk0=',
+        //     slidesNavigation: true
+        // });
     });
 
-    $(function() {
-        $("input").attr("spellcheck","false");
+    $(function () {
+        $("input").attr("spellcheck", "false");
     });
     /*
     $(document).ready(function() {
@@ -449,9 +455,17 @@
 <style type="text/css">
     /*Disable Google Copyright*/
 
-    a[href*="maps.google.com/maps"]{display:none !important}
-    a[href*="www.google.cn"]{display:none !important}
-    .gm-style-cc{display: none !important;}
+    a[href*="maps.google.com/maps"] {
+        display: none !important
+    }
+
+    a[href*="www.google.cn"] {
+        display: none !important
+    }
+
+    .gm-style-cc {
+        display: none !important;
+    }
 
 </style>
 </body>

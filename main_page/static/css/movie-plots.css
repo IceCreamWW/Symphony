@@ -1,5 +1,7 @@
 ul#movie-plots-list {
     list-style: none;
+	height: 100%;
+	position: relative;
 }
 li.movie-plot {
     margin: 5%;
