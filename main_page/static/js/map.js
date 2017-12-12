@@ -33,7 +33,7 @@ var lineSetting = {
 
 
 var mcSettings = {
-    imagePath: 'http://localhost:8000/static/img/m'
+    imagePath: 'http://127.0.0.1:8000/static/img/m'
 }
 
 function initMap(){

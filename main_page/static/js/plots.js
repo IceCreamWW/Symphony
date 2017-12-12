@@ -28,7 +28,8 @@ $(function() {
 			$('.gm-style-iw').prev('div').children().last().addClass('info-window');
         	$('.gm-style-iw').prev('div').children().attr('data-html2canvas-ignore', 'true');
         	$('.plots-content').attr('data-html2canvas-ignore', 'true');
-
+        	$('.gm-style-iw').children().first().addClass('info-window-close');
+			var s = new PerfectScrollbar('.info-window-close');
 			$('.gm-style-iw').next('div').addClass('close-icon');
 		});
 	});
