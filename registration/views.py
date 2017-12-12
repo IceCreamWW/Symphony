@@ -30,8 +30,6 @@ def msignup(request):
         if signup_form.is_valid():
             user = User.objects.create_user(email=signup_form.cleaned_data['email'],
                                             password=signup_form.cleaned_data['password'])
-            user_profile = UserProfile(user=user)
-            user_profile.save()
             login(request, user)
             return HttpResponseRedirect('/main_page/')
         else:
