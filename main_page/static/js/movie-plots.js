@@ -1,6 +1,7 @@
 $(function() {
 	$moviePlotsList = $('#movie-plots-list');
-	var $moviePlotsListPS = new PerfectScrollbar('#movie-plots-list');
+	$moviePlotsList.niceScroll();
+	// var $moviePlotsListPS = new PerfectScrollbar('#movie-plots-list');
 
 	$moviePlotsList.on('show-plots', function(event, movieId) {
 		$.getJSON('get_movie_plots', {id: movieId}, function(json, textStatus) {
@@ -15,7 +16,7 @@ $(function() {
 					$('#map').trigger('marker-click',[plot['site_id'], true]);
 				});
 			})
-			$moviePlotsListPS.update();
+			$moviePlotsList.getNiceScroll().resize();
 		});
 		return false;		
 	});

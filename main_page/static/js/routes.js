@@ -1,8 +1,10 @@
 $(function() {
 	var $placesList = $('ul#places-list');
 	var $routesList = $('ul#routes-list');
-	var $routeslistPS = new PerfectScrollbar('#routes-list');
-	var $placeslistPS = new PerfectScrollbar('#places-list');
+	$routesList.niceScroll();
+	$placesList.niceScroll();
+	// var $routeslistPS = new PerfectScrollbar('#routes-list');
+	// var $placeslistPS = new PerfectScrollbar('#places-list');
 	var stylesheet = $('style[name=impostor_size]')[0].sheet;
     var rule = stylesheet.rules ? stylesheet.rules[0].style : stylesheet.cssRules[0].style;
 
@@ -23,7 +25,8 @@ $(function() {
 						break;
 					}
 					$routesList.trigger('commit', [$('.route.active')]);
-					$routeslistPS && $routeslistPS.update();
+					$routesList.getNiceScroll().resize()
+					// $routeslistPS && $routeslistPS.update();
 					$routesList.sortable('refresh');
 					break;
 				case PLACES_SLIDE:
@@ -35,7 +38,7 @@ $(function() {
 
 	$routesList.sortable({
 	    placeholder: 'marker',
-	    items: 'li.route',
+	    items: 'li.route:not(.example)',
 	    containment: 'parent',
 	    axis: "y",
 	    cursor: "default",
@@ -88,10 +91,13 @@ $(function() {
 						/* 添加元素UI */
 						newRouteElement.prependTo($('#routes-list')).show(400, function(){
 							// Refresh SlideBar
-							$routeslistPS && $routeslistPS.update();
+                            $routesList.getNiceScroll().resize()
+							// $routeslistPS && $routeslistPS.update();
 							$routesList.sortable('refresh');
 						});
 						newRouteElement.trigger('click');
+
+						$('#profile_route_ul').trigger("add-route",[route])
 
 						return false;
 					}
@@ -124,14 +130,15 @@ $(function() {
 					/* 添加元素UI */
 					newRouteElement.prependTo($('#routes-list')).show(function(){
 						// Refresh SlideBar
-						$routeslistPS && $routeslistPS.update();
+                        $routesList.getNiceScroll().resize()
+						// $routeslistPS && $routeslistPS.update();
 						$routesList.sortable('refresh');
 					});
 					newRouteElement.click();
 				})
 			},
 			'load-routes': function(event){
-				mExtMap.routes.loadRoutes(function(routes){
+				mExtMap.routes.loadRoutes(function(){
 					routes.forEach(function(route){
 						var newRouteElement = createRrouteElement();
 						/*补全HTML */
@@ -156,18 +163,22 @@ $(function() {
 							return false;
 						});
 						/* 添加元素UI */
-						newRouteElement.prependTo($('#routes-list')).show(function(){
-							// Refresh SlideBar
-							$routeslistPS && $routeslistPS.update();
-							$routesList.sortable('refresh');
-						});
+						newRouteElement.prependTo($('#routes-list')).show(200);
 					})
+                    // Refresh SlideBar
+                    // $routeslistPS && $routeslistPS.update();
+                    $routesList.sortable('refresh');
 					if ($('#shared-route-id').length != 0) {
 						$routesList.trigger('load-route',[$('#shared-route-id').data('value')])
 					}
 					else{
-						$placesList.children().first().click();
+						$routesList.children().first().click();
 					}
+					setInterval(function () {
+                        $routesList.getNiceScroll().resize()
+                    },1000);
+
+
 				})
 			},
 			'remove-route': function(event, routeElement, norm){
@@ -175,11 +186,13 @@ $(function() {
 				mExtMap.routes.removeRoute(route.id, norm);
 				routeElement.hide(400, function() {
 					routeElement.remove();
-					$routeslistPS && $routeslistPS.update();
+					// $routeslistPS && $routeslistPS.update();
+                    $routesList.getNiceScroll().resize()
 					$routesList.sortable('refresh');
 					// $routesList.trigger('refresh-layout');
 					mExtMap.geoMarkers.curMarker && $('#map').trigger('marker-click', [mExtMap.geoMarkers.curMarker.id]);
 				});
+				$('#profile_route_ul').trigger("remove-route",[route.id]);
 				return false;
 			},
 			'commit': function(event, routeElement){
@@ -317,7 +330,8 @@ $(function() {
 				mExtMap.routes.getCurRoute().addMarker(marker.id);
 				/* 添加元素UI */
 				newPlaceElement.insertBefore("#add-place-wrapper").show(400, function() {
-					$placeslistPS.update();
+					// $placeslistPS.update();
+					$placesList.getNiceScroll().resize();
 					$placesList.sortable("refresh");
 				});
 
@@ -337,6 +351,7 @@ $(function() {
 					mExtMap.routes.getCurRoute().removeMarker(markerId);
 					toRemove.hide(400, function() {
 						toRemove.remove();
+						$placesList.trigger("sort-list", [true]);
 					});
 					mExtMap.routes.getCurRoute().canUndo() ? 
 					$('.places-tool-undo').addClass('active') : $('.places-tool-undo').removeClass('active');
@@ -360,7 +375,7 @@ $(function() {
 				mExtMap.routes.getCurRoute().redo();
 				$placesList.trigger('refresh');
 			},
-			'sort-list': function(event){
+			'sort-list': function(event, noUndo){
 				var hasChange = false;
 				$('ul#places-list li.place').each(function(index, el) {
 					if ($(el).find('.place-index').text() != index + 1) {
@@ -368,7 +383,7 @@ $(function() {
 						$(el).find('.place-index').text(index + 1);
 					}
 				});
-				if (!hasChange) {
+				if (!hasChange && !noUndo) {
 					mExtMap.routes.getCurRoute().undo();
 					mExtMap.routes.getCurRoute().clearStateQueue();
 				}
@@ -394,7 +409,8 @@ $(function() {
 
 				// 更新但没有路线
 				if(newRouteId == -1){
-					$placeslistPS && $placeslistPS.update();
+					$placesList.getNiceScroll().resize()
+					// $placeslistPS && $placeslistPS.update();
 					$placesList.sortable("refresh")
 					return false;
 				}
@@ -417,8 +433,8 @@ $(function() {
 				
 				mExtMap.routes.getCurRoute().canRedo() ? 
 				$('.places-tool-redo').addClass('active') : $('.places-tool-redo').removeClass('active');
-				
-				$placeslistPS.update();
+                $placesList.getNiceScroll().resize();
+				// $placeslistPS.update();
 				$placesList.sortable("refresh");
 				mExtMap.geoMarkers.curMarker && $placesList.trigger('marker-click', [mExtMap.geoMarkers.curMarker.id]);
 				
@@ -426,11 +442,7 @@ $(function() {
 			},
 		}
 	);
-	setTimeout(function(){
-		$routesList.trigger('load-routes')
-		
-	},3000);
-    
+
 });
 
 function createRrouteElement(options){

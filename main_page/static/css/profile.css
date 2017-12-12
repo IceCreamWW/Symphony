@@ -29,7 +29,7 @@ div.head_portrait_div {
     height: 140px;
     width: 140px;
     background-color: white;
-    box-shadow: 0.5px 0.5px 10px #797979;
+    box-shadow: 0.5px 0.5px 10px #000000;
     position: absolute;
     bottom: 0;
     left: 8%;
@@ -50,7 +50,7 @@ div.profile_username_div {
     position: absolute;
     top: 40%;
     left: 24%;
-    text-shadow: 0.5px 0.5px 10px #797979;
+    text-shadow: 0.5px 0.5px 10px #000000;
     font-size: 40pt;
     color: white;
     overflow: hidden;
@@ -63,17 +63,16 @@ div.profile_user_summary_div {
     position: absolute;
     top: 50%;
     right: 2%;
-    background-color: white;
-    box-shadow: 0.5px 0.5px 10px #797979;
     border-radius: 5px;
     padding: 5px;
+    background: rgba(255, 255, 255, 0.2);
 }
 
 div.profile_user_summary_div table {
     text-align: center;
     table-layout: fixed;
     font-size: 10pt;
-    color: #888888;
+    color: white;
 }
 
 div.profile_user_summary_div tbody {
@@ -99,12 +98,6 @@ aside.profile_nav_aside {
     text-align: center;
 }
 
-aside.profile_nav_aside p {
-    font-size: 12pt;
-    font-size: 1.5vw;
-    color: #505050;
-}
-
 aside.profile_nav_aside hr {
     border: none;
     border-top: 1px solid #888888;
@@ -120,7 +113,7 @@ div.profile_content {
     top: -4%;
     left: 24%;
     right: 0;
-    color: #505050;
+    color: white;
     height: 100%;
 }
 
@@ -148,28 +141,30 @@ div.profile_content_body li {
     height: 28%;
     margin: 1% 3% 2% 1%;
     border-radius: 5px;
-    box-shadow: 0.5px 0.5px 10px #797979;
+    /* box-shadow: 0.5px 0.5px 10px #797979; */
+    background: rgba(255,255,255,0.1);
 }
 
 div.profile_content_body img {
-    position: absolute;
+    position: relative;
     top: 10px;
-    left: 10px;
+    left: 3%;
     width: 80px;
-    height: 80px;
+    height: 80%;
+    border-radius: 50%;
 }
 
 div.profile_content_body div.profile_follow_email {
     position: absolute;
     bottom: 25%;
-    left: 12%;
+    left: 16%;
     font-size: 10pt;
-    color: #9f9f9f;
+    color: white;
 }
 
 div.profile_content_body div.profile_follow_nickname {
     position: absolute;
-    left: 12%;
+    left: 16%;
     font-size: 20pt;
     top: 18%;
 }
@@ -217,43 +212,44 @@ div.profile_content_body div.profile_route_follow:hover {
 }
 
 aside.profile_nav_aside p {
-    border-left: 3px solid #9f9f9f;
+    border-left: 3px solid rgba(255,255,255,0.4);
     margin: 0;
     padding-top: 10%;
     padding-bottom: 10%;
     padding-left: 0;
-    color: #9f9f9f;
+    color: rgba(255,255,255,0.4);
+    font-size: 1.5vw;
 }
 
 aside.profile_nav_aside p:hover {
-    border-left: 3px solid #50779f;
+    border-left: 3px solid rgba(255,255,255,0.7);
     margin: 0;
     padding-top: 10%;
     padding-bottom: 10%;
     padding-left: 0;
-    color: #50779f;
+    color: rgba(255,255,255,0.7);
     -webkit-transition: all 0.3s;
     cursor: pointer;
 }
 
 aside.profile_nav_aside p.nav_selected {
-    border-left: 3px solid #3b609f;
+    border-left: 3px solid rgba(255,255,255,1);
     margin: 0;
     padding-top: 10%;
     padding-bottom: 10%;
     padding-left: 0;
-    color: #3b609f;
+    color: rgba(255,255,255,1);
     -webkit-transition: all 0.3s;
     cursor: pointer;
 }
 
 aside.profile_nav_aside p.nav_selected:hover {
-    border-left: 3px solid #3b609f;
+    border-left: 3px solid rgba(255,255,255,1);
     margin: 0;
     padding-top: 10%;
     padding-bottom: 10%;
     padding-left: 0;
-    color: #3b609f;
+    color: rgba(255,255,255,0.7);
     -webkit-transition: all 0.3s;
     cursor: pointer;
 }
@@ -261,7 +257,7 @@ aside.profile_nav_aside p.nav_selected:hover {
 div.profile_content_empty {
     margin-left: 2%;
     font-size: 50pt;
-    color: #9f9f9f;
+    color: white;
 }
 
 div#profile_follow_body_wrapper {
@@ -280,7 +276,7 @@ div.profile_route_date {
     top: 45%;
     left: 2%;
     font-size: 10pt;
-    color: #9f9f9f;
+    color: white;
 }
 
 div.profile_route_site {
@@ -314,13 +310,20 @@ ul.profile_detail_ul li {
     position: relative;
     padding-top: 2%;
     padding-bottom: 2%;
-    border-bottom: 1px solid #f2f3f4;
+    border-bottom: 1px solid #6c6c6c;
     height: 16%;
     line-height: 400%;
+    width: 90%;
 }
 
 div.profile_detail_value {
-    position: absolute;
+    float: left;
+}
+
+div.profile_detail_name {
+    width: 25%;
+    display: inline-block;
+    float: left;
 }
 
 hr.profile_table_head_hr {
@@ -328,6 +331,8 @@ hr.profile_table_head_hr {
     border-style: solid;
     border-width: 1px;
     border-color: #bbbbbb;
+    width: 90%;
+    height: 0;
 }
 
 div.profile_detail_wrapper {
@@ -335,14 +340,17 @@ div.profile_detail_wrapper {
 }
 
 input.profile_password {
-    padding: 0;
     border: 0;
     line-height: 1.5em;
     height: 1.5em;
     overflow: visible;
-    color: #363636;
+    color: white;
     opacity: 1;
     width: 250%;
+    background: rgba(255,255,255,0.1);
+    border-radius: 5px;
+    padding: 2% 5%;
+    font-size: 1.5vw;
 }
 
 ul.profile_password_ul {
@@ -357,9 +365,10 @@ ul.profile_password_ul li {
     position: relative;
     padding-top: 2%;
     padding-bottom: 2%;
-    border-bottom: 1px solid #f2f3f4;
+    border-bottom: 1px solid #6c6c6c;
     height: 16%;
     line-height: 400%;
+    width: 90%;
 }
 
 div.profile_submit_button {

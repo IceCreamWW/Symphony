@@ -21,11 +21,11 @@ def film_map(request):
     else:
         context["nickname"] = my_user_obj.nickname
     context["real_nickname"] = my_user_obj.nickname
-    route_set = user_profile_obj.route_follow.all()
+    route_set = my_user_obj.route_create.all()
     route_list = list()
     for route in route_set:
         route_list.append(RouteInHtml(route.name, str(route.date),
-                                      ", ".join([site.name for site in route.siteinroute_set.all()]),
+                                      ", ".join([sir.site.name for sir in route.siteinroute_set.all()]),
                                       route.id))
     user_list = list()
     for user in user_profile_obj.user_follow.all():
@@ -56,7 +56,7 @@ def save_route(request):
         if request.GET['isNew'] == 'true':
             route = Route(name=request.GET['name'],creator=request.user, date=timezone.now())
             route.save()
-            return JsonResponse({"id": route.id})
+            return JsonResponse({"id": route.id, "date": str(route.date)})
         else:
             route = Route.objects.get(id=request.GET['id'])
             route.sites.clear()

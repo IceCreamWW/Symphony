@@ -6,6 +6,7 @@
     outline: none;
     border-radius: 7px;
     font-size: 17px;
+    color: white;
 }
 .search-movie-wrapper {
     text-align: center;
@@ -27,6 +28,8 @@ div#movies-list {
     padding: 5%;
     height: 30%;
    	overflow: hidden;
+    color: white;
+    border-color: rgba(255,255,255,0.8);
 }
 img.movie-img {
     height: 100%;

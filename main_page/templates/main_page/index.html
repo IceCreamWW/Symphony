@@ -65,9 +65,8 @@
 
     <script src="{% static "js/jquery.mslider.js" %}"></script>
     <script src="{% static "js/maprightdiv.js" %}"></script>
-
+    <script src="{% static "js/jquery.nicescroll.min.js" %}"></script>
     <script src="{% static 'js/profile.js' %}"></script>
-    <script src="{% static "js/jquery.optiscroll.min.js" %}"></script>
     <script>
         $(function () {
             $("#profile_password_submit").on("click", function () {
@@ -122,125 +121,137 @@
 {% if route_id %}
     <input type="hidden" data-value="{{ route_id }}" id="shared-route-id">
 {% endif %}
-<!--input type="text" id="map_search" name=""-->
-<div id="fullpage">
-    <div class="section m-slide">
-            <div id="map"></div>
-            <input id="pac-input" type="text" placeholder="Search Box">
+<input type="text" id="screenshot-input" value="" style="display: none">
 
-            <!-- Routes Div -->
-            <div id='routes-div'>
-                <div class="routes-menu-wrapper">
-                    <ul id="routes-menu">
-                        <li style="display:none"></li>
-                        <li></li>
-                        <li></li>
-                        <li style="display:none"></li>
+<!--input type="text" id="map_search" name=""-->
+<div id="global-right-arrow" class="global-arrow" style="display: none"></div>
+<div id="global-left-arrow" class="global-arrow" style="display: none"></div>
+<div id="fullpage">
+    <div class="m-slide" id="welcome-page">
+        <div class="welcome-page-content">
+            <div class="welcome-text">
+                Welcome to Symphony
+            </div>
+            <div class="welcome-button">Get Start</div>
+        </div>
+    </div>
+    <div class="section m-slide">
+        <div id="map"></div>
+        <input id="pac-input" type="text" placeholder="Search Box">
+
+        <!-- Routes Div -->
+        <div id='routes-div'>
+            <div class="routes-menu-wrapper">
+                <ul id="routes-menu">
+                    <li style="display:none"></li>
+                    <li></li>
+                    <li></li>
+                    <li style="display:none"></li>
+                </ul>
+            </div>
+
+            <div id="routes-slides">
+
+                <div class="m-slide movie-plots-div">
+                    <ul id="movie-plots-list">
+
                     </ul>
                 </div>
 
-                <div id="routes-slides">
-
-                    <div class="m-slide movie-plots-div">
-                        <ul id="movie-plots-list">
-
-                        </ul>
+                <div class="m-slide movies-div">
+                    <div class="search-movie-wrapper">
+                        <form id="search-movie-form">
+                            <input type="text" name="movie" placeholder="请输入电影/电视剧">
+                        </form>
                     </div>
-
-                    <div class="m-slide movies-div">
-                        <div class="search-movie-wrapper">
-                            <form id="search-movie-form">
-                                <input type="text" name="movie" placeholder="请输入电影/电视剧">
-                            </form>
-                        </div>
-                        <div id="movies-list">
-                            <div class="no-movie" style="display:none">
-                                没有搜索到相关电影
-                            </div>
+                    <div id="movies-list">
+                        <div class="no-movie" style="display:none">
+                            没有搜索到相关电影
                         </div>
                     </div>
+                </div>
 
-                    <div class="m-slide">
+                <div class="m-slide">
 
-                        <ul id="routes-list" class="routes-list sortable">
+                    <ul id="routes-list" class="routes-list sortable">
 
-                            <!-- ROUTE EXAMPLE -->
-                            <li class='route'>
-                                <img class='route-thumbnail'
-                                     src="http://localhost:8000/static/img/default_thumbnail.jpg">
-                                <span class='fa-stack fa-2x checked-icon'>
+                        <!-- ROUTE EXAMPLE -->
+                        <li class='route example'>
+                            <img class='route-thumbnail'
+                                 src="http://localhost:8000/static/img/default_thumbnail.jpg">
+                            <span class='fa-stack fa-2x checked-icon'>
                                     <i class="fa fa-circle fa-stack-2x"></i>
                                     <i class='fa fa-check fa-stack-1x'></i>
                                 </span>
-                                <div class='route-control'>
-                                    <div class='route-name-wrapper'>
-                                        <div class='route-name'>示例路线</div>
-                                    </div>
-                                    <hr align="center">
-                                    <div class='route-icons-list'>
-                                        <div class='route-icons-wrapper'>
-                                            <div class='route-share-icon route-icon'>
-                                                <i class="fa fa-share-alt" aria-hidden="true"></i>
-                                            </div>
-                                            <div class='route-delete-icon route-icon'>
-                                                <i data-title="删除" class="fa fa-trash-o" aria-hidden="true"></i>
-                                            </div>
-                                            <div class='route-edit-icon route-icon'>
-                                                <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
-                                            </div>
+                            <div class='route-control'>
+                                <div class='route-name-wrapper'>
+                                    <div class='route-name'>示例路线</div>
+                                </div>
+                                <hr align="center">
+                                <div class='route-icons-list'>
+                                    <div class='route-icons-wrapper'>
+                                        <div class='route-share-icon route-icon'>
+                                            <i class="fa fa-share-alt" aria-hidden="true"></i>
+                                        </div>
+                                        <div class='route-delete-icon route-icon'>
+                                            <i data-title="删除" class="fa fa-trash-o" aria-hidden="true"></i>
+                                        </div>
+                                        <div class='route-edit-icon route-icon'>
+                                            <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
                                         </div>
                                     </div>
                                 </div>
-                            </li>
-                            <!-- ROUTE EXAMPLE -->
-                            <li id="create-route-wrapper">
-                                <i class="fa fa-plus" aria-hidden="true"></i>
-                                <div id="create-route-text">create a new route</div>
-                            </li>
-                        </ul>
-                    </div>
-
-                    <div class="m-slide places-div">
-                        <ul class="places-tools-list">
-                            <li class="places-tool-return-routes places-icon">
-                                <i class="fa fa-chevron-left" aria-hidden="true"></i>
-                            </li>
-                            <li class="places-tool-current-marker places-icon">
-                                <i class="fa fa-map-marker" aria-hidden="true"></i>
-                            </li>
-                            <li class="places-tool-screenshot places-icon">
-                                <i class="fa fa-picture-o" aria-hidden="true"></i>
-                            </li>
-                            <li class='places-tool-share places-icon'>
-                                <i class="fa fa-share-alt" aria-hidden="true"></i>
-                            </li>
-                            <li class='places-tool-undo places-icon icon-need-activate'>
-                                <i class="fa fa-reply" aria-hidden="true"></i>
-                            </li>
-                            <li class='places-tool-redo places-icon icon-need-activate'>
-                                <i class="fa fa-share" aria-hidden="true"></i>
-                            </li>
-                            <li class='places-tool-delete places-icon icon-need-activate'>
-                                <i class="fa fa-trash-o " aria-hidden="true"></i>
-                            </li>
-                        </ul>
-
-                        <div class="places-content">
-                            <div class="route-name-editable-wrapper">
-                                <input type="text" class="route-name-editable">
                             </div>
-                            <ul id="places-list" class="sortable">
-                                <li title="选择一个地点" id="add-place-wrapper" class="sortable-border-top"
-                                    data-markerid="-1">
-                                    <i class="fa fa-plus" aria-hidden="true"></i>
-                                    <div id="add-place-text">add a new place</div>
-                                </li>
-                            </ul>
-                        </div>
+                        </li>
+                        <!-- ROUTE EXAMPLE -->
+                        <li id="create-route-wrapper">
+                            <i class="fa fa-plus" aria-hidden="true"></i>
+                            <div id="create-route-text">create a new route</div>
+                        </li>
+                    </ul>
+                </div>
 
+                <div class="m-slide places-div">
+                    <ul class="places-tools-list">
+                        <li class="places-tool-return-routes places-icon">
+                            <i class="fa fa-chevron-left" aria-hidden="true"></i>
+                        </li>
+                        <li class="places-tool-current-marker places-icon">
+                            <i class="fa fa-map-marker" aria-hidden="true"></i>
+                        </li>
+                        <li class="places-tool-screenshot places-icon" onclick="screenShot()">
+                            <i class="fa fa-picture-o" aria-hidden="true"></i>
+                        </li>
+                        <li class='places-tool-share places-icon'>
+                            <i class="fa fa-share-alt" aria-hidden="true"></i>
+                        </li>
+                        <li class='places-tool-undo places-icon icon-need-activate'>
+                            <i class="fa fa-reply" aria-hidden="true"></i>
+                        </li>
+                        <li class='places-tool-redo places-icon icon-need-activate'>
+                            <i class="fa fa-share" aria-hidden="true"></i>
+                        </li>
+                        <li class='places-tool-delete places-icon icon-need-activate'>
+                            <i class="fa fa-trash-o " aria-hidden="true"></i>
+                        </li>
+                    </ul>
+
+                    <div class="places-content">
+                        <div class="route-name-editable-wrapper">
+                            <input type="text" class="route-name-editable">
+                        </div>
+                        <ul id="places-list" class="sortable">
+                            <li title="选择一个地点" id="add-place-wrapper" class="sortable-border-top"
+                                data-markerid="-1">
+                                <i class="fa fa-plus" aria-hidden="true"></i>
+                                <div id="add-place-text">add a new place</div>
+                            </li>
+                        </ul>
                     </div>
+
                 </div>
             </div>
+        </div>
     </div>
 
     <div class="slide m-slide" data-anchor="slide2">
@@ -282,7 +293,7 @@
                         无关注的用户
                     </div>
                     <div id="profile_follow_body_wrapper">
-                        <div class="profile_content_body optiscroll" id="profile_content_body_1">
+                        <div class="profile_content_body" id="profile_content_body_1">
                             <ul id="profile_follow_ul">
                                 {% for user in user_list %}
                                     <li id="profile_follow_li_{{ forloop.counter }}">
@@ -311,10 +322,10 @@
                         无收藏的路线
                     </div>
                     <div id="profile_route_body_wrapper">
-                        <div class="profile_content_body optiscroll" id="profile_content_body_2">
+                        <div class="profile_content_body" id="profile_content_body_2">
                             <ul id="profile_route_ul">
                                 {% for route in route_list %}
-                                    <li id="profile_route_li_{{ forloop.counter }}">
+                                    <li id="profile_route_li_{{ forloop.counter }}" class="profile_route_entry">
                                         <div class="profile_route_name">{{ route.name }}</div>
                                         <div class="profile_route_date">创建时间：{{ route.date }}</div>
                                         <div class="profile_route_site">{{ route.site }}</div>
@@ -322,7 +333,7 @@
                                              id="profile_switch_route_{{ forloop.counter }}"
                                              route_id="{{ route.id }}"
                                              li_id="profile_route_li_{{ forloop.counter }}">
-                                            取消收藏
+                                            删除路线
                                         </div>
                                     </li>
                                 {% endfor %}
@@ -336,7 +347,7 @@
                 </div>
                 <div class="profile_content" id="profile_content_4" style="display: none">
                     <h2>个人资料</h2>
-                    <div class="profile_detail_wrapper optiscroll" id="profile_detail_wrapper">
+                    <div class="profile_detail_wrapper" id="profile_detail_wrapper">
                         <hr class="profile_table_head_hr"/>
                         <ul class="profile_detail_ul">
                             <li>
@@ -428,12 +439,26 @@
 </style>
 <script type="text/javascript">
     $(document).ready(function () {
-        $('#fullpage').mslider();
-        // $('#fullpage').fullpage({
-        //     continuousHorizontal: true,
-        //     continuousHorizontalKey: 'YWx2YXJvdHJpZ28uY29tX00zVVkyOXVkR2x1ZFc5MWMwaHZjbWw2YjI1MFlXdz12Nk0=',
-        //     slidesNavigation: true
-        // });
+        $('#fullpage').mslider({
+            leftArrow: "#global-left-arrow",
+            rightArrow: "#global-right-arrow",
+            transition: "400ms",
+            after: function (target) {
+                if (target == 1) {
+                    $("#global-left-arrow").hide(100);
+                    $("#global-right-arrow").show(100);
+                }
+                if (target == 2) {
+                    $("#global-left-arrow").show(100);
+                    $("#global-right-arrow").hide(100);
+                }
+            },
+            initSlide: 0
+        });
+        $('#fullpage').addRightArrow(".welcome-button");
+        $(".welcome-button").click(function () {
+            $("#routes-list").trigger('load-routes')
+        })
     });
 
     $(function () {
@@ -450,6 +475,27 @@
       });
     });
     */
+    $("#fullpage").on('transitionend webkitTransitionEnd oTransitionEnd', function (event) {
+			if (event.target != this) {
+				return;
+			}
+			if($(this).hasClass("done")){
+			    return false;
+            }else{
+			    $(this).css("opacity","1");
+			    $(this).addClass("done");
+            }
+		});
+    function screenShot(){
+        $('#fullpage').removeClass("done");
+        $('#fullpage').css("opacity", "0.2");
+        var v = $('.route.active').find('img').attr('src');
+        document.getElementById('screenshot-input').value = v;
+        document.getElementById("screenshot-input").select();
+        var result = document.execCommand("Copy");
+        //alert("图片url已复制到剪贴板" + result);
+
+    }
 </script>
 
 <style type="text/css">
@@ -466,6 +512,7 @@
     .gm-style-cc {
         display: none !important;
     }
+
 
 </style>
 </body>

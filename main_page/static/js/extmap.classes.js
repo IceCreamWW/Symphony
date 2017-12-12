@@ -150,6 +150,7 @@ function Route(options) {
         name: undefined,
         isNew: true,
         bufferSize: 50,
+        date: null
     }, options);
 
     updateAttrs.call(this, settings);
@@ -279,6 +280,11 @@ Route.prototype = {
     },
     getMarkerArray: function(){
         return this.routeStates[this.curRouteStateIndex].asMarkerArray();
+    },
+    getMarkerNamesArray: function () {
+        return this.getMarkerArray().map(function (marker) {
+            return marker.name;
+        });
     }
 };
 
@@ -330,7 +336,7 @@ Routes.prototype = {
     },
     createRoute: function (options) {
         if (!options.name) {
-            name = this.generateName();
+            var name = this.generateName();
         } else if (this.existName_(name)) {
             return false;
         }
@@ -343,6 +349,7 @@ Routes.prototype = {
         route.save(function (json) {
             this.routes.set(json["id"], route);
             route.id = json["id"];
+            route.date = json["date"];
             options.callback(route);
         }.bind(self));
     },
@@ -362,6 +369,7 @@ Routes.prototype = {
                 })
                 route.clearUndoQueue();
                 routes.push(route);
+                route.hide()
                 self.routes.set(route.id, route);
             })
             callback && callback(routes);

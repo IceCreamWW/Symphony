@@ -147,7 +147,8 @@
 		return $(this).getMSlider().children('.m-slide').length;
 	}
 	$.fn.getActiveSlideIndex = function(){
-		return $(this).getMSlider().children('.m-slide-active').index('.m-slide');
+		// return $(this).getMSlider().children('.m-slide-active').index('.m-slide');
+		return $(this).getMSlider().children('.m-slide-active').prevAll('.m-slide').length
 	}
 	$.fn.getActiveSlide = function(){
 		return $(this).getMSlider().children('.m-slide-active');

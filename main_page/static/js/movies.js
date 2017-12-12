@@ -1,7 +1,8 @@
 $(function() {
 
-	var $moviesListPS = new PerfectScrollbar('#movies-list');
+	// var $moviesListPS = new PerfectScrollbar('#movies-list');
 	$moviesList = $('#movies-list');
+	$moviesList.niceScroll();
 
 	$('#search-movie-form').submit(function(event) {
 		event.preventDefault();
@@ -11,7 +12,8 @@ $(function() {
 
 				if (json.length == 0) {
 					$moviesList.children('.no-movie').show();
-					$moviesListPS.update();
+					$moviesList.getNiceScroll().resize();
+					// $moviesListPS.update();
 					return;
 				}
 
@@ -33,7 +35,8 @@ $(function() {
 
 					$moviesList.prepend(movieElement);
 				})
-				$moviesListPS.update();
+				$moviesList.getNiceScroll().resize();
+				// $moviesListPS.update();
 		});	
 	});
 	

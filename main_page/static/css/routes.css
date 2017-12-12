@@ -169,6 +169,13 @@ img.route-thumbnail{
 	opacity: 1;
 	color: red;
 }
+.route-edit-icon .fa:hover{
+	opacity: 1;
+	color: red;
+}.route-share-icon .fa:hover{
+	opacity: 1;
+	color: red;
+}
 .route-icon .fa, .places-icon .fa{
 	color: white;
 	opacity: 0.7;
@@ -305,6 +312,7 @@ li.place{
     position: relative;
     overflow: hidden;
     font-size: 1.2vw;
+	cursor: default;
 }
 li.place:first-child{
 	/*margin-top: 0;*/

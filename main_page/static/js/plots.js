@@ -29,7 +29,7 @@ $(function() {
         	$('.gm-style-iw').prev('div').children().attr('data-html2canvas-ignore', 'true');
         	$('.plots-content').attr('data-html2canvas-ignore', 'true');
         	$('.gm-style-iw').children().first().addClass('info-window-close');
-			var s = new PerfectScrollbar('.info-window-close');
+        	$('.info-window-close').niceScroll();
 			$('.gm-style-iw').next('div').addClass('close-icon');
 		});
 	});
