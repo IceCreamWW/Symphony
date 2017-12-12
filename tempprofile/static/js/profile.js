@@ -23,27 +23,26 @@ function check_route_empty() {
 // 切换导航栏
 function switch_nav(tarId) {
     for (var i = 1; i <= 6; ++i) {
-        $("#profile_nav_" + i).attr("class", "")
+        $("#profile_nav_" + i).attr("class", "");
         $("#profile_content_" + i).hide();
-        $("#profile_content_body_" + i).getNiceScroll().hide();
     }
 
-    $('#nav').children().eq(tarId)
+    // $('#nav').children().eq(tarId);
 
     $("#profile_nav_" + tarId).attr("class", "nav_selected");
     $("#profile_content_" + tarId).show();
-    $("#profile_content_body_" + tarId).getNiceScroll().show().resize();
-    if (tarId == 4) {
-        $("#profile_detail_wrapper").getNiceScroll().show().resize();
-    } else {
-        $("#profile_detail_wrapper").getNiceScroll().hide();
+    if (tarId == 1 || tarId == 2) {
+        $("#profile_content_body_" + tarId).data("optiscroll").update();
+    } else if (tarId == 4) {
+        $("#profile_detail_wrapper").data("optiscroll").update();
     }
 }
 
-// 关注者列表/路线列表滚动
+
+// OptiScroll滚动
 $(function () {
-    $(".profile_content_body").niceScroll({});
-    $("#profile_detail_wrapper").niceScroll({});
+    $('.optiscroll').optiscroll();
+    Optiscroll.globalSettings.checkFrequency = 0;
 });
 
 // 检查关注用户数量是否为零
@@ -66,9 +65,9 @@ $(function () {
     })
 });
 $(function () {
-   $("#profile_follow_route_num_td").on("click", function () {
-       switch_nav(2);
-   })
+    $("#profile_follow_route_num_td").on("click", function () {
+        switch_nav(2);
+    })
 });
 
 // 取消关注用户
@@ -85,6 +84,7 @@ $(function () {
                 var cur_num = $("#profile_follow_user_counter").text() - 1;
                 $("#profile_follow_user_counter").text(cur_num);
                 check_follow_empty();
+                $("#profile_content_body_1").data("optiscroll").update();
             }
         });
     })
@@ -104,6 +104,7 @@ $(function () {
                 var cur_num = $("#profile_follow_route_counter").text() - 1;
                 $("#profile_follow_route_counter").text(cur_num);
                 check_route_empty();
+                $("#profile_content_body_2").data("optiscroll").update();
             }
         });
     })
