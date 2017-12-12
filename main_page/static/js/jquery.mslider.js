@@ -57,8 +57,12 @@
 		$(settings.rightArrow).click(function() {
 			self.moveRight();
 		})
-		self.on('slide', function(event, target) {
-			settings.handler && settings.handler(target);
+
+		self.getMSlider().on('transitionend webkitTransitionEnd oTransitionEnd', function (event) {
+			if (event.target != this) {
+				return;
+			}
+			settings.handler && settings.handler(self.getActiveSlideIndex());
 		});
 
 	}	
@@ -98,7 +102,6 @@
 
 		$slider.children('.m-slide').eq(target).find('*').removeAttr("tabindex");
 		$slider.children('.m-slide').eq(target).siblings().find('*').attr("tabindex", -1);
-		$(this).trigger('slide', [target]);
 	};
 
 
