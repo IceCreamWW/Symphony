@@ -4,9 +4,10 @@
     <meta charset="UTF-8">
     <title></title>
     {% load static %}
+    <link rel="stylesheet" href="{% static "css/optiscroll.css" %}">
     <script src="{% static 'js/jquery.min.js' %}"></script>
-    <script src="{% static "js/jquery.nicescroll.min.js" %}"></script>
     <script src="{% static 'js/profile.js' %}"></script>
+    <script src="{% static "js/jquery.optiscroll.min.js" %}"></script>
     <script>
         $(function () {
             $("#profile_password_submit").on("click", function () {
@@ -90,7 +91,7 @@
             <h2>我的关注</h2>
             <div class="profile_content_empty" style="display: none" id="profile_content_empty_user">无关注的用户</div>
             <div id="profile_follow_body_wrapper">
-                <div class="profile_content_body" id="profile_content_body_1">
+                <div class="profile_content_body optiscroll" id="profile_content_body_1">
                     <ul id="profile_follow_ul">
                         {% for user in user_list %}
                             <li id="profile_follow_li_{{ forloop.counter }}">
@@ -115,7 +116,7 @@
             <h2>我的路线</h2>
             <div class="profile_content_empty" style="display: none" id="profile_content_empty_route">无收藏的路线</div>
             <div id="profile_route_body_wrapper">
-                <div class="profile_content_body" id="profile_content_body_2">
+                <div class="profile_content_body optiscroll" id="profile_content_body_2">
                     <ul id="profile_route_ul">
                         {% for route in route_list %}
                             <li id="profile_route_li_{{ forloop.counter }}">
@@ -138,7 +139,7 @@
         </div>
         <div class="profile_content" id="profile_content_4" style="display: none">
             <h2>个人资料</h2>
-            <div class="profile_detail_wrapper" id="profile_detail_wrapper">
+            <div class="profile_detail_wrapper optiscroll" id="profile_detail_wrapper">
                 <hr class="profile_table_head_hr"/>
                 <ul class="profile_detail_ul">
                     <li>
