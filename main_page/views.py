@@ -13,9 +13,37 @@ import json
 # Create your views here.
 @login_required
 def film_map(request):
+    my_user_obj = request.user
+    user_profile_obj = my_user_obj.userprofile
+    context = dict()
+    if my_user_obj.nickname == "":
+        context["nickname"] = my_user_obj.email
+    else:
+        context["nickname"] = my_user_obj.nickname
+    context["real_nickname"] = my_user_obj.nickname
+    route_set = user_profile_obj.route_follow.all()
+    route_list = list()
+    for route in route_set:
+        route_list.append(RouteInHtml(route.name, str(route.date),
+                                      ", ".join([site.name for site in route.siteinroute_set.all()]),
+                                      route.id))
+    user_list = list()
+    for user in user_profile_obj.user_follow.all():
+        user_list.append(UserInHtml(user.email, user.userprofile.head_img,
+                                    user.email if user.nickname == "" else user.nickname))
+    context["email"] = my_user_obj.email
+    context["user_list"] = user_list
+    context["follow_num"] = len(context["user_list"])
+    context["route_list"] = route_list
+    context["route_num"] = len(context["route_list"])
+    context["portrait"] = user_profile_obj.head_img
+    context["introduction"] = user_profile_obj.intro
+    context["label"] = user_profile_obj.label
+    context["phone"] = user_profile_obj.phone
     if 'route_id' in request.GET:
-        return render(request, "main_page/index.html",{"route_id": request.GET["route_id"]})
-    return render(request, "main_page/index.html")
+        context[route_id] = request.GET['route_id']
+        return render(request, "main_page/index.html", context)
+    return render(request, "main_page/index.html", context)
 
 
 def init_marks(request):
@@ -114,125 +142,140 @@ def search_movie(request):
         context = [{'name': movie.name, 'img': movie.video, 'description': movie.description, 'id': movie.id} for movie in movies]
         return JsonResponse(context, safe=False)
 
-def get_random(a, b):
-    return a + (b - a) * random()
-
-
-# For test, return all marker lat and lng in table site
-def generate_random_marks(cnt=100):
-    seed(0)
-    location_names = '''
-Unknown Place
-Australia - New South Wales - Barmedman
-Australia - New South Wales - Wallaroo
-Australia - Victoria - Toorloo Arm
-Australia - New South Wales - Gerroa
-Australia
-Australia
-Australia - Victoria - Shelley
-Unknown Place
-Unknown Place
-Australia
-Unknown Place
-Australia - New South Wales - Coleambally
-Australia - New South Wales - Coalcliff
-Unknown Place
-Unknown Place
-Unknown Place
-Australia - New South Wales - Deniliquin
-Australia - Victoria - Bendoc
-Unknown Place
-Australia - New South Wales - Couradda
-Australia - Victoria
-Unknown Place
-Australia - New South Wales - Upper Dartbrook
-Unknown Place
-Australia
-Australia - New South Wales - Coonamble
-Unknown Place
-Australia - New South Wales - Piallaway
-Australia
-Unknown Place
-Unknown Place
-Australia - New South Wales - Jerangle
-Australia - New South Wales - Bolaro
-Australia - New South Wales - Glenroy
-Australia - New South Wales - Honeybugle
-Unknown Place
-Australia - New South Wales - Coleambally
-Unknown Place
-Unknown Place
-Unknown Place
-Australia - Australian Capital Territory - Paddys River
-Australia - Victoria - Omeo
-Unknown Place
-Unknown Place
-Unknown Place
-Australia
-Unknown Place
-Australia - Victoria - Gentle Annie
-Australia - New South Wales - Nerrigundah
-Unknown Place
-Australia - New South Wales - Mayers Flat
-Australia - New South Wales - Murrawombie
-Australia - Victoria - Tostaree
-Australia - Victoria - Darnum
-Australia - New South Wales - Nowendoc
-Australia - New South Wales - Woodsreef
-Unknown Place
-Australia - Victoria - Locksley
-Unknown Place
-Australia - Australian Capital Territory - Cotter River
-Unknown Place
-Australia - New South Wales - Louth
-Australia - Tasmania
-Australia - New South Wales - Nyngan
-Unknown Place
-Australia - New South Wales - Merah North
-Australia - New South Wales - Oxley
-Australia - New South Wales - Upper Allyn
-Australia - New South Wales - Ungarie
-Australia - New South Wales - Steam Plains
-Unknown Place
-Australia - New South Wales - Eumungerie
-Unknown Place
-Australia - Tasmania
-Unknown Place
-Australia - New South Wales - Castle Doyle
-Australia
-Australia - New South Wales - Warkworth
-Australia - New South Wales - Kamarah
-Australia - New South Wales - Broadway
-Australia - New South Wales - Nelligen
-Australia - New South Wales - Bocobra
-Australia - Victoria - Golden Beach
-Australia - New South Wales - Warragoon
-Australia - Victoria - Yalmy
-Australia - New South Wales - Carinda
-Unknown Place
-Australia - New South Wales - Forbes
-Unknown Place
-Unknown Place
-Australia - Victoria - Bendoc
-Australia
-Australia - New South Wales - Brewarrina
-Australia - New South Wales - Fairholme
-Australia - New South Wales - Berridale
-Unknown Place
-Australia - New South Wales - Bigga
-Australia - New South Wales - Mila
-Australia - Victoria - Miepoll
-'''
-    location_names = [location_name for location_name in location_names.split('\n') if len(location_name) > 0]
-    marks = [{"latlng": {"lat": get_random(-30, -40), "lng": get_random(145, 155)},
-              "id": _,
-              "name": location_names[_]} for _ in range(100)]
-    return marks
-
-
 # For Real Usage
 def get_init_markers():
     site_set = Site.objects.all()
     markers = [{"latlng": {"lat": site.lat, "lng": site.lng}, "name": site.name, "id":site.id} for site in site_set]
     return markers
 
+
+
+
+
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import render, get_object_or_404
+from django.template.loader import render_to_string
+from django.views.decorators.csrf import csrf_exempt
+from django.contrib.auth import logout
+
+from django.http import JsonResponse
+from registration.models import MyUser, UserProfile
+from main_page.models import Route
+
+
+@csrf_exempt
+def unfollow_user(request):
+    my_user_obj = request.user
+    user_profile_obj = my_user_obj.userprofile
+    follow_set = user_profile_obj.user_follow
+    removing_email = request.POST["email"]
+    removing_user = get_object_or_404(MyUser, email=removing_email)
+    follow_set.remove(removing_user)
+    return JsonResponse({"status": "success"})
+
+
+@csrf_exempt
+def unfollow_route(request):
+    my_user_obj = request.user
+    user_profile_obj = my_user_obj.userprofile
+    route_set = user_profile_obj.route_follow
+    route_id = request.POST["id"]
+    removing_route = get_object_or_404(Route, id=route_id)
+    route_set.remove(removing_route)
+    return JsonResponse({"status": "success"})
+
+
+@csrf_exempt
+def change_password(request):
+    if request.method == "POST":
+        cur_password = request.POST["cur_password"]
+        new_password = request.POST["new_password"]
+        my_user_obj = request.user
+        if my_user_obj.check_password(cur_password):
+            my_user_obj.set_password(new_password)
+            my_user_obj.save()
+            logout(request)
+            return JsonResponse({"status": "success"})
+        else:
+            return JsonResponse({"status": "fail"})
+    return JsonResponse({"status": "error"})
+
+
+@csrf_exempt
+def follow_user(request):
+    my_user_obj = request.user
+    user_profile_obj = my_user_obj.userprofile
+    follow_set = user_profile_obj.user_follow
+    removing_email = request.POST["email"]
+    removing_user = get_object_or_404(MyUser, email=removing_email)
+    follow_set.add(removing_user)
+    return JsonResponse({"status": "success"})
+
+
+@csrf_exempt
+def follow_route(request):
+    my_user_obj = request.user
+    user_profile_obj = my_user_obj.userprofile
+    route_set = user_profile_obj.route_follow
+    route_id = request.POST["id"]
+    removing_route = get_object_or_404(Route, id=route_id)
+    route_set.add(removing_route)
+    return JsonResponse({"status": "success"})
+
+
+@login_required
+def designate_user(request, email):
+    cur_user_obj = get_object_or_404(MyUser, email=email)
+    cur_user_profile_obj = cur_user_obj.userprofile
+    my_user_obj = request.user
+    my_user_profile_obj = my_user_obj.userprofile
+    context = dict()
+    if cur_user_obj.nickname == "":
+        context["nickname"] = cur_user_obj.email
+    else:
+        context["nickname"] = cur_user_obj.nickname
+    context["real_nickname"] = cur_user_obj.nickname
+    route_set = cur_user_profile_obj.route_follow.all()
+    route_list = list()
+    for route in route_set:
+        route_list.append(RouteInHtml(route.name, str(route.date),
+                                      ", ".join([site.name for site in route.siteinroute_set.all()]),
+                                      route.id, my_user_profile_obj.route_follow.filter(id=route.id).exists()))
+    user_list = list()
+    for user in cur_user_profile_obj.user_follow.all():
+        user_list.append(UserInHtml(user.email, user.userprofile.head_img,
+                                    user.email if user.nickname == "" else user.nickname,
+                                    my_user_profile_obj.user_follow.filter(email=user.email).exists()))
+    context["email"] = cur_user_obj.email
+    context["user_list"] = user_list
+    context["follow_num"] = len(context["user_list"])
+    context["route_list"] = route_list
+    context["route_num"] = len(context["route_list"])
+    context["portrait"] = cur_user_profile_obj.head_img
+    context["introduction"] = cur_user_profile_obj.intro
+    context["label"] = cur_user_profile_obj.label
+    context["phone"] = cur_user_profile_obj.phone
+    context["is_followed"] = my_user_profile_obj.user_follow.filter(email=email).exists()
+    return render(request, "profile/other_user.html", context)
+
+
+def logout_user(request):
+    logout(request)
+    return JsonResponse({"status": "success"})
+
+
+class RouteInHtml:
+    def __init__(self, name: str, date: str, site: str, id: int, is_followed: bool = False):
+        self.name = name
+        self.date = date
+        self.site = site
+        self.id = id
+        self.is_followed = is_followed
+
+
+class UserInHtml:
+    def __init__(self, email: str, portrait: str, nickname: str, is_followed: bool = False):
+        self.email = email
+        self.portrait = portrait
+        self.nickname = nickname
+        self.is_followed = is_followed
