@@ -59,6 +59,11 @@
 			self.moveRight();
 		})
 
+
+		// Before Handler
+		settings.before && self.data("m-slider-before", settings.before);
+
+
 		self.getMSlider().on('transitionend webkitTransitionEnd oTransitionEnd', function (event) {
 			if (event.target != this) {
 				return;
@@ -85,6 +90,7 @@
 
 	$.fn.moveToSlideNumber = function (target) {
 
+		$(this).data("m-slider-before") && $(this).data("m-slider-before")(target);
 		// settings.before && settings.before(target);
 		
 		var slidesCnt = $(this).getSlideCnt();

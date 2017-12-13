@@ -448,7 +448,7 @@
             leftArrow: "#global-left-arrow",
             rightArrow: "#global-right-arrow",
             transition: "400ms",
-            after: function (target) {
+            before: function (target) {
                 if (target == 1) {
                     $("#global-left-arrow").hide(100);
                     $("#global-right-arrow").show(100);
