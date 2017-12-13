@@ -367,6 +367,7 @@ Routes.prototype = {
                 routeJson['sites'].forEach(function(siteId){
                     route.addMarker(siteId);
                 })
+                self.browseOrder.push(route.id);
                 route.clearUndoQueue();
                 routes.push(route);
                 route.hide()

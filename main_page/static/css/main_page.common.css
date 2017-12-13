@@ -50,6 +50,7 @@ input:-webkit-autofill {
 #welcome-page {
     background: url("../img/wb.png") no-repeat center;
     position: relative;
+    background-size: cover;
 }
 
 .welcome-page-content {

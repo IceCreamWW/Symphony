@@ -192,6 +192,16 @@ $(function () {
                     mExtMap.geoMarkers.curMarker && $('#map').trigger('marker-click', [mExtMap.geoMarkers.curMarker.id]);
                 });
                 $('#profile_route_ul').trigger("remove-route", [route.id]);
+                var curRoute = mExtMap.routes.getCurRoute();
+                if(!curRoute){
+                    return false;
+                }else{
+                    $('li.route').each(function (index, el) {
+                    if ($(el).data('route-id') == curRoute.id) {
+                            $(el).click();
+                        }
+                    })
+                }
                 return false;
             },
             'commit': function (event, routeElement) {
@@ -359,7 +369,7 @@ $(function () {
 
                     mExtMap.routes.getCurRoute().canRedo() ?
                         $('.places-tool-redo').addClass('active') : $('.places-tool-redo').removeClass('active');
-                    $('#map').trigger('marker-click', [mExtMap.geoMarkers.curMarker]);
+                    $('#map').trigger('marker-click', [mExtMap.geoMarkers.curMarker.id]);
                 }
                 return false;
             },
@@ -369,7 +379,7 @@ $(function () {
                 }
                 mExtMap.routes.getCurRoute().undo();
                 $placesList.trigger('refresh');
-                $('#map').trigger('marker-click', [mExtMap.geoMarkers.curMarker]);
+                $('#map').trigger('marker-click', [mExtMap.geoMarkers.curMarker.id]);
             },
             'redo': function (event) {
                 if (!mExtMap.routes.getCurRoute().canRedo()) {
@@ -377,7 +387,7 @@ $(function () {
                 }
                 mExtMap.routes.getCurRoute().redo();
                 $placesList.trigger('refresh');
-                $('#map').trigger('marker-click', [mExtMap.geoMarkers.curMarker]);
+                $('#map').trigger('marker-click', [mExtMap.geoMarkers.curMarker.id]);
 
             },
             'sort-list': function (event, noUndo) {

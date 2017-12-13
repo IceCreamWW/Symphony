@@ -116,18 +116,19 @@ $(function () {
 $(function () {
 
     $('.profile_route_entry').click(function (event) {
-            if(event.target != this){
-                return;
-            };
-            $('#fullpage').moveLeft();
-            var self = $(this);
-            $('li.route').each(function (index, el) {
-                if ($(el).data('route-id') == self.find(".profile_route_follow").attr("route_id")) {
-                    $(el).click();
-                }
-            })
+        if (event.target != this) {
+            return;
+        }
+        ;
+        $('#fullpage').moveLeft();
+        var self = $(this);
+        $('li.route').each(function (index, el) {
+            if ($(el).data('route-id') == self.find(".profile_route_follow").attr("route_id")) {
+                $(el).click();
+            }
+        })
 
-        });
+    });
 });
 
 // 添加路线同步
@@ -140,9 +141,10 @@ $(function () {
         newEl.find(".profile_route_follow").attr("route_id", route.id);
 
         newEl.click(function (event) {
-            if(event.target != this){
+            if (event.target != this) {
                 return;
-            };
+            }
+            ;
             var self = $(this);
             $('#fullpage').moveLeft();
             $('li.route').each(function (index, el) {
@@ -172,6 +174,8 @@ $(function () {
         $("#profile_route_ul").prepend(newEl);
         $("#profile_route_body_wrapper").show();
         $("#profile_content_empty_route").hide();
+        var cur_num = parseInt($("#profile_follow_route_counter").text()) + 1;
+        $("#profile_follow_route_counter").text(cur_num);
     })
 });
 
@@ -192,6 +196,8 @@ function createProfileRouteElement() {
 $(function () {
     $('#profile_route_ul').on("remove-route", function (event, routeId) {
         $("#profile_route_ul").find("[route_id=" + routeId + "]").parent().remove();
+        var cur_num = $("#profile_follow_route_counter").text() - 1;
+        $("#profile_follow_route_counter").text(cur_num);
         check_route_empty();
     })
 });
@@ -201,4 +207,4 @@ $(function () {
     $('#profile_route_ul').on("change-name", function (event, routeId, newName) {
         $("#profile_route_ul").find("[route_id=" + routeId + "]").parent().find(".profile_route_name").text(newName);
     })
-})
+});
