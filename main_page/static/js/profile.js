@@ -100,8 +100,6 @@ $(function () {
         var self = $(this);
         $.post('delete_route', data, function (json) {
             self.parent().remove();
-            var cur_num = $("#profile_follow_route_counter").text() - 1;
-            $("#profile_follow_route_counter").text(cur_num);
             check_route_empty();
             $('li.route').each(function (index, el) {
                 if ($(el).data('route-id') == self.attr("route_id")) {
@@ -160,8 +158,6 @@ $(function () {
             var self = $(this);
             $.post('delete_route', data, function (json) {
                 self.parent().remove();
-                var cur_num = $("#profile_follow_route_counter").text() - 1;
-                $("#profile_follow_route_counter").text(cur_num);
                 check_route_empty();
                 $('li.route').each(function (index, el) {
                     if ($(el).data('route-id') == self.attr("route_id")) {
